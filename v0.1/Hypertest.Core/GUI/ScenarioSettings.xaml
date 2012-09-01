@@ -1,0 +1,73 @@
+﻿<Window x:Class="Hypertest.Core.GUI.ScenarioSettings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:utils="clr-namespace:Hypertest.Core.Utils;assembly=Hypertest.Core"
+             mc:Ignorable="d" 
+             Height="435" Width="600" WindowStartupLocation="CenterScreen" WindowStyle="ToolWindow" Title="Scenario settings">
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="BTypeEnum">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="utils:BrowserType"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Name</TextBlock>
+            <TextBox Name="Name" Text="{Binding Name, Mode=TwoWay}"  Grid.Column="1"></TextBox>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Description</TextBlock>
+            <TextBox Name="Description" Text="{Binding Description, Mode=TwoWay}"  Grid.Column="1" Height="80" AcceptsReturn="True" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Initialize Variables</TextBlock>
+            <DataGrid Name="Variables" ItemsSource="{Binding Variables, Mode=TwoWay}" Grid.Column="1" Height="200" ScrollViewer.CanContentScroll="True" ColumnWidth="*" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=Name, Mode=TwoWay}" Header="Name" />
+                    <DataGridTextColumn Binding="{Binding Path=Value, Mode=TwoWay}" Header="Value"  />
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Base URL</TextBlock>
+            <TextBox Name="txtURL" Text="{Binding BaseURL, Mode=TwoWay}"  Grid.Column="1"></TextBox>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0">Browser Type</TextBlock>
+            <ComboBox Name="browser" ItemsSource="{Binding Source={StaticResource BTypeEnum}}" SelectedItem="{Binding BrowserType, Mode=TwoWay}" Grid.Column="1" />
+        </Grid>
+        <Grid Height="30" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Name="Accept" Grid.Column="0" IsDefault="True" Width="290" Content="_Accept" Click="Accept_Click" />
+            <Button Name="Cancel"  Grid.Column="1" IsCancel="True" Width="290" Content="_Cancel"/>
+        </Grid>
+    </StackPanel>
+</Window>

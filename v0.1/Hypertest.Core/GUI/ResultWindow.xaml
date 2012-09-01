@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="Hypertest.Core.GUI.ResultWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:utils="clr-namespace:Hypertest.Core.Utils"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <utils:StatusToBitmapSource x:Key="IconConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <TreeView Grid.Column="0" Name="treeView1" ItemsSource="{Binding Children}" AllowDrop="True">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{Binding Path=Status, Converter={StaticResource IconConverter}}" Height="16" Width="16"/>
+                        <TextBlock Text="{Binding Path=TestCase.Name}" Margin="4,0,4,0" ToolTip="{Binding Description}"/>
+                    </StackPanel>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+        <ContentControl Grid.Column="1" DataContext="{Binding ElementName=treeView1, Path=SelectedItem}" Content="{Binding Path=ResultUI}" />
+    </Grid>
+</UserControl>

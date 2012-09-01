@@ -1,0 +1,113 @@
+﻿<Window x:Class="Hypertest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock"
+        xmlns:utils="clr-namespace:Hypertest.Core.Utils;assembly=Hypertest.Core"
+        xmlns:core="clr-namespace:Hypertest.Core;assembly=Hypertest.Core"
+        xmlns:gui="clr-namespace:Hypertest.Core.GUI;assembly=Hypertest.Core"
+        Title="Hypertest" Height="600" Width="800" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow" WindowState="Maximized" Icon="Hypertest.ico">
+    <Window.Resources>
+        <RoutedUICommand x:Key="Run" Text="Run Current Scenario"/>
+        <RoutedUICommand x:Key="ScenarioSettings" Text="Sets the current scenario's settings"/>
+        <RoutedUICommand x:Key="Stop" Text="Stops the current run"/>
+        <RoutedUICommand x:Key="ShowTestPane" Text="Shows the test pane if not visible" />
+    </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{StaticResource Run}" Key="R" Modifiers="Ctrl" Gesture="Ctrl+R"/>
+        <KeyBinding Command="{StaticResource ShowTestPane}" Key="T" Modifiers="Ctrl" Gesture="Ctrl+T"/>
+    </Window.InputBindings>
+    <Window.CommandBindings>
+        <CommandBinding Command="New" CanExecute="CommandBinding_CanNew" Executed="CommandBinding_NewExecuted" />
+        <CommandBinding Command="Save" CanExecute="CommandBinding_CanSave" Executed="CommandBinding_SaveExecuted" />
+        <CommandBinding Command="SaveAs" CanExecute="CommandBinding_CanSaveAs" Executed="CommandBinding_SaveAsExecuted" />
+        <CommandBinding Command="Open" CanExecute="CommandBinding_CanOpen" Executed="CommandBinding_OpenExecuted" />
+        <CommandBinding Command="Close" CanExecute="CommandBinding_CanClose" Executed="CommandBinding_CloseExecuted" />
+        <CommandBinding Command="{StaticResource Run}" CanExecute="CommandBinding_CanRun" Executed="CommandBinding_RunExecuted" />
+        <CommandBinding Command="{StaticResource ScenarioSettings}" CanExecute="CommandBinding_CanScenarioSettings" Executed="CommandBinding_ScenarioSettingsExecuted" />
+        <CommandBinding Command="{StaticResource ShowTestPane}" CanExecute="CommandBinding_CanShowTestPane" Executed="CommandBinding_ShowTestPaneExecuted" />
+        <CommandBinding Command="{StaticResource Stop}" CanExecute="CommandBinding_CanStop" Executed="CommandBinding_StopExecuted" />
+    </Window.CommandBindings>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24" />
+            <RowDefinition Height="24" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="24" />
+        </Grid.RowDefinitions>
+        
+        <Menu IsMainMenu="True" Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New..." Command="New">
+                    <MenuItem.Icon>
+                        <Image Source="Images/new.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open..." Command="Open">
+                    <MenuItem.Icon>
+                        <Image Source="Images/open.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" Command="Save">
+                    <MenuItem.Icon>
+                        <Image Source="Images/save.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save As..." Command="SaveAs"/>
+                <MenuItem Header="E_xit" Command="Close"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" Command="Undo">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Undo.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Redo" Command="Redo">
+                    <MenuItem.Icon>
+                        <Image Source="Images/Redo.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Cut" Command="Cut">
+                    <MenuItem.Icon>
+                        <Image Source="Images/cut.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Copy" Command="Copy">
+                    <MenuItem.Icon>
+                        <Image Source="Images/copy.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Paste" Command="Paste">
+                    <MenuItem.Icon>
+                        <Image Source="Images/paste.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Run" Command="{StaticResource Run}" InputGestureText="Ctrl+R">
+                    <MenuItem.Icon>
+                        <Image Source="Images/run.png" Height="16" Width="16"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Stop" Command="{StaticResource Stop}"/>
+                <MenuItem Header="_Tests" Command="{StaticResource ShowTestPane}" InputGestureText="Ctrl+T"/>
+                <MenuItem Header="S_cenario Settings" Command="{StaticResource ScenarioSettings}" />
+            </MenuItem>
+            <MenuItem Header="_Help" />
+        </Menu>
+
+        <ad:DockingManager x:Name="dockManager" Grid.Row="2">
+            <ad:ResizingPanel Orientation="Vertical">
+                <ad:ResizingPanel Orientation="Horizontal">
+                    <ad:DocumentPane Name="docPane">
+                    </ad:DocumentPane>
+                    <ad:DockablePane ad:ResizingPanel.ResizeWidth="250">
+                        <ad:DockableContent x:Name="testsContent" Title="Tests">
+                            <gui:TestsPane Name="testPane1"></gui:TestsPane>
+                        </ad:DockableContent>
+                    </ad:DockablePane>
+                </ad:ResizingPanel>
+            </ad:ResizingPanel>
+        </ad:DockingManager>
+    </Grid>
+</Window>

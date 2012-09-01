@@ -1,0 +1,37 @@
+=================================
+       Hypertest (v0.1)
+  chandramouleswaran@gmail.com
+=================================
+Inspired by QALiber and Selenium, and wanting to learn WPF/C# I started out this project (during my spare time) to automate some web testing at work. The project is still in the initial stages but a decent amount of functionalities work.
+
+Stuff that works
+- Variables, visual scripting
+- Performing simple actions on elements (Click/Send keys)
+- Complex searching within elements
+- Simple expression evaluation
+- Storing element's properties as variables
+- Taking screen shots at the end of a test step
+- Easy to create new test cases
+- Different browsers (Chrome, Firefox, IE)
+
+Plans for future
+- Complex inputs (Dragging/dropping, Ctrl + Click etc)
+- Partial screenshots
+- Image comparison
+- OCR over an area and analyze text
+- Better organization of tests in the tests pane
+- Plans to have different types of scenario - currently there is only web scenario. This can be extended to test an app (WPF UIA Based)
+- Create/reuse existing property grid in test case whenever possible
+- Create a runner service? This way runner can be installed in a remote system and the scenario can be serialized and sent to the system for execution
+- Any new ideas/suggestion??
+
+Please feel free to contact me if you have some ideas and if you would like to contribute to this project.
+
+The project has the following dependencies
+1. AvalonDock - This is an open source control/tool used in SharpDevelop for the docking system. No code was modified - only the DLL was used. For more details: http://avalondock.codeplex.com/
+2. Selenium Webdriver - Used to create browser instance and issue commands. For more details: http://seleniumhq.org/
+
+All the dependencies of the projects are open source. I would like to keep this project open source as well under the GPL.
+
+Thanks
+Chandramouleswaran

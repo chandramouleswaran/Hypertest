@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="Hypertest.Core.GUI.BaseResultControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:utils="clr-namespace:Hypertest.Core.Utils;assembly=Hypertest.Core"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="300" d:DesignWidth="631">
+    <StackPanel Name="StackLayout">
+        <Expander Name="BaseExpander" IsExpanded="True" Header="General settings">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Name</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding Path=Name}" IsReadOnly="True"></TextBox>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Output message</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding Path=OutputMessage}" IsReadOnly="True" Height="80" AcceptsReturn="True" TextWrapping="Wrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Wait time (in ms)</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding Path=WaitTime}" IsReadOnly="True"></TextBox>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Actual value</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding Path=Actual}" IsReadOnly="True"></TextBox>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0">Expected value</TextBlock>
+                    <TextBox Grid.Column="1" Text="{Binding Path=Expected}" IsReadOnly="True"></TextBox>
+                </Grid>
+            </StackPanel>
+        </Expander>
+        <Expander Name="TestSpecificContent" Header="Test specific result" IsExpanded="True">            
+        </Expander>
+        <Expander Name="PostRunValues" Header="Screenshot" IsExpanded="True">
+            <StackPanel>
+                <Image Source="{Binding ScreenShotLocation}" Stretch="Uniform"></Image>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
+</UserControl>
