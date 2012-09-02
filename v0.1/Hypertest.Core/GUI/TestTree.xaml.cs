@@ -281,7 +281,8 @@ namespace Hypertest.Core.GUI
         #region Paste
         private void CommandBinding_CanPaste(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = ((treeView1.Items.Count == 0 && treeView1.IsFocused) || treeView1.SelectedItem != null);
+            TestCase copyValue = Clipboard.GetData("hypertest") as TestCase;
+            e.CanExecute = (copyValue != null && (treeView1.Items.Count == 0 && treeView1.IsFocused || treeView1.SelectedItem != null));
         }
 
         private void CommandBinding_PasteExecuted(object sender, ExecutedRoutedEventArgs e)

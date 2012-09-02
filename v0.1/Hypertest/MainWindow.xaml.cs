@@ -65,7 +65,7 @@ namespace Hypertest
 
         private void CommandBinding_CanSave(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (dockManager.ActiveDocument != null)
+            if (dockManager != null && dockManager.ActiveDocument != null)
             {
                 TestWindowObject obj = dockManager.ActiveDocument.DataContext as TestWindowObject;
                 if (obj != null)
@@ -86,7 +86,7 @@ namespace Hypertest
         
         private void CommandBinding_CanSaveAs(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (dockManager.ActiveDocument != null)
+            if (dockManager != null && dockManager.ActiveDocument != null)
             {
                 TestWindowObject obj = dockManager.ActiveDocument.DataContext as TestWindowObject;
                 if (obj != null)
@@ -112,8 +112,9 @@ namespace Hypertest
 
         private void CommandBinding_CloseExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            foreach (DocumentContent cnt in dockManager.Documents)
+            while(dockManager.Documents.Count != 0)
             {
+                DocumentContent cnt = dockManager.Documents[0];
                 TestWindowObject obj = cnt.DataContext as TestWindowObject;
                 if (obj != null && Runner.Instance.IsRunning == false)
                 {
@@ -126,7 +127,7 @@ namespace Hypertest
 
         private void CommandBinding_CanRun(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (dockManager.ActiveDocument != null)
+            if (dockManager != null && dockManager.ActiveDocument != null)
             {
                 TestWindowObject obj = dockManager.ActiveDocument.DataContext as TestWindowObject;
                 if (obj != null && Runner.Instance.IsRunning == false)
@@ -147,7 +148,7 @@ namespace Hypertest
 
         private void CommandBinding_CanScenarioSettings(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (dockManager.ActiveDocument != null)
+            if (dockManager != null && dockManager.ActiveDocument != null)
             {
                 TestWindowObject obj = dockManager.ActiveDocument.DataContext as TestWindowObject;
                 if (obj != null)

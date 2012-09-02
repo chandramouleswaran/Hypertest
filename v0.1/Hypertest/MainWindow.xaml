@@ -11,6 +11,14 @@
         <RoutedUICommand x:Key="ScenarioSettings" Text="Sets the current scenario's settings"/>
         <RoutedUICommand x:Key="Stop" Text="Stops the current run"/>
         <RoutedUICommand x:Key="ShowTestPane" Text="Shows the test pane if not visible" />
+
+        <Style TargetType="Image">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{StaticResource Run}" Key="R" Modifiers="Ctrl" Gesture="Ctrl+R"/>
@@ -96,6 +104,36 @@
             <MenuItem Header="_Help" />
         </Menu>
 
+        <ToolBar Name="toolBar1"  Grid.Row="1">
+            <Button Command="New" ToolTip="New">
+                <Image Source="Images/new.png" />
+            </Button>
+            <Button Command="Open" ToolTip="Open">
+                <Image Source="Images/open.png" />
+            </Button>
+            <Button Command="Save" ToolTip="Save">
+                <Image Source="Images/save.png" />
+            </Button>
+            <Button Command="Undo" ToolTip="Undo">
+                <Image Source="Images/undo.png" />
+            </Button>
+            <Button Command="Redo" ToolTip="Redo">
+                <Image Source="Images/redo.png" />
+            </Button>
+            <Button Command="Cut" ToolTip="Cut">
+                <Image Source="Images/cut.png" />
+            </Button>
+            <Button Command="Copy" ToolTip="Copy">
+                <Image Source="Images/copy.png" />
+            </Button>
+            <Button Command="Paste" ToolTip="Paste">
+                <Image Source="Images/paste.png" />
+            </Button>
+            <Button Command="{StaticResource Run}" ToolTip="Run">
+                <Image Source="Images/run.png" IsEnabled="{Binding IsEnabled}" />
+            </Button>
+        </ToolBar>
+ 
         <ad:DockingManager x:Name="dockManager" Grid.Row="2">
             <ad:ResizingPanel Orientation="Vertical">
                 <ad:ResizingPanel Orientation="Horizontal">
