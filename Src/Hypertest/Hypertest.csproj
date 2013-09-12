@@ -177,6 +177,9 @@
   <ItemGroup>
     <Resource Include="Images\run.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Hypertest.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
