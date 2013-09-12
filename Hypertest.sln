@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypertest", "Src\Hypertest\Hypertest.csproj", "{FE7449BA-E2BB-4420-ADB0-CE87D3691F70}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypertest.Core", "Src\Hypertest.Core\Hypertest.Core.csproj", "{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}"
