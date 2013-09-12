@@ -11,21 +11,19 @@
 #endregion
 
 using System.Windows;
+using Wide.Splash;
 
 namespace Hypertest
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaction logic for AppSplash.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class AppSplash : Window, ISplashView
     {
-        private HTBootstrapper b;
-
-        protected override void OnStartup(StartupEventArgs e)
+        public AppSplash(SplashViewModel model)
         {
-            base.OnStartup(e);
-            b = new HTBootstrapper();
-            b.Run();
+            InitializeComponent();
+            DataContext = model;
         }
     }
 }

@@ -10,22 +10,41 @@
 
 #endregion
 
-using System.Windows;
+using System.Collections.Generic;
+using Microsoft.Practices.Prism.Modularity;
+using System.IO;
 
 namespace Hypertest
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Allows our shell to probe multiple directories for module assemblies
     /// </summary>
-    public partial class App : Application
+    public class MultipleDirectoryModuleCatalog : DirectoryModuleCatalog
     {
-        private HTBootstrapper b;
+        private readonly IList<string> _pathsToProbe;
 
-        protected override void OnStartup(StartupEventArgs e)
+        /// <summary>
+        /// Initializes a new instance of the MultipleDirectoryModuleCatalog class.
+        /// </summary>
+        /// <param name="pathsToProbe">An IList of paths to probe for modules.</param>
+        public MultipleDirectoryModuleCatalog(IList<string> pathsToProbe)
         {
-            base.OnStartup(e);
-            b = new HTBootstrapper();
-            b.Run();
+            _pathsToProbe = pathsToProbe;
+        }
+
+        /// <summary>
+        /// Provides multiple-path loading of modules over the default <see cref="DirectoryModuleCatalog.InnerLoad"/> method.
+        /// </summary>
+        protected override void InnerLoad()
+        {
+            foreach (string path in _pathsToProbe)
+            {
+                ModulePath = path;
+                if(Directory.Exists(path))
+                {
+                    base.InnerLoad();
+                }
+            }
         }
     }
 }
