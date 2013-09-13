@@ -40,7 +40,7 @@ namespace Hypertest
         {
             get
             {
-                ImageSource imageSource = new BitmapImage(new Uri("pack://application:,,,/Hypertest;component/Hypertest.ico"));
+                ImageSource imageSource = new BitmapImage(new Uri("pack://application:,,,/Hypertest;component/Hypertest.png"));
                 return imageSource;
             }
         }
