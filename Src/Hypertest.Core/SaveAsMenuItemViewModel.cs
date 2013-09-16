@@ -15,6 +15,7 @@ using System.Windows.Media;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Prism.Events;
 using Wide.Interfaces;
+using Wide.Interfaces.Controls;
 using Wide.Interfaces.Events;
 
 namespace Hypertest.Core
