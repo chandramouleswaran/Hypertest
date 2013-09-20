@@ -38,7 +38,18 @@ namespace Hypertest.Core.Manager
         public void Dispose()
         {
             DetachCollectionChanged(_collections);
-            DetachPropertyChanged(_targets);
+            foreach (INotifyPropertyChanged target in _targets)
+            {
+                UnmonitorObject(target);
+            }
+        }
+
+        public void AddChange(Change change, string description)
+        {
+            if (_isWorking == true)
+                return;
+            _undoStack.Push(new ChangeSet(change, description));
+            _redoStack.Clear();
         }
 
         public void MonitorCollection(INotifyCollectionChanged collection)
@@ -50,12 +61,30 @@ namespace Hypertest.Core.Manager
             }
         }
 
+        public void UnmonitorCollection(INotifyCollectionChanged collection)
+        {
+            if (_collections.Contains(collection))
+            {
+                _collections.Remove(collection);
+                collection.CollectionChanged -= collection_CollectionChanged;
+            }
+        }
+
         public void MonitorObject(INotifyPropertyChanged target)
         {
             if (!_targets.Contains(target))
             {
                 _targets.Add(target);
                 target.PropertyChanged += target_PropertyChanged;
+            }
+        }
+
+        public void UnmonitorObject(INotifyPropertyChanged target)
+        {
+            if (_targets.Contains(target))
+            {
+                _targets.Remove(target);
+                target.PropertyChanged -= target_PropertyChanged;
             }
         }
 
@@ -137,19 +166,7 @@ namespace Hypertest.Core.Manager
             }
         }
 
-        private void AttachPropertyChanged(IList e)
-        {
-            foreach (INotifyPropertyChanged item in e)
-                item.PropertyChanged += target_PropertyChanged;
-        }
-
-        private void DetachPropertyChanged(IList e)
-        {
-            foreach (INotifyPropertyChanged item in e)
-                item.PropertyChanged -= target_PropertyChanged;
-        }
-
-        private void DetachCollectionChanged(IEnumerable<INotifyCollectionChanged> e)
+        private void DetachCollectionChanged(IList e)
         {
             foreach (INotifyCollectionChanged item in e)
                 item.CollectionChanged -= collection_CollectionChanged;
@@ -164,6 +181,7 @@ namespace Hypertest.Core.Manager
             if (newArgs != null)
             {
                 _undoStack.Push(new ChangeSet(new Change(sender, newArgs), newArgs.Description));
+                _redoStack.Clear();
             }
         }
 
@@ -176,16 +194,23 @@ namespace Hypertest.Core.Manager
             if (e != null)
             {
                 _undoStack.Push(new ChangeSet(new Change(sender, e), "Collection changed"));
+                _redoStack.Clear();
             }
 
             if (e.OldItems != null)
             {
-                DetachPropertyChanged(e.OldItems);
+                foreach (INotifyPropertyChanged item in e.OldItems)
+                {
+                    UnmonitorObject(item);
+                }
             }
 
             if (e.NewItems != null)
             {
-                AttachPropertyChanged(e.NewItems);
+                foreach (INotifyPropertyChanged item in e.NewItems)
+                {
+                    MonitorObject(item);
+                }
             }
         }
     }

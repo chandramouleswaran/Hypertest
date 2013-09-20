@@ -59,6 +59,10 @@ namespace Hypertest.Core.Handlers
         {
             var vm = _container.Resolve<WebTestScenarioViewModel>();
             var model = _container.Resolve<WebTestScenario>();
+            model.Description = "wow another scenario!";
+            model.Children.Add(new FolderTestCase() { Description = "My dear folder" });
+            model.IsSelected = true;
+            model.Manager.Clear();
             var view = _container.Resolve<WebTestScenarioView>();
 
             //Model details
@@ -71,6 +75,8 @@ namespace Hypertest.Core.Handlers
             vm.View.DataContext = model;
             vm.SetHandler(this);
             model.SetDirty(true);
+            model.TestRegistry = _testRegistry;
+            model.LoggerService = _loggerService;
 
             return vm;
         }
@@ -119,12 +125,15 @@ namespace Hypertest.Core.Handlers
                     //Model details
                     model.SetLocation(info);
                     model.SetDirty(false);
+                    model.TestRegistry = _testRegistry;
+                    model.LoggerService = _loggerService;
 
                     //Set the model and view
                     vm.SetModel(model);
                     vm.SetView(view);
                     vm.Title = Path.GetFileName(location);
                     vm.View.DataContext = model;
+                    view.Focus();
 
                     return vm;
                 }

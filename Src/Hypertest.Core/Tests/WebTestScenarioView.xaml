@@ -5,17 +5,39 @@
              xmlns:hyConv="clr-namespace:Hypertest.Core.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
         <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
     </UserControl.Resources>
+    <UserControl.CommandBindings>
+        <CommandBinding Command="Copy" CanExecute="CommandBinding_CanCopy" Executed="CommandBinding_CopyExecuted" />
+        <CommandBinding Command="Paste" CanExecute="CommandBinding_CanPaste" Executed="CommandBinding_PasteExecuted" />
+        <CommandBinding Command="Delete" CanExecute="CommandBinding_CanDelete" Executed="CommandBinding_DeleteExecuted" />
+        <CommandBinding Command="Cut" CanExecute="CommandBinding_CanCut" Executed="CommandBinding_CutExecuted" />
+        <CommandBinding Command="Undo" CanExecute="CommandBinding_CanUndo" Executed="CommandBinding_UndoExecuted" />
+        <CommandBinding Command="Redo" CanExecute="CommandBinding_CanRedo" Executed="CommandBinding_RedoExecuted" />
+    </UserControl.CommandBindings>
     <Grid>
-        <TreeView ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" Grid.Column="0">
+        <TreeView Name="treeView1" ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" Grid.Column="0" SelectedItemChanged="treeView1_SelectedItemChanged">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
                     <TextBlock Text="{Binding Description}" Margin="4,0,4,0"/>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Trigger.Setters>
+                                <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
+                                <Setter Property="FontWeight" Value="Bold" />
+                            </Trigger.Setters>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
     </Grid>
 </UserControl>

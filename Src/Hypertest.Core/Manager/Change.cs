@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Specialized;
+using System.Windows;
 using Hypertest.Core.Tests;
 using Wide.Utils;
 
@@ -8,15 +9,18 @@ namespace Hypertest.Core.Manager
 {
     public class Change
     {
-        public Change(object target, EventArgs args)
+        public Change(object target, EventArgs args, string property="")
         {
             this.args = args;
             this.target = target;
+            this.property = property;
         }
 
         public object target { get; internal set; }
 
         public EventArgs args { get; internal set; }
+
+        public string property { get; internal set; }
 
         internal void Undo()
         {
@@ -27,6 +31,18 @@ namespace Hypertest.Core.Manager
             else if (args is NotifyCollectionChangedEventArgs)
             {
                 CollectionUndo();
+            }
+            else if (args is RoutedPropertyChangedEventArgs<object>)
+            {
+                RoutedPropertyChangedEventArgs<object> e = args as RoutedPropertyChangedEventArgs<object>;
+                if (e == target)
+                {
+                    object o1 = e.OldValue;
+                    object o2 = e.NewValue;
+                    object backup = o1.GetType().GetProperty(this.property).GetValue(o1);
+                    o1.GetType().GetProperty(this.property).SetValue(o1, o2.GetType().GetProperty(this.property).GetValue(o2), null);
+                    o2.GetType().GetProperty(this.property).SetValue(o2, backup, null);
+                }
             }
         }
 
@@ -39,6 +55,18 @@ namespace Hypertest.Core.Manager
             else if (args is NotifyCollectionChangedEventArgs)
             {
                 CollectionRedo();
+            }
+            else if (args is RoutedPropertyChangedEventArgs<object>)
+            {
+                RoutedPropertyChangedEventArgs<object> e = args as RoutedPropertyChangedEventArgs<object>;
+                if (e == target)
+                {
+                    object o1 = e.OldValue;
+                    object o2 = e.NewValue;
+                    object backup = o1.GetType().GetProperty(this.property).GetValue(o1);
+                    o1.GetType().GetProperty(this.property).SetValue(o1, o2.GetType().GetProperty(this.property).GetValue(o2), null);
+                    o2.GetType().GetProperty(this.property).SetValue(o2, backup, null);
+                }
             }
         }
 

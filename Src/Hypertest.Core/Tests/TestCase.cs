@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using Hypertest.Core.Interfaces;
 using Wide.Interfaces.Services;
 using Wide.Interfaces;
+using System.Xml.Serialization;
 
 namespace Hypertest.Core.Tests
 {
@@ -12,11 +13,14 @@ namespace Hypertest.Core.Tests
     /// The basic unit of a test case in the Hypertest framework
     /// </summary>
     [DataContract]
+    [Serializable]
     public abstract class TestCase : ContentModel, ICloneable
     {
         #region Members
-        private TestCase _parent;
+        private FolderTestCase _parent;
         private string _description;
+        protected bool _isSelected;
+        protected bool _isExpanded;
         #endregion
 
         #region CTOR
@@ -65,6 +69,7 @@ namespace Hypertest.Core.Tests
             //This is where we want to look at the properties and assign it to variables
         }
 
+        #region Properties
         [DataMember]
         public string Description
         {
@@ -75,12 +80,14 @@ namespace Hypertest.Core.Tests
                 {
                     string oldValue = _description;
                     _description = value;
-                    RaisePropertyChanged();
+                    if (oldValue != value)
+                        RaisePropertyChangedWithValues(oldValue, _description, "Description change");
                 }
             }
         }
 
-        public TestCase Parent
+        [XmlIgnore]
+        public FolderTestCase Parent
         {
             get { return _parent; }
             internal set
@@ -90,6 +97,31 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        [XmlIgnore]
+        public virtual bool IsSelected
+        {
+            get { return _isSelected; }
+            internal set
+            {
+                _isSelected = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [XmlIgnore]
+        public virtual bool IsExpanded
+        {
+            get { return _isExpanded; }
+            internal set
+            {
+                bool oldValue = _isExpanded;
+                _isExpanded = value;
+                if(oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _isExpanded, "Expand - " + _isExpanded.ToString());
+            }
+        }
+
+        [XmlIgnore]
         public TestScenario Scenario
         {
             get
@@ -103,17 +135,21 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        [XmlIgnore]
         protected internal virtual ITestRegistry TestRegistry
         {
             get { return Scenario.TestRegistry; }
             set {}
         }
 
+        [XmlIgnore]
         protected internal virtual ILoggerService LoggerService
         {
             get { return Scenario.LoggerService; }
             set { }
         }
+
+        #endregion
 
         #region ICloneable
         public object Clone()
