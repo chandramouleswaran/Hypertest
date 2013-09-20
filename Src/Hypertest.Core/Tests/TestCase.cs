@@ -65,6 +65,7 @@ namespace Hypertest.Core.Tests
             //This is where we want to look at the properties and assign it to variables
         }
 
+        [DataMember]
         public string Description
         {
             get { return _description; }
@@ -74,7 +75,7 @@ namespace Hypertest.Core.Tests
                 {
                     string oldValue = _description;
                     _description = value;
-                    RaisePropertyChangedWithUndo(oldValue, _description, "Description change");
+                    RaisePropertyChanged();
                 }
             }
         }
@@ -114,25 +115,22 @@ namespace Hypertest.Core.Tests
             set { }
         }
 
-        public override event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void RaisePropertyChangedWithUndo(object oldValue, object newValue, string description, [CallerMemberName] string propertyName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedExtendedEventArgs(propertyName, oldValue, newValue, description));
-            }
-        }
-
         #region ICloneable
         public object Clone()
-        {       
-            var serializer = new DataContractSerializer(this.GetType(), this.TestRegistry.Tests);
-            using (var ms = new System.IO.MemoryStream())
+        {
+            if (this.TestRegistry != null)
             {
-                serializer.WriteObject(ms, this);
-                ms.Position = 0;
-                return (TestCase)serializer.ReadObject(ms);
+                var serializer = new DataContractSerializer(this.GetType(), this.TestRegistry.Tests);
+                using (var ms = new System.IO.MemoryStream())
+                {
+                    serializer.WriteObject(ms, this);
+                    ms.Position = 0;
+                    return (TestCase) serializer.ReadObject(ms);
+                }
+            }
+            else
+            {
+                throw new Exception("Test registry is null - please set the scenario's registry");
             }
         }
         #endregion

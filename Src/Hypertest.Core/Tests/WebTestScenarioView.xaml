@@ -10,10 +10,10 @@
         <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
     </UserControl.Resources>
     <Grid>
-        <TreeView ItemsSource="{Binding Scenario, Converter={StaticResource ResourceKey=scenarioConverter}}" Grid.Column="0">
+        <TreeView ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" Grid.Column="0">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
-                    <TextBlock Text="{Binding Name}" Margin="4,0,4,0"/>
+                    <TextBlock Text="{Binding Description}" Margin="4,0,4,0"/>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

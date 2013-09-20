@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Specialized;
 using Hypertest.Core.Tests;
+using Wide.Utils;
 
 namespace Hypertest.Core.Manager
 {

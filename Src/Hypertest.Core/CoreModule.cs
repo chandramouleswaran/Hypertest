@@ -27,6 +27,8 @@ using Wide.Interfaces.Themes;
 using System.Windows;
 using Hypertest.Core.Handlers;
 using Hypertest.Core.Tests;
+using Hypertest.Core.Interfaces;
+using Hypertest.Core.Service;
 
 namespace Hypertest.Core
 {
@@ -85,13 +87,18 @@ namespace Hypertest.Core
 
         private void RegisterParts()
         {
-            //TODO
             _container.RegisterType<WebTestScenarioHandler>();
             _container.RegisterType<WebTestScenarioViewModel>();
             _container.RegisterType<WebTestScenarioView>();
+            _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
+
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
+
+            ITestRegistry registry = _container.Resolve<ITestRegistry>();
+            //Register the test cases that you want to be able to participate
+            registry.Add(typeof(FolderTestCase));
         }
 
         private void LoadTheme()

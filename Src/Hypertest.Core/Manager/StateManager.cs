@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using Hypertest.Core.Tests;
+using Wide.Utils;
 
 namespace Hypertest.Core.Manager
 {

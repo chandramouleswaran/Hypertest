@@ -15,15 +15,19 @@ namespace Hypertest.Core.Converters
             {
                 ObservableCollection<TestScenario> list = new ObservableCollection<TestScenario>();
                 list.Add(scenario);
-                return scenario;
-
+                return list;
             }
             return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            ObservableCollection<TestScenario> list = value as ObservableCollection<TestScenario>;
+            if(list != null)
+            {
+                return list[0];
+            }
+            return null;
         }
     }
 }

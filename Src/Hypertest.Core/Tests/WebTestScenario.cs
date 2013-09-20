@@ -10,7 +10,10 @@ namespace Hypertest.Core.Tests
     {
         public WebTestScenario() : base()
         {
-
+            this.URL = "http://www.google.com";
+            this.Description = "Web test scenario root !!";
+            this.Children.Add(new FolderTestCase() {Description = "Folder 1"});
+            this.Children.Add(new FolderTestCase() { Description = "Folder 2" });
         }
 
         [DataMember]
