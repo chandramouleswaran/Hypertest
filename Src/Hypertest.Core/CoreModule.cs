@@ -25,6 +25,8 @@ using Wide.Interfaces.Services;
 using Wide.Interfaces.Settings;
 using Wide.Interfaces.Themes;
 using System.Windows;
+using Hypertest.Core.Handlers;
+using Hypertest.Core.Tests;
 
 namespace Hypertest.Core
 {
@@ -84,12 +86,12 @@ namespace Hypertest.Core
         private void RegisterParts()
         {
             //TODO
-            //_container.RegisterType<MDHandler>();
-            //_container.RegisterType<MDViewModel>();
-            //_container.RegisterType<MDView>();
+            _container.RegisterType<WebTestScenarioHandler>();
+            _container.RegisterType<WebTestScenarioViewModel>();
+            _container.RegisterType<WebTestScenarioView>();
 
-            //IContentHandler handler = _container.Resolve<MDHandler>();
-            //_container.Resolve<IContentHandlerRegistry>().Register(handler);
+            IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
+            _container.Resolve<IContentHandlerRegistry>().Register(handler);
         }
 
         private void LoadTheme()
