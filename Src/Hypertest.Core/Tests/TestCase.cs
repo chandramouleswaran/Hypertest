@@ -103,8 +103,11 @@ namespace Hypertest.Core.Tests
             get { return _isSelected; }
             internal set
             {
-                _isSelected = value;
-                RaisePropertyChanged();
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    RaisePropertyChanged();
+                }
             }
         }
 

@@ -1,22 +1,30 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using Hypertest.Core.Tests;
 using Wide.Utils;
 
 namespace Hypertest.Core.Manager
 {
     public class StateManager
     {
+
+        #region Members
         private Stack<ChangeSet> _undoStack;
         private Stack<ChangeSet> _redoStack;
         private bool _isWorking;
+        private bool _isBatch;
+        private int _batchCounter = 0;
+        private ChangeSet _currentBatch;
         private ObservableCollection<INotifyPropertyChanged> _targets;
         private ObservableCollection<INotifyCollectionChanged> _collections;
+        public event EventHandler StateChange;
+        #endregion
 
+        #region CTOR
         public StateManager()
         {
             _undoStack = new Stack<ChangeSet>();
@@ -25,9 +33,59 @@ namespace Hypertest.Core.Manager
             _targets = new ObservableCollection<INotifyPropertyChanged>();
             _collections = new ObservableCollection<INotifyCollectionChanged>();
         }
+        #endregion
 
-        public IEnumerable<ChangeSet> UndoStack { get { return _undoStack; } }
-        public IEnumerable<ChangeSet> RedoStack { get { return _redoStack; } }
+        #region Property
+        public IEnumerable<ChangeSet> UndoStack
+        {
+            get { return _undoStack; }
+        }
+
+        public IEnumerable<ChangeSet> RedoStack
+        {
+            get { return _redoStack; }
+        }
+
+        public bool IsBatch
+        {
+            get { return _isBatch; }
+        }
+        #endregion
+
+        #region Batch
+
+        public void BeginChangeSetBatch(string batchDescription)
+        {
+            if (_isBatch)
+                return;
+
+            _batchCounter++;
+            _isBatch = true;
+
+            if (_batchCounter == 1)
+            {
+                _currentBatch = new ChangeSet(batchDescription);
+                _undoStack.Push(_currentBatch);
+            }
+        }
+
+        public void EndChangeSetBatch()
+        {
+            _batchCounter--;
+
+            if (_batchCounter < 0)
+                _batchCounter = 0;
+
+            if (_batchCounter == 0)
+            {
+                _currentBatch = null;
+                _isBatch = false;
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         public void Clear()
         {
@@ -44,13 +102,32 @@ namespace Hypertest.Core.Manager
             }
         }
 
+
+        private void DetachCollectionChanged(IList e)
+        {
+            foreach (INotifyCollectionChanged item in e)
+                item.CollectionChanged -= collection_CollectionChanged;
+        }
+
         public void AddChange(Change change, string description)
         {
             if (_isWorking == true)
                 return;
-            _undoStack.Push(new ChangeSet(change, description));
+            if (_isBatch)
+            {
+                _currentBatch.Changes.Add(change);
+            }
+            else
+            {
+                _undoStack.Push(new ChangeSet(change, description));
+                RaiseStateChangeEvent();
+            }
             _redoStack.Clear();
         }
+
+        #endregion
+
+        #region Monitor & Unmonitor
 
         public void MonitorCollection(INotifyCollectionChanged collection)
         {
@@ -88,6 +165,10 @@ namespace Hypertest.Core.Manager
             }
         }
 
+        #endregion
+
+        #region Undo & Redo
+
         public bool CanUndo()
         {
             return _undoStack.Count > 0;
@@ -118,6 +199,7 @@ namespace Hypertest.Core.Manager
                     actionDone = true;
 
                     _redoStack.Push(changeSet);
+                    RaiseStateChangeEvent();
 
                 } while (!done);
             }
@@ -157,6 +239,7 @@ namespace Hypertest.Core.Manager
                     actionDone = true;
 
                     _undoStack.Push(changeSet);
+                    RaiseStateChangeEvent();
 
                 } while (!done);
             }
@@ -166,13 +249,11 @@ namespace Hypertest.Core.Manager
             }
         }
 
-        private void DetachCollectionChanged(IList e)
-        {
-            foreach (INotifyCollectionChanged item in e)
-                item.CollectionChanged -= collection_CollectionChanged;
-        }
+        #endregion
 
-        void target_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        #region Events
+
+        private void target_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_isWorking == true)
                 return;
@@ -180,20 +261,37 @@ namespace Hypertest.Core.Manager
             PropertyChangedExtendedEventArgs newArgs = e as PropertyChangedExtendedEventArgs;
             if (newArgs != null)
             {
-                _undoStack.Push(new ChangeSet(new PropertyChange(sender, newArgs), newArgs.Description));
+                if (_isBatch)
+                {
+                    _currentBatch.Changes.Add(new PropertyChange(sender, newArgs));
+                    RaiseStateChangeEvent();
+                }
+                else
+                {
+                    _undoStack.Push(new ChangeSet(new PropertyChange(sender, newArgs), newArgs.Description));
+                    RaiseStateChangeEvent();
+                }
                 _redoStack.Clear();
             }
         }
 
 
-        void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (_isWorking == true)
                 return;
 
             if (e != null)
             {
-                _undoStack.Push(new ChangeSet(new CollectionChange(sender, e), "Collection changed"));
+                if (_isBatch)
+                {
+                    _currentBatch.Changes.Add(new CollectionChange(sender, e));
+                }
+                else
+                {
+                    _undoStack.Push(new ChangeSet(new CollectionChange(sender, e), "Collection changed"));
+                    RaiseStateChangeEvent();
+                }
                 _redoStack.Clear();
             }
 
@@ -213,5 +311,16 @@ namespace Hypertest.Core.Manager
                 }
             }
         }
+
+        private void RaiseStateChangeEvent()
+        {
+            if (StateChange != null)
+            {
+                StateChange(this, EventArgs.Empty);
+            }
+        }
+
+        #endregion
+
     }
 }

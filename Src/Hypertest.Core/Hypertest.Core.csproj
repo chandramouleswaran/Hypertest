@@ -89,7 +89,7 @@
     <Compile Include="Manager\Change.cs" />
     <Compile Include="Manager\ChangeSet.cs" />
     <Compile Include="Manager\CollectionChange.cs" />
-    <Compile Include="Manager\SinglePropertyChange.cs" />
+    <Compile Include="Manager\CommonPropertyChange.cs" />
     <Compile Include="Manager\PropertyChange.cs" />
     <Compile Include="Manager\StateManager.cs" />
     <Compile Include="Service\TestRegistry.cs" />

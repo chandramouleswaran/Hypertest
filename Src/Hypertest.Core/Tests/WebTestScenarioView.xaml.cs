@@ -27,6 +27,7 @@ namespace Hypertest.Core.Tests
 
         private void CommandBinding_CutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            scenario.Manager.BeginChangeSetBatch("Cut action");
             Copy();
             Delete();
             e.Handled = true;
@@ -72,8 +73,10 @@ namespace Hypertest.Core.Tests
                 FolderTestCase folder = treeView1.SelectedItem as FolderTestCase;
                 if(folder != null)
                 {
+                    scenario.Manager.BeginChangeSetBatch("Pasting");
                     folder.IsExpanded = true;
                     folder.Children.Add(copyValue);
+                    scenario.Manager.EndChangeSetBatch();
                 }
             }
             e.Handled = true;
@@ -88,7 +91,9 @@ namespace Hypertest.Core.Tests
 
         private void CommandBinding_DeleteExecuted(object sender, ExecutedRoutedEventArgs e)
         {
+            scenario.Manager.BeginChangeSetBatch("Delete action");
             Delete();
+            e.Handled = true;
         }
 
         private void Delete()
@@ -151,11 +156,15 @@ namespace Hypertest.Core.Tests
 
         private void treeView1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue != null && e.OldValue != null)
+            if (e.NewValue != null && e.OldValue != null && e.OldValue != e.NewValue)
             {
-                scenario.Manager.AddChange(new SinglePropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
+                scenario.Manager.AddChange(new CommonPropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
             }
             treeView1.Focus();
+            if(scenario.Manager.IsBatch)
+            {
+                scenario.Manager.EndChangeSetBatch();
+            }
         }
     }
 }

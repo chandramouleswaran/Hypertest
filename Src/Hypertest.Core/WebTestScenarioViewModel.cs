@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using Hypertest.Core.Handlers;
+﻿using Hypertest.Core.Handlers;
 using Hypertest.Core.Tests;
 using Wide.Core.TextDocument;
 using Wide.Interfaces;

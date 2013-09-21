@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Specialized;
-using System.Windows;
-using Hypertest.Core.Tests;
-using Wide.Utils;
-
-namespace Hypertest.Core.Manager
+﻿namespace Hypertest.Core.Manager
 {
-    public class SinglePropertyChange : Change
+    public class CommonPropertyChange : Change
     {
-        public SinglePropertyChange(object obj1, object obj2, string property)
+        public CommonPropertyChange(object obj1, object obj2, string property)
         {
             this.Object1 = obj1;
             this.Object2 = obj2;

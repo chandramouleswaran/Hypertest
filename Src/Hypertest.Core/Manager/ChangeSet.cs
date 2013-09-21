@@ -5,11 +5,15 @@ namespace Hypertest.Core.Manager
 {
     public class ChangeSet
     {
-        public ChangeSet(Change change, string description)
+        public ChangeSet(string description)
         {
             Changes = new List<Change>();
-            Changes.Add(change);
             this.Description = description;
+        }
+
+        public ChangeSet(Change change, string description) : this(description)
+        {
+            Changes.Add(change);
         }
         internal IList<Change> Changes { get; set; }
 

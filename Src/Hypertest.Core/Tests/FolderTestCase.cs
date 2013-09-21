@@ -10,22 +10,14 @@ namespace Hypertest.Core.Tests
     [Serializable]
     public class FolderTestCase : TestCase
     {
+        #region Members
         protected ObservableCollection<TestCase> _children;
+        #endregion
 
+        #region CTOR
         public FolderTestCase() : base()
         {
             Initialize();
-        }
-
-        [DataMember]
-        public ObservableCollection<TestCase> Children
-        {
-            get { return _children; }
-            set 
-            {
-                _children = value;
-                RaisePropertyChanged("Children"); 
-            }
         }
 
         private void Initialize(bool create = true)
@@ -35,6 +27,22 @@ namespace Hypertest.Core.Tests
                 _children = new ObservableCollection<TestCase>();
             }
         }
+        #endregion
+
+        #region Property
+        [DataMember]
+        public ObservableCollection<TestCase> Children
+        {
+            get { return _children; }
+            set
+            {
+                _children = value;
+                RaisePropertyChanged("Children");
+            }
+        }
+        #endregion
+
+        #region Deserialize
 
         [OnDeserializing]
         private void OnDeserializing(StreamingContext context)
@@ -52,8 +60,11 @@ namespace Hypertest.Core.Tests
             _children.CollectionChanged += _children_CollectionChanged;
         }
 
+        #endregion
+
+        #region Events
         //USED ONLY TO SET THE PARENT - NOTHING TO DO WITH STATE MANAGER.
-        void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
@@ -64,5 +75,6 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        #endregion
     }
 }

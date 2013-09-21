@@ -32,8 +32,16 @@ namespace Hypertest.Core.Tests
         private void Initialize()
         {
             _manager = new StateManager();
+            _manager.StateChange += _manager_StateChange;
+        }
+
+        void _manager_StateChange(object sender, EventArgs e)
+        {
+            this.IsDirty = true;
         }
         #endregion
+
+        #region Deserialize
 
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
@@ -49,6 +57,10 @@ namespace Hypertest.Core.Tests
             this.IsExpanded = true;
             _manager.Clear();
         }
+
+        #endregion
+
+        #region Monitoring functions
 
         protected void BulkMonitor(TestCase testCase)
         {
@@ -80,7 +92,7 @@ namespace Hypertest.Core.Tests
             }
         }
 
-        void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.NewItems != null)
             {
@@ -89,7 +101,7 @@ namespace Hypertest.Core.Tests
                     test.Parent = this;
                 }
             }
-            
+
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 if (this._manager != null && e.NewItems != null)
@@ -110,6 +122,10 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        #endregion
+
+        #region Methods
+
         internal void SetDirty(bool p)
         {
             this.IsDirty = p;
@@ -121,6 +137,8 @@ namespace Hypertest.Core.Tests
             this.IsDirty = false;
             RaisePropertyChanged("Location");
         }
+
+        #endregion
 
         #region Property
         protected internal override ITestRegistry TestRegistry
