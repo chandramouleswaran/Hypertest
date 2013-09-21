@@ -180,7 +180,7 @@ namespace Hypertest.Core.Manager
             PropertyChangedExtendedEventArgs newArgs = e as PropertyChangedExtendedEventArgs;
             if (newArgs != null)
             {
-                _undoStack.Push(new ChangeSet(new Change(sender, newArgs), newArgs.Description));
+                _undoStack.Push(new ChangeSet(new PropertyChange(sender, newArgs), newArgs.Description));
                 _redoStack.Clear();
             }
         }
@@ -193,7 +193,7 @@ namespace Hypertest.Core.Manager
 
             if (e != null)
             {
-                _undoStack.Push(new ChangeSet(new Change(sender, e), "Collection changed"));
+                _undoStack.Push(new ChangeSet(new CollectionChange(sender, e), "Collection changed"));
                 _redoStack.Clear();
             }
 

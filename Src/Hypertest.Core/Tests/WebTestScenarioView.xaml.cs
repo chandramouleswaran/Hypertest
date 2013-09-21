@@ -153,8 +153,9 @@ namespace Hypertest.Core.Tests
         {
             if (e.NewValue != null && e.OldValue != null)
             {
-                scenario.Manager.AddChange(new Change(e, e, "IsSelected"), "Selection");
+                scenario.Manager.AddChange(new SinglePropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
             }
+            treeView1.Focus();
         }
     }
 }
