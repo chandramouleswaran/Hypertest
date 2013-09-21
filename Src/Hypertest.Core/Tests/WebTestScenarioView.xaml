@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:hyConv="clr-namespace:Hypertest.Core.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:xwt="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" DataContextChanged="UserControl_DataContextChanged">
+             d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
         <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
     </UserControl.Resources>
@@ -18,7 +19,14 @@
         <CommandBinding Command="Redo" CanExecute="CommandBinding_CanRedo" Executed="CommandBinding_RedoExecuted" />
     </UserControl.CommandBindings>
     <Grid>
-        <TreeView Name="treeView1" ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" Grid.Column="0" SelectedItemChanged="treeView1_SelectedItemChanged">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="200" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" MinWidth="200" />
+        </Grid.ColumnDefinitions>
+        <TreeView Name="treeView1" ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" 
+                  Grid.Column="0" SelectedItemChanged="treeView1_SelectedItemChanged"
+                   ScrollViewer.CanContentScroll="True">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
                     <TextBlock Text="{Binding Description}" Margin="4,0,4,0"/>
@@ -39,5 +47,7 @@
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
+        <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1" ResizeBehavior="PreviousAndNext" Width="5" Background="#FFBCBCBC" />
+        <xwt:PropertyGrid SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" Grid.Column="2" />
     </Grid>
 </UserControl>

@@ -87,6 +87,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public FolderTestCase Parent
         {
             get { return _parent; }
@@ -98,6 +99,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public virtual bool IsSelected
         {
             get { return _isSelected; }
@@ -112,6 +114,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public virtual bool IsExpanded
         {
             get { return _isExpanded; }
@@ -125,6 +128,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         public TestScenario Scenario
         {
             get
@@ -139,6 +143,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         protected internal virtual ITestRegistry TestRegistry
         {
             get { return Scenario.TestRegistry; }
@@ -146,6 +151,7 @@ namespace Hypertest.Core.Tests
         }
 
         [XmlIgnore]
+        [Browsable(false)]
         protected internal virtual ILoggerService LoggerService
         {
             get { return Scenario.LoggerService; }

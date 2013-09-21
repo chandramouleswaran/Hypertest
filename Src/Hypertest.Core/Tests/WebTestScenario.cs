@@ -10,11 +10,25 @@ namespace Hypertest.Core.Tests
     [Serializable]
     public class WebTestScenario : TestScenario
     {
+        private string _url;
+
         public WebTestScenario() : base()
         {
         }
 
         [DataMember]
-        public string URL { get; internal set; }
+        public string URL
+        {
+            get { return _url; }
+            set
+            {
+                string oldValue = _url;
+                if (oldValue != value)
+                {
+                    _url = value;
+                    RaisePropertyChangedWithValues(oldValue,value,"URL change");
+                }
+            }
+        }
     }
 }

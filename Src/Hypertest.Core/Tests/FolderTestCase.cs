@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
@@ -31,6 +32,7 @@ namespace Hypertest.Core.Tests
 
         #region Property
         [DataMember]
+        [Browsable(false)]
         public ObservableCollection<TestCase> Children
         {
             get { return _children; }

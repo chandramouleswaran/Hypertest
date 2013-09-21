@@ -76,7 +76,7 @@ namespace Hypertest.Core.Tests
                     scenario.Manager.BeginChangeSetBatch("Pasting");
                     folder.IsExpanded = true;
                     folder.Children.Add(copyValue);
-                    scenario.Manager.EndChangeSetBatch();
+                    copyValue.IsSelected = true;
                 }
             }
             e.Handled = true;
