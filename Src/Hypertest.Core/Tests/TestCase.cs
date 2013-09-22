@@ -6,6 +6,7 @@ using Hypertest.Core.Interfaces;
 using Wide.Interfaces.Services;
 using Wide.Interfaces;
 using System.Xml.Serialization;
+using System.Collections.ObjectModel;
 
 namespace Hypertest.Core.Tests
 {
@@ -32,11 +33,20 @@ namespace Hypertest.Core.Tests
         protected TestCaseResult _expectedResult;
         protected TestCaseResult _actualResult;
         protected bool _markedForExecution;
+        private ObservableCollection<Variable> _variables;
         #endregion
 
         #region CTOR
         protected TestCase()
         {
+            Initialize();
+        }
+        private void Initialize(bool create = true)
+        {
+            if (_variables == null)
+            {
+                _variables = new ObservableCollection<Variable>();
+            }
         }
         #endregion
 
@@ -100,6 +110,9 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
+        [DisplayName("Expected Result")]
+        [Description("The expected end result of the test case")]
+        [Category("General")]
         public TestCaseResult ExpectedResult
         {
             get { return _expectedResult; }
@@ -111,6 +124,9 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
+        [DisplayName("Actual Result")]
+        [Description("The actual end result of the test case")]
+        [Category("General")]
         [Browsable(false)]
         public TestCaseResult ActualResult
         {
@@ -122,6 +138,8 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        [DataMember]
+        [Browsable(false)]
         protected internal virtual TestCaseResult ExpectedVsActual
         {
             get
@@ -134,6 +152,14 @@ namespace Hypertest.Core.Tests
                     return TestCaseResult.Passed;
             }
         }
+
+        [DataMember]
+        public virtual ObservableCollection<Variable> Variables
+        {
+            get { return _variables; }
+            set { _variables = value; RaisePropertyChanged(); }
+        }
+
 
         [XmlIgnore]
         [Browsable(false)]
