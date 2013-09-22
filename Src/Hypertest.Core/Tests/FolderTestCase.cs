@@ -9,6 +9,9 @@ namespace Hypertest.Core.Tests
 {
     [DataContract]
     [Serializable]
+    [DisplayName("Folder")]
+    [Description("A test case which holds a list of test cases")]
+    [Category("General")]
     public class FolderTestCase : TestCase
     {
         #region Members

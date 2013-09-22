@@ -71,6 +71,8 @@ namespace Hypertest.Core.Tests
 
         #region Properties
         [DataMember]
+        [Description("Enter the description for the test case")]
+        [Category("General")]
         public string Description
         {
             get { return _description; }

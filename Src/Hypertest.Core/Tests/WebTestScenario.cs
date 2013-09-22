@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace Hypertest.Core.Tests
@@ -8,6 +9,7 @@ namespace Hypertest.Core.Tests
     /// </summary>
     [DataContract]
     [Serializable]
+    [DisplayName("Web test scenario")]
     public class WebTestScenario : TestScenario
     {
         private string _url;
@@ -17,6 +19,7 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
+        [Category("General")]
         public string URL
         {
             get { return _url; }
