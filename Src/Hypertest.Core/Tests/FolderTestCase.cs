@@ -13,6 +13,7 @@ namespace Hypertest.Core.Tests
     {
         #region Members
         protected ObservableCollection<TestCase> _children;
+        protected bool _exitTotally;
         #endregion
 
         #region CTOR
@@ -78,5 +79,19 @@ namespace Hypertest.Core.Tests
         }
 
         #endregion
+
+        public override void Body()
+        {
+            _actualResult = TestCaseResult.Passed;
+            foreach (TestCase child in _children)
+            {
+                if (child.MarkedForExecution)
+                {
+                    child.Run();
+                    if(child.ExpectedVsActual == TestCaseResult.Failed)
+                        _actualResult = TestCaseResult.Failed;
+                }
+            }
+        }
     }
 }

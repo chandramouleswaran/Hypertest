@@ -9,6 +9,14 @@ using System.Xml.Serialization;
 
 namespace Hypertest.Core.Tests
 {
+
+    public enum TestCaseResult
+    {
+        None,
+        Passed,
+        Failed
+    }
+
     /// <summary>
     /// The basic unit of a test case in the Hypertest framework
     /// </summary>
@@ -21,6 +29,9 @@ namespace Hypertest.Core.Tests
         private string _description;
         protected bool _isSelected;
         protected bool _isExpanded;
+        protected TestCaseResult _expectedResult;
+        protected TestCaseResult _actualResult;
+        protected bool _markedForExecution;
         #endregion
 
         #region CTOR
@@ -83,6 +94,42 @@ namespace Hypertest.Core.Tests
                     if (oldValue != value)
                         RaisePropertyChangedWithValues(oldValue, _description, "Description change");
                 }
+            }
+        }
+
+        [DataMember]
+        public TestCaseResult ExpectedResult
+        {
+            get { return _expectedResult; }
+            set
+            {
+                _expectedResult = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [DataMember]
+        [Browsable(false)]
+        public TestCaseResult ActualResult
+        {
+            get { return _actualResult; }
+            set
+            {
+                _actualResult = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        protected internal virtual TestCaseResult ExpectedVsActual
+        {
+            get
+            {
+                if (_expectedResult == TestCaseResult.None)
+                    return TestCaseResult.Passed;
+                else if (_expectedResult != _actualResult)
+                    return TestCaseResult.Failed;
+                else
+                    return TestCaseResult.Passed;
             }
         }
 
@@ -157,6 +204,18 @@ namespace Hypertest.Core.Tests
             get { return Scenario.LoggerService; }
             set { }
         }
+
+        [Browsable(false)]
+        public bool MarkedForExecution
+        {
+            get { return _markedForExecution; }
+            set
+            {
+                _markedForExecution = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         #endregion
 
