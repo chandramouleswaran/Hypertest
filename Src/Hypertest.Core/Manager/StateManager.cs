@@ -131,7 +131,7 @@ namespace Hypertest.Core.Manager
 
         public void MonitorCollection(INotifyCollectionChanged collection)
         {
-            if (!_collections.Contains(collection))
+            if (collection != null && !_collections.Contains(collection))
             {
                 _collections.Add(collection);
                 collection.CollectionChanged += collection_CollectionChanged;

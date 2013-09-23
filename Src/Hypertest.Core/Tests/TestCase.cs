@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -169,7 +170,11 @@ namespace Hypertest.Core.Tests
         public virtual ObservableCollection<Variable> Variables
         {
             get { return _variables; }
-            set { _variables = value; RaisePropertyChanged(); }
+            set
+            {
+                _variables = value;
+                RaisePropertyChanged();
+            }
         }
 
 

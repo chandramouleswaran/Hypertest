@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace Hypertest.Core.Interfaces
@@ -19,16 +21,53 @@ namespace Hypertest.Core.Interfaces
     /// The variable class
     /// </summary>
     [DataContract]
-    public class Variable
+    public class Variable : INotifyPropertyChanged
     {
+        #region Members
+
+        private string _name;
+        private object _value;
+        private DataType _type;
+
+        #endregion
+
+        #region Property
         [DataMember]
-        public string Name { get; set; }
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         [DataMember]
-        public object Value { get; set; }
+        public object Value
+        {
+            get { return _value; }
+            set
+            {
+                _value = value;
+                RaisePropertyChanged();
+            }
+        }
 
         [DataMember]
-        public DataType Type { get; set; }
+        public DataType Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        #region Overrides
 
         public override int GetHashCode()
         {
@@ -44,6 +83,15 @@ namespace Hypertest.Core.Interfaces
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return _name + "=" + _value.ToString() + " (" + _type.ToString() + ")";
+        }
+
+        #endregion
+
+        #region CTOR
 
         public Variable(string name, string strValue)
         {
@@ -75,15 +123,15 @@ namespace Hypertest.Core.Interfaces
                 this.Type = DataType.Object;
                 Type t = val.GetType();
 
-                if (t == typeof(string) || t == typeof(String))
+                if (t == typeof (string) || t == typeof (String))
                 {
                     this.Type = DataType.String;
                 }
-                if (t == typeof(double) || t == typeof(Double) || t == typeof(int) || t == typeof(Int32))
+                if (t == typeof (double) || t == typeof (Double) || t == typeof (int) || t == typeof (Int32))
                 {
                     this.Type = DataType.Number;
                 }
-                if (t == typeof(bool) || t == typeof(Boolean))
+                if (t == typeof (bool) || t == typeof (Boolean))
                 {
                     this.Type = DataType.Boolean;
                 }
@@ -97,5 +145,20 @@ namespace Hypertest.Core.Interfaces
             Type = DataType.String;
             Value = "";
         }
+
+        #endregion
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
     }
 }
