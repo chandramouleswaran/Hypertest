@@ -65,6 +65,7 @@ namespace Hypertest.Core.Tests
         protected void BulkMonitor(TestCase testCase)
         {
             _manager.MonitorObject(testCase);
+            _manager.MonitorCollection(testCase.Variables);
             FolderTestCase ftc = testCase as FolderTestCase;
             if (ftc != null)
             {

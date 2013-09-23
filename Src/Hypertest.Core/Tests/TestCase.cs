@@ -7,6 +7,7 @@ using Wide.Interfaces.Services;
 using Wide.Interfaces;
 using System.Xml.Serialization;
 using System.Collections.ObjectModel;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
@@ -41,6 +42,7 @@ namespace Hypertest.Core.Tests
         {
             Initialize();
         }
+
         private void Initialize(bool create = true)
         {
             if (_variables == null)
@@ -48,6 +50,16 @@ namespace Hypertest.Core.Tests
                 _variables = new ObservableCollection<Variable>();
             }
         }
+        #endregion
+
+
+        #region Deserialize
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Initialize();
+        }
+
         #endregion
 
         #region Virtuals
@@ -138,7 +150,6 @@ namespace Hypertest.Core.Tests
             }
         }
 
-        [DataMember]
         [Browsable(false)]
         protected internal virtual TestCaseResult ExpectedVsActual
         {
@@ -154,6 +165,7 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
+        [NewItemTypes(typeof(Variable))]
         public virtual ObservableCollection<Variable> Variables
         {
             get { return _variables; }
