@@ -155,6 +155,12 @@ namespace Hypertest.Core.Tests
             get;
             set;
         }
+
+        protected internal override IRunner Runner
+        {
+            get;
+            set;
+        }
         #endregion
     }
 }

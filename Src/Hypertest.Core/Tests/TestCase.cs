@@ -20,6 +20,13 @@ namespace Hypertest.Core.Tests
         Failed
     }
 
+    public enum TestRunState
+    {
+        NotStarted = 0,
+        Executing = 1,
+        Done = 2
+    }
+
     /// <summary>
     /// The basic unit of a test case in the Hypertest framework
     /// </summary>
@@ -36,6 +43,7 @@ namespace Hypertest.Core.Tests
         protected TestCaseResult _actualResult;
         protected bool _markedForExecution;
         private ObservableCollection<Variable> _variables;
+        private TestRunState _runState;
         #endregion
 
         #region CTOR
@@ -50,6 +58,8 @@ namespace Hypertest.Core.Tests
             {
                 _variables = new ObservableCollection<Variable>();
             }
+            _expectedResult = TestCaseResult.Passed;
+            _runState = TestRunState.NotStarted;
         }
         #endregion
 
@@ -95,7 +105,10 @@ namespace Hypertest.Core.Tests
 
         private void InitRun()
         {
-            //Set the actual result to None
+            foreach (var variable in Variables)
+            {
+                
+            }
         }
         
         private void FinalizeRun()
@@ -225,29 +238,13 @@ namespace Hypertest.Core.Tests
         {
             get
             {
-                TestCase result = this;
-                while (result.Parent != null)
+                TestCase test = this;
+                while (test.Parent != null)
                 {
-                    result = result.Parent;
+                    test = test.Parent;
                 }
-                return (TestScenario) result;
+                return (TestScenario) test;
             }
-        }
-
-        [XmlIgnore]
-        [Browsable(false)]
-        protected internal virtual ITestRegistry TestRegistry
-        {
-            get { return Scenario.TestRegistry; }
-            set {}
-        }
-
-        [XmlIgnore]
-        [Browsable(false)]
-        protected internal virtual ILoggerService LoggerService
-        {
-            get { return Scenario.LoggerService; }
-            set { }
         }
 
         [Browsable(false)]
@@ -261,8 +258,46 @@ namespace Hypertest.Core.Tests
             }
         }
 
+        [DataMember]
+        [Browsable(false)]
+        public TestRunState RunState
+        {
+            get { return _runState; }
+            internal set
+            {
+                _runState = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
+
+        #region Internal Properties
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual ITestRegistry TestRegistry
+        {
+            get { return Scenario.TestRegistry; }
+            set { }
+        }
+
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual ILoggerService LoggerService
+        {
+            get { return Scenario.LoggerService; }
+            set { }
+        }
+        
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual IRunner Runner
+        {
+            get { return Scenario.Runner; }
+            set { }
+        }
+        #endregion
+
 
         #region ICloneable
         public object Clone()
