@@ -1,7 +1,10 @@
-﻿using Hypertest.Core.Manager;
+﻿using System;
+using Hypertest.Core.Manager;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Linq;
+using Hypertest.Core.Utils;
 using Wide.Interfaces;
 
 namespace Hypertest.Core.Tests
@@ -53,7 +56,8 @@ namespace Hypertest.Core.Tests
             {
                 Clipboard.Clear();
                 TestCase clone = (TestCase)toCopy.Clone();
-                Clipboard.SetData("hypertest", clone);
+                byte[] data = SerializationHelper.SerializeToBinary<TestCase>(clone, this.scenario.TestRegistry.Tests.ToArray());
+                Clipboard.SetDataObject(data, true);
             }
         }
         #endregion
@@ -61,13 +65,24 @@ namespace Hypertest.Core.Tests
         #region Paste
         private void CommandBinding_CanPaste(object sender, CanExecuteRoutedEventArgs e)
         {
-            TestCase copyValue = Clipboard.GetData("hypertest") as TestCase;
+            TestCase copyValue = null;
+            IDataObject data = Clipboard.GetDataObject();
+            if (data.GetDataPresent(typeof(byte[])))
+            {
+                copyValue = SerializationHelper.DeserializeFromBinary<TestCase>((byte[])data.GetData(typeof(byte[])), this.scenario.TestRegistry.Tests);
+            }
             e.CanExecute = (copyValue != null && (treeView1.Items.Count == 0 && treeView1.IsFocused || treeView1.SelectedItem != null));
         }
 
         private void CommandBinding_PasteExecuted(object sender, ExecutedRoutedEventArgs e)
         {
-            TestCase copyValue = Clipboard.GetData("hypertest") as TestCase;
+            TestCase copyValue = null;
+            IDataObject data = Clipboard.GetDataObject();
+            if (data.GetDataPresent(typeof(byte[])))
+            {
+                copyValue = SerializationHelper.DeserializeFromBinary<TestCase>((byte[])data.GetData(typeof(byte[])), this.scenario.TestRegistry.Tests);
+            }
+
             if (copyValue != null)
             {
                 FolderTestCase folder = treeView1.SelectedItem as FolderTestCase;

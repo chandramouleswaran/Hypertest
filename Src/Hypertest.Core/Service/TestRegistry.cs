@@ -19,7 +19,7 @@ namespace Hypertest.Core.Service
                 _types.Add(testCase);
         }
 
-        public IList<Type> Tests
+        public IEnumerable<Type> Tests
         {
             get { return _types; }
         }
