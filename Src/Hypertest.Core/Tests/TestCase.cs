@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Wide.Interfaces.Services;
 using Wide.Interfaces;
@@ -32,7 +33,7 @@ namespace Hypertest.Core.Tests
     /// </summary>
     [DataContract]
     [Serializable]
-    public abstract class TestCase : ContentModel, ICloneable
+    public abstract class TestCase : ContentModel, ICloneable, ICustomTypeDescriptor
     {
         #region Members
         private FolderTestCase _parent;
@@ -88,6 +89,7 @@ namespace Hypertest.Core.Tests
             {
                 InitRun();
                 Setup();
+                RunState = TestRunState.Executing;
                 Body();
                 FinalizeRun();
                 Cleanup();
@@ -95,6 +97,10 @@ namespace Hypertest.Core.Tests
             catch (Exception e)
             {
                 Cleanup(e);
+            }
+            finally
+            {
+                RunState = TestRunState.Done;
             }
         }
 
@@ -164,8 +170,11 @@ namespace Hypertest.Core.Tests
             }
         }
 
-        [Browsable(false)]
-        protected internal virtual TestCaseResult ExpectedVsActual
+        [DisplayName("Expected vs Actual Result")]
+        [Description("The final result of the test case")]
+        [Category("Results")]
+        [DynamicBrowsable("RunState")]
+        public TestCaseResult ExpectedVsActual
         {
             get
             {
@@ -259,7 +268,7 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
-        [Browsable(false)]
+        [Browsable(false),RefreshProperties(RefreshProperties.All)]
         public TestRunState RunState
         {
             get { return _runState; }
@@ -316,6 +325,68 @@ namespace Hypertest.Core.Tests
             {
                 throw new Exception("Test registry is null - please set the scenario's registry");
             }
+        }
+        #endregion
+
+        #region ICustomTypeDescriptor
+        public AttributeCollection GetAttributes()
+        {
+            return TypeDescriptor.GetAttributes(this, true);
+        }
+
+        public string GetClassName()
+        {
+            return TypeDescriptor.GetClassName(this, true);
+        }
+
+        public string GetComponentName()
+        {
+            return TypeDescriptor.GetComponentName(this, true);
+        }
+
+        public TypeConverter GetConverter()
+        {
+            return TypeDescriptor.GetConverter(this, true);
+        }
+
+        public EventDescriptor GetDefaultEvent()
+        {
+            return TypeDescriptor.GetDefaultEvent(this, true);
+        }
+
+        public PropertyDescriptor GetDefaultProperty()
+        {
+            return TypeDescriptor.GetDefaultProperty(this, true);
+        }
+
+        public object GetEditor(Type editorBaseType)
+        {
+            return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        }
+
+        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        {
+            return TypeDescriptor.GetEvents(this, attributes, true);
+        }
+
+        public EventDescriptorCollection GetEvents()
+        {
+            return TypeDescriptor.GetEvents(this, true);
+        }
+
+        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+            return this.GetProperties();
+        }
+
+        public PropertyDescriptorCollection GetProperties()
+        {
+            return DynamicTypeDescriptor.GetProperties(this);
+        }
+
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
         }
         #endregion
     }

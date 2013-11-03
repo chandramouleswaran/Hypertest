@@ -86,6 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Handlers\WebTestScenarioHandler.cs" />
@@ -97,6 +98,10 @@
     <Compile Include="Manager\PropertyChange.cs" />
     <Compile Include="Manager\StateManager.cs" />
     <Compile Include="Runners\WebScenarioRunner.cs" />
+    <Compile Include="Attributes\DependsOnPropertyAttribute.cs" />
+    <Compile Include="Attributes\DynamicBrowsableAttribute.cs" />
+    <Compile Include="Attributes\DynamicReadonlyAttribute.cs" />
+    <Compile Include="Attributes\DynamicTypeDescriptor.cs" />
     <Compile Include="Service\TestRegistry.cs" />
     <Compile Include="Tests\WebTestScenario.cs" />
     <Compile Include="Tests\FolderTestCase.cs" />
