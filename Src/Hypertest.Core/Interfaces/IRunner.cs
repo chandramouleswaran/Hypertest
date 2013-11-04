@@ -5,7 +5,7 @@ namespace Hypertest.Core.Interfaces
 {
     public interface IRunner
     {
-        void Initialize();
+        void Initialize(TestScenario scenario);
         void Pause();
         void Resume();
         void Stop();
@@ -13,8 +13,6 @@ namespace Hypertest.Core.Interfaces
         bool AddVariable(Variable variable);
         void Clear();
         void CleanUp();
-        void Enqueue(TestScenario scenario);
-        void Dequeue(TestScenario scenario);
 
         Variable GetVariable(String name);
         string UniqueID { get; }

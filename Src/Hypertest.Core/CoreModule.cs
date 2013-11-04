@@ -14,6 +14,7 @@ using System;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Hypertest.Core.Runners;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
@@ -91,12 +92,16 @@ namespace Hypertest.Core
             _container.RegisterType<WebTestScenarioViewModel>();
             _container.RegisterType<WebTestScenarioView>();
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
+            
+            _container.RegisterType<WebTestResultViewModel>(new ContainerControlledLifetimeManager());
+            _container.Resolve<WebTestResultViewModel>();
 
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
 
             ITestRegistry registry = _container.Resolve<ITestRegistry>();
+
             //Register the test cases that you want to be able to participate
             registry.Add(typeof(FolderTestCase));
         }
@@ -123,6 +128,7 @@ namespace Hypertest.Core
             var saveAsCommand = new DelegateCommand(SaveAsDocument, CanExecuteSaveAsDocument);
             var themeCommand = new DelegateCommand<string>(ThemeChangeCommand);
             var loggerCommand = new DelegateCommand(ToggleLogger);
+            var runCommand = new DelegateCommand(RunTest, CanRunTest);
 
 
             manager.RegisterCommand("OPEN", openCommand);
@@ -131,12 +137,7 @@ namespace Hypertest.Core
             manager.RegisterCommand("EXIT", exitCommand);
             manager.RegisterCommand("LOGSHOW", loggerCommand);
             manager.RegisterCommand("THEMECHANGE", themeCommand);
-        }
-
-        private void CloseCommandExecute()
-        {
-            IShell shell = _container.Resolve<IShell>();
-            shell.Close();
+            manager.RegisterCommand("RUNTEST", runCommand);
         }
 
         private void LoadMenus()
@@ -215,6 +216,11 @@ namespace Hypertest.Core
                                                                    new Uri(
                                                                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
                                                                ApplicationCommands.Paste));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("Run", 23,
+                                                               new BitmapImage(
+                                                                   new Uri(
+                                                                       @"pack://application:,,,/Hypertest;component/Images/paste.png")),
+                                                               manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
 
             menuService.Add(new MenuItemViewModel("_View", 3));
 
@@ -341,6 +347,49 @@ namespace Hypertest.Core
 
         #endregion
 
+        #region Run
+        private void RunTest()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            if (workspace.ActiveDocument != null)
+            {
+                if(workspace.ActiveDocument.Model is TestScenario)
+                {
+                    WebTestResultViewModel cvm = workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
+                    if (cvm != null)
+                    {
+                        workspace.ActiveDocument = cvm;
+                    }
+                    else
+                    {
+                        cvm = _container.Resolve<WebTestResultViewModel>();
+                        WebScenarioRunner.Current.Initialize((workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
+                        cvm.Refresh();
+                        workspace.Documents.Add(cvm);
+                        workspace.ActiveDocument = cvm;
+                    }
+                }
+            }
+        }
+
+        private bool CanRunTest()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            if (workspace.ActiveDocument != null)
+            {
+                return (workspace.ActiveDocument.Model is TestScenario);
+            }
+            return false;
+        }
+        #endregion
+
+        #region Close
+        private void CloseCommandExecute()
+        {
+            IShell shell = _container.Resolve<IShell>();
+            shell.Close();
+        }
+        #endregion
         #endregion
     }
 }

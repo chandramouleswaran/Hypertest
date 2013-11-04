@@ -117,10 +117,14 @@
     <Compile Include="Interfaces\ITestRegistry.cs" />
     <Compile Include="Tests\TestCase.cs" />
     <Compile Include="Tests\TestScenario.cs" />
+    <Compile Include="Tests\WebTestResultView.xaml.cs">
+      <DependentUpon>WebTestResultView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Tests\WebTestScenarioView.xaml.cs">
       <DependentUpon>WebTestScenarioView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\SerializationHelper.cs" />
+    <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="WebTestScenarioViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +134,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Tests\WebTestResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Tests\WebTestScenarioView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

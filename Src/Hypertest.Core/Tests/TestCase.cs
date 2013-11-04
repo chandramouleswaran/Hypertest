@@ -64,7 +64,6 @@ namespace Hypertest.Core.Tests
         }
         #endregion
 
-
         #region Deserialize
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
@@ -306,7 +305,6 @@ namespace Hypertest.Core.Tests
             set { }
         }
         #endregion
-
 
         #region ICloneable
         public object Clone()

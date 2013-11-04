@@ -2,6 +2,7 @@
 using Hypertest.Core.Interfaces;
 using System;
 using Hypertest.Core.Tests;
+using System.Threading.Tasks;
 
 namespace Hypertest.Core.Runners
 {
@@ -16,15 +17,17 @@ namespace Hypertest.Core.Runners
 
         private readonly Dictionary<String, Variable> _globals;
         private WebTestScenario _scenario;
-        private Queue<WebTestScenario> _scenarioQueue;
         private WebScenarioRunner()
         {
             _globals = new Dictionary<string, Variable>();
-            _scenarioQueue = new Queue<WebTestScenario>();
         }
-        public void Initialize()
+        public void Initialize(TestScenario scenario)
         {
-            _globals.Clear();
+            if (scenario is WebTestScenario)
+            {
+                _globals.Clear();
+                _scenario = scenario as WebTestScenario;
+            }
         }
 
         public void Pause()
@@ -62,16 +65,6 @@ namespace Hypertest.Core.Runners
             throw new NotImplementedException();
         }
 
-        public void Enqueue(TestScenario scenario)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dequeue(TestScenario scenario)
-        {
-            throw new NotImplementedException();
-        }
-
         public Variable GetVariable(string name)
         {
             throw new NotImplementedException();
@@ -80,5 +73,10 @@ namespace Hypertest.Core.Runners
         public string UniqueID { get; private set; }
         public string RunFolder { get; private set; }
         public bool IsRunning { get; private set; }
+
+        public TestScenario Scenario
+        {
+            get { return _scenario; }
+        }
     }
 }
