@@ -32,9 +32,13 @@ namespace Hypertest.Core
         /// </summary>
         public void Refresh()
         {
-            this.Model = WebScenarioRunner.Current.Scenario;
-            this.View = _resultView;
-            this.View.DataContext = this.Model;
+            if (WebScenarioRunner.Current.Scenario != null)
+            {
+                WebScenarioRunner.Current.Scenario.SetDirty(false);
+                this.Model = WebScenarioRunner.Current.Scenario;
+                this.View = _resultView;
+                this.View.DataContext = this.Model;
+            }
         }
     }
 }

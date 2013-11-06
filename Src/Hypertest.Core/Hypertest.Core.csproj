@@ -34,6 +34,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GongSolutions.Wpf.DragDrop">
+      <HintPath>..\..\Libs\GongSolutions.Wpf.DragDrop.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.Prism">
       <HintPath>..\..\Libs\Microsoft.Practices.Prism.dll</HintPath>
       <Private>False</Private>
@@ -89,6 +93,8 @@
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
+    <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
     <Compile Include="Handlers\WebTestScenarioHandler.cs" />
     <Compile Include="Interfaces\Variable.cs" />
     <Compile Include="Manager\Change.cs" />

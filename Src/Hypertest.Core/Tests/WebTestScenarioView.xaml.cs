@@ -15,6 +15,7 @@ namespace Hypertest.Core.Tests
     public partial class WebTestScenarioView : UserControl, IContentView
     {
         private WebTestScenario scenario;
+        private bool actionInProgress;
 
         public WebTestScenarioView()
         {
@@ -31,6 +32,7 @@ namespace Hypertest.Core.Tests
         private void CommandBinding_CutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             scenario.Manager.BeginChangeSetBatch("Cut action");
+            actionInProgress = true;
             Copy();
             Delete();
             e.Handled = true;
@@ -89,6 +91,7 @@ namespace Hypertest.Core.Tests
                 if(folder != null)
                 {
                     scenario.Manager.BeginChangeSetBatch("Pasting");
+                    actionInProgress = true;
                     folder.IsExpanded = true;
                     folder.Children.Add(copyValue);
                     copyValue.IsSelected = true;
@@ -107,6 +110,7 @@ namespace Hypertest.Core.Tests
         private void CommandBinding_DeleteExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             scenario.Manager.BeginChangeSetBatch("Delete action");
+            actionInProgress = true;
             Delete();
             e.Handled = true;
         }
@@ -176,9 +180,10 @@ namespace Hypertest.Core.Tests
                 scenario.Manager.AddChange(new CommonPropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
             }
             treeView1.Focus();
-            if(scenario.Manager.IsBatch)
+            if(actionInProgress)
             {
                 scenario.Manager.EndChangeSetBatch();
+                actionInProgress = false;
             }
         }
     }

@@ -3,12 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:hyConv="clr-namespace:Hypertest.Core.Converters"
+             xmlns:hyHand="clr-namespace:Hypertest.Core.Handlers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:xwt="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
         <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
+        <hyHand:WebScenarioViewDragHandler x:Key="webScenarioViewDragHandler" />
+        <hyHand:WebScenarioViewDropHandler x:Key="webScenarioViewDropHandler" />
     </UserControl.Resources>
     <UserControl.CommandBindings>
         <CommandBinding Command="Copy" CanExecute="CommandBinding_CanCopy" Executed="CommandBinding_CopyExecuted" />
@@ -26,7 +30,12 @@
         </Grid.ColumnDefinitions>
         <TreeView Name="treeView1" ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}" 
                   Grid.Column="0" SelectedItemChanged="treeView1_SelectedItemChanged"
-                   ScrollViewer.CanContentScroll="True">
+                  ScrollViewer.CanContentScroll="True"
+                  dd:DragDrop.IsDragSource="True"
+                  dd:DragDrop.IsDropTarget="True"
+                  dd:DragDrop.UseDefaultDragAdorner="True"
+                  dd:DragDrop.DragHandler="{StaticResource webScenarioViewDragHandler}"
+                  dd:DragDrop.DropHandler="{StaticResource webScenarioViewDropHandler}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
                     <TextBlock Text="{Binding Description}" Margin="4,0,4,0"/>
