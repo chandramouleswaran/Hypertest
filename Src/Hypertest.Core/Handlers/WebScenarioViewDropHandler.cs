@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using GongSolutions.Wpf.DragDrop;
+using GongSolutions.Wpf.DragDrop.Utilities;
 using Hypertest.Core.Tests;
 using DragDrop = GongSolutions.Wpf.DragDrop.DragDrop;
 
@@ -36,8 +36,8 @@ namespace Hypertest.Core.Handlers
                 TreeView view = dropInfo.VisualTarget as TreeView;
                 if (view != null)
                 {
-                    IDropTarget target = DragDrop.GetDropHandler(view);
-                    if (target == this)
+                    IDropTarget dropHandler = DragDrop.GetDropHandler(view);
+                    if (dropHandler == this)
                     {
                         dropInfo.Effects = DragDropEffects.Move;
                     }
@@ -48,10 +48,19 @@ namespace Hypertest.Core.Handlers
         public override void Drop(IDropInfo dropInfo)
         {
             TreeViewItem item = dropInfo.VisualTargetItem as TreeViewItem;
-            if (item != null)
+            TreeView view = dropInfo.VisualTarget as TreeView;
+            bool directlyOverItem = false;
+
+            if (item != null && view != null)
             {
+                var result = view.InputHitTest(dropInfo.DropPosition) as UIElement;
+                if (result != null)
+                {
+                    TreeViewItem ancestor = result.GetVisualAncestor<TreeViewItem>();
+                    directlyOverItem = (ancestor != null) && (ancestor == item);
+                }
                 FolderTestCase ftc = item.DataContext as FolderTestCase;
-                if (ftc != null)
+                if (ftc != null && directlyOverItem == true)
                 {
                     var insertIndex = dropInfo.InsertIndex;
                     var destinationList = GetList(dropInfo.TargetCollection);
@@ -83,9 +92,9 @@ namespace Hypertest.Core.Handlers
                     }
                 }
             }
-            else
+            if(!directlyOverItem)
             {
-                //base.Drop(dropInfo);
+                base.Drop(dropInfo);
             }
         }
     }

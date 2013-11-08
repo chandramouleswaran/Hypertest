@@ -10,19 +10,22 @@ namespace Hypertest.Core.Handlers
 
         public override void StartDrag(IDragInfo dragInfo)
         {
-            if (dragInfo.SourceItem.GetType() == typeof (WebTestScenario))
+            if (dragInfo.SourceItem != null)
             {
-                dragInfo.Effects = DragDropEffects.None;
-            }
-            else
-            {
-                _testCase = dragInfo.SourceItem as TestCase;
-                if (_testCase != null)
+                if (dragInfo.SourceItem.GetType() == typeof (WebTestScenario))
                 {
-                    TestScenario scenario = _testCase.Scenario;
-                    scenario.Manager.BeginChangeSetBatch("Drag and Drop");
+                    dragInfo.Effects = DragDropEffects.None;
                 }
-                base.StartDrag(dragInfo);
+                else
+                {
+                    _testCase = dragInfo.SourceItem as TestCase;
+                    if (_testCase != null)
+                    {
+                        TestScenario scenario = _testCase.Scenario;
+                        scenario.Manager.BeginChangeSetBatch("Drag and Drop");
+                    }
+                    base.StartDrag(dragInfo);
+                }
             }
         }
 
