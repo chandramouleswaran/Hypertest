@@ -122,7 +122,7 @@ namespace Hypertest.Core
             var win = _container.Resolve<IShell>() as Window;
             manager.AddTheme(new LightTheme());
             manager.AddTheme(new DarkTheme());
-            win.Dispatcher.InvokeAsync(() => manager.SetCurrent(themeSettings.SelectedTheme));
+            win.Dispatcher.Invoke(() => manager.SetCurrent(themeSettings.SelectedTheme));
         }
 
         private void LoadCommands()
