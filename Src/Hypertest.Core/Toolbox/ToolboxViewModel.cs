@@ -10,34 +10,37 @@
 
 #endregion
 
-using Hypertest.Core.Handlers;
-using Hypertest.Core.Tests;
-using Wide.Core.TextDocument;
+using Hypertest.Core.Interfaces;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Unity;
 using Wide.Interfaces;
-using Wide.Interfaces.Services;
 
-namespace Hypertest.Core
+namespace Hypertest.Core.Toolbox
 {
-    internal class WebTestScenarioViewModel : TextViewModel
+    internal class ToolboxViewModel : ToolViewModel
     {
-        public WebTestScenarioViewModel(AbstractWorkspace workspace, ICommandManager commandManager,
-            ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
-        {
-        }
+        private readonly IEventAggregator _aggregator;
+        private readonly IUnityContainer _container;
+        private ToolModel _model;
+        private ToolboxView _view;
+        private IWorkspace _workspace;
 
-        internal void SetModel(WebTestScenario model)
+        public ToolboxViewModel(IUnityContainer container, AbstractWorkspace workspace, ITestRegistry registry)
         {
-            Model = model;
-        }
+            _workspace = workspace;
+            _container = container;
+            Name = "Toolbox";
+            Title = "Toolbox";
+            ContentId = "Toolbox";
+            _model = new ToolboxModel(registry);
+            Model = _model;
+            IsVisible = false;
 
-        internal void SetView(WebTestScenarioView view)
-        {
-            View = view;
-        }
+            _view = new ToolboxView();
+            _view.DataContext = _model;
+            View = _view;
 
-        internal void SetHandler(WebTestScenarioHandler webTestScenarioHandler)
-        {
-            Handler = webTestScenarioHandler;
+            _aggregator = _container.Resolve<IEventAggregator>();
         }
     }
 }

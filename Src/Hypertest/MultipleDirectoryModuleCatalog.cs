@@ -11,20 +11,20 @@
 #endregion
 
 using System.Collections.Generic;
-using Microsoft.Practices.Prism.Modularity;
 using System.IO;
+using Microsoft.Practices.Prism.Modularity;
 
 namespace Hypertest
 {
     /// <summary>
-    /// Allows our shell to probe multiple directories for module assemblies
+    ///     Allows our shell to probe multiple directories for module assemblies
     /// </summary>
     public class MultipleDirectoryModuleCatalog : DirectoryModuleCatalog
     {
         private readonly IList<string> _pathsToProbe;
 
         /// <summary>
-        /// Initializes a new instance of the MultipleDirectoryModuleCatalog class.
+        ///     Initializes a new instance of the MultipleDirectoryModuleCatalog class.
         /// </summary>
         /// <param name="pathsToProbe">An IList of paths to probe for modules.</param>
         public MultipleDirectoryModuleCatalog(IList<string> pathsToProbe)
@@ -33,14 +33,14 @@ namespace Hypertest
         }
 
         /// <summary>
-        /// Provides multiple-path loading of modules over the default <see cref="DirectoryModuleCatalog.InnerLoad"/> method.
+        ///     Provides multiple-path loading of modules over the default <see cref="DirectoryModuleCatalog.InnerLoad" /> method.
         /// </summary>
         protected override void InnerLoad()
         {
             foreach (string path in _pathsToProbe)
             {
                 ModulePath = path;
-                if(Directory.Exists(path))
+                if (Directory.Exists(path))
                 {
                     base.InnerLoad();
                 }

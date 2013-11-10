@@ -12,9 +12,15 @@
 
 using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Hypertest.Core.Handlers;
+using Hypertest.Core.Interfaces;
 using Hypertest.Core.Runners;
+using Hypertest.Core.Service;
+using Hypertest.Core.Tests;
+using Hypertest.Core.Toolbox;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
@@ -25,11 +31,6 @@ using Wide.Interfaces.Events;
 using Wide.Interfaces.Services;
 using Wide.Interfaces.Settings;
 using Wide.Interfaces.Themes;
-using System.Windows;
-using Hypertest.Core.Handlers;
-using Hypertest.Core.Tests;
-using Hypertest.Core.Interfaces;
-using Hypertest.Core.Service;
 
 namespace Hypertest.Core
 {
@@ -37,8 +38,8 @@ namespace Hypertest.Core
     [ModuleDependency("Wide.Tools.Logger")]
     public class CoreModule : IModule
     {
-        private IUnityContainer _container;
-        private IEventAggregator _eventAggregator;
+        private readonly IUnityContainer _container;
+        private readonly IEventAggregator _eventAggregator;
 
         public CoreModule(IUnityContainer container, IEventAggregator eventAggregator)
         {
@@ -48,26 +49,28 @@ namespace Hypertest.Core
 
         public void Initialize()
         {
-            _eventAggregator.GetEvent<SplashMessageUpdateEvent>().Publish(new SplashMessageUpdateEvent { Message = "Loading Core Module" });
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Loading Core Module"});
+            RegisterParts();
             LoadTheme();
             LoadCommands();
             LoadMenus();
             LoadToolbar();
-            RegisterParts();
             LoadSettings();
         }
 
         private void LoadToolbar()
         {
-            _eventAggregator.GetEvent<SplashMessageUpdateEvent>().Publish(new SplashMessageUpdateEvent { Message = "Toolbar.." });
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Toolbar.."});
             var toolbarService = _container.Resolve<IToolbarService>();
             var menuService = _container.Resolve<IMenuService>();
 
-            toolbarService.Add(new ToolbarViewModel("Standard", 1) { Band = 1, BandIndex = 1 });
+            toolbarService.Add(new ToolbarViewModel("Standard", 1) {Band = 1, BandIndex = 1});
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_New"));
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_Open"));
 
-            toolbarService.Add(new ToolbarViewModel("Edit", 1) { Band = 1, BandIndex = 2 });
+            toolbarService.Add(new ToolbarViewModel("Edit", 1) {Band = 1, BandIndex = 2});
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Undo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Redo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Cut"));
@@ -82,8 +85,7 @@ namespace Hypertest.Core
 
         private void LoadSettings()
         {
-            ISettingsManager manager = _container.Resolve<ISettingsManager>();
-            
+            var manager = _container.Resolve<ISettingsManager>();
         }
 
         private void RegisterParts()
@@ -92,7 +94,8 @@ namespace Hypertest.Core
             _container.RegisterType<WebTestScenarioViewModel>();
             _container.RegisterType<WebTestScenarioView>();
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
-            
+            _container.RegisterType<ToolboxViewModel>();
+
             _container.RegisterType<WebTestResultViewModel>(new ContainerControlledLifetimeManager());
             _container.Resolve<WebTestResultViewModel>();
 
@@ -100,15 +103,20 @@ namespace Hypertest.Core
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
 
-            ITestRegistry registry = _container.Resolve<ITestRegistry>();
+            var registry = _container.Resolve<ITestRegistry>();
 
             //Register the test cases that you want to be able to participate
-            registry.Add(typeof(FolderTestCase));
+            registry.Add(typeof (FolderTestCase));
+
+            //Add the toolbox to the workspace
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            workspace.Tools.Add(_container.Resolve<ToolboxViewModel>());
         }
 
         private void LoadTheme()
         {
-            _eventAggregator.GetEvent<SplashMessageUpdateEvent>().Publish(new SplashMessageUpdateEvent { Message = "Themes.." });
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Themes.."});
             var manager = _container.Resolve<IThemeManager>();
             var themeSettings = _container.Resolve<IThemeSettings>();
             var win = _container.Resolve<IShell>() as Window;
@@ -119,7 +127,8 @@ namespace Hypertest.Core
 
         private void LoadCommands()
         {
-            _eventAggregator.GetEvent<SplashMessageUpdateEvent>().Publish(new SplashMessageUpdateEvent { Message = "Commands.." });
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Commands.."});
             var manager = _container.Resolve<ICommandManager>();
 
             var openCommand = new DelegateCommand(OpenModule);
@@ -128,6 +137,7 @@ namespace Hypertest.Core
             var saveAsCommand = new DelegateCommand(SaveAsDocument, CanExecuteSaveAsDocument);
             var themeCommand = new DelegateCommand<string>(ThemeChangeCommand);
             var loggerCommand = new DelegateCommand(ToggleLogger);
+            var toolboxCommand = new DelegateCommand(ToggleToolbox);
             var runCommand = new DelegateCommand(RunTest, CanRunTest);
 
 
@@ -136,118 +146,128 @@ namespace Hypertest.Core
             manager.RegisterCommand("SAVEAS", saveAsCommand);
             manager.RegisterCommand("EXIT", exitCommand);
             manager.RegisterCommand("LOGSHOW", loggerCommand);
+            manager.RegisterCommand("TOOLBOXSHOW", toolboxCommand);
             manager.RegisterCommand("THEMECHANGE", themeCommand);
             manager.RegisterCommand("RUNTEST", runCommand);
         }
 
         private void LoadMenus()
         {
-            _eventAggregator.GetEvent<SplashMessageUpdateEvent>().Publish(new SplashMessageUpdateEvent { Message = "Menus.." });
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Menus.."});
             var manager = _container.Resolve<ICommandManager>();
             var menuService = _container.Resolve<IMenuService>();
             var settingsManager = _container.Resolve<ISettingsManager>();
             var themeSettings = _container.Resolve<IThemeSettings>();
             var recentFiles = _container.Resolve<IRecentViewSettings>();
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            ToolViewModel logger = workspace.Tools.First(f => f.ContentId == "Logger");
+            ToolViewModel logger = workspace.Tools.FirstOrDefault(f => f.ContentId == "Logger");
+            ToolViewModel toolbox = workspace.Tools.FirstOrDefault(f => f.ContentId == "Toolbox");
 
             menuService.Add(new MenuItemViewModel("_File", 1));
 
             menuService.Get("_File").Add(
                 (new MenuItemViewModel("_New", 3,
-                                       new BitmapImage(
-                                           new Uri(
-                                               @"pack://application:,,,/Hypertest;component/Images/new.png")),
-                                       manager.GetCommand("NEW"),
-                                       new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl + N"))));
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/new.png")),
+                    manager.GetCommand("NEW"),
+                    new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl + N"))));
 
             menuService.Get("_File").Add(
                 (new MenuItemViewModel("_Open", 4,
-                                       new BitmapImage(
-                                           new Uri(
-                                               @"pack://application:,,,/Hypertest;component/Images/open.png")),
-                                       manager.GetCommand("OPEN"),
-                                       new KeyGesture(Key.O, ModifierKeys.Control, "Ctrl + O"))));
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/open.png")),
+                    manager.GetCommand("OPEN"),
+                    new KeyGesture(Key.O, ModifierKeys.Control, "Ctrl + O"))));
             menuService.Get("_File").Add(new MenuItemViewModel("_Save", 5,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/save.png")),
-                                                               manager.GetCommand("SAVE"),
-                                                               new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl + S")));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/save.png")),
+                manager.GetCommand("SAVE"),
+                new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl + S")));
             menuService.Get("_File").Add(new SaveAsMenuItemViewModel("Save As..", 6,
-                                                   new BitmapImage(
-                                                       new Uri(
-                                                           @"pack://application:,,,/Hypertest;component/Images/save.png")),
-                                                   manager.GetCommand("SAVEAS"), null, false, false, _container));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/save.png")),
+                manager.GetCommand("SAVEAS"), null, false, false, _container));
 
             menuService.Get("_File").Add(new MenuItemViewModel("Close", 8, null, manager.GetCommand("CLOSE"),
-                                                               new KeyGesture(Key.F4, ModifierKeys.Control, "Ctrl + F4")));
+                new KeyGesture(Key.F4, ModifierKeys.Control, "Ctrl + F4")));
 
             menuService.Get("_File").Add(recentFiles.RecentMenu);
 
             menuService.Get("_File").Add(new MenuItemViewModel("E_xit", 101, null, manager.GetCommand("EXIT"),
-                                                               new KeyGesture(Key.F4, ModifierKeys.Alt, "Alt + F4")));
+                new KeyGesture(Key.F4, ModifierKeys.Alt, "Alt + F4")));
 
 
             menuService.Add(new MenuItemViewModel("_Edit", 2));
             menuService.Get("_Edit").Add(new MenuItemViewModel("_Undo", 1,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/undo.png")),
-                                                               ApplicationCommands.Undo));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                ApplicationCommands.Undo));
             menuService.Get("_Edit").Add(new MenuItemViewModel("_Redo", 2,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/redo.png")),
-                                                               ApplicationCommands.Redo));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/redo.png")),
+                ApplicationCommands.Redo));
             menuService.Get("_Edit").Add(MenuItemViewModel.Separator(15));
             menuService.Get("_Edit").Add(new MenuItemViewModel("Cut", 20,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/cut.png")),
-                                                               ApplicationCommands.Cut));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/cut.png")),
+                ApplicationCommands.Cut));
             menuService.Get("_Edit").Add(new MenuItemViewModel("Copy", 21,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/copy.png")),
-                                                               ApplicationCommands.Copy));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/copy.png")),
+                ApplicationCommands.Copy));
             menuService.Get("_Edit").Add(new MenuItemViewModel("_Paste", 22,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/paste.png")),
-                                                               ApplicationCommands.Paste));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
+                ApplicationCommands.Paste));
             menuService.Get("_Edit").Add(new MenuItemViewModel("Run", 23,
-                                                               new BitmapImage(
-                                                                   new Uri(
-                                                                       @"pack://application:,,,/Hypertest;component/Images/paste.png")),
-                                                               manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
+                manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
 
             menuService.Add(new MenuItemViewModel("_View", 3));
 
             if (logger != null)
                 menuService.Get("_View").Add(new MenuItemViewModel("_Logger", 1,
-                                                                   new BitmapImage(
-                                                                       new Uri(
-                                                                           @"pack://application:,,,/Hypertest;component/Images/undo.png")),
-                                                                   manager.GetCommand("LOGSHOW")) { IsCheckable = true, IsChecked = logger.IsVisible });
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                    manager.GetCommand("LOGSHOW")) {IsCheckable = true, IsChecked = logger.IsVisible});
+
+            if (toolbox != null)
+                menuService.Get("_View").Add(new MenuItemViewModel("_Toolbox", 2,
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                    manager.GetCommand("TOOLBOXSHOW")) {IsCheckable = true, IsChecked = toolbox.IsVisible});
 
             menuService.Get("_View").Add(new MenuItemViewModel("Themes", 1));
 
             //Set the checkmark of the theme menu's based on which is currently selected
             menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Dark", 1, null,
-                                                                             manager.GetCommand("THEMECHANGE"))
-            {
-                IsCheckable = true,
-                IsChecked = (themeSettings.SelectedTheme == "Dark"),
-                CommandParameter = "Dark"
-            });
+                manager.GetCommand("THEMECHANGE"))
+                                                       {
+                                                           IsCheckable = true,
+                                                           IsChecked = (themeSettings.SelectedTheme == "Dark"),
+                                                           CommandParameter = "Dark"
+                                                       });
             menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Light", 2, null,
-                                                                             manager.GetCommand("THEMECHANGE"))
-            {
-                IsCheckable = true,
-                IsChecked = (themeSettings.SelectedTheme == "Light"),
-                CommandParameter = "Light"
-            });
+                manager.GetCommand("THEMECHANGE"))
+                                                       {
+                                                           IsCheckable = true,
+                                                           IsChecked = (themeSettings.SelectedTheme == "Light"),
+                                                           CommandParameter = "Light"
+                                                       });
 
             menuService.Add(new MenuItemViewModel("_Tools", 4));
             menuService.Get("_Tools").Add(new MenuItemViewModel("Settings", 1, null, settingsManager.SettingsCommand));
@@ -288,7 +308,7 @@ namespace Hypertest.Core
         private void SaveDocument()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            ICommandManager manager = _container.Resolve<ICommandManager>();
+            var manager = _container.Resolve<ICommandManager>();
             workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument);
             manager.Refresh();
         }
@@ -296,13 +316,14 @@ namespace Hypertest.Core
         private void SaveAsDocument()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            ICommandManager manager = _container.Resolve<ICommandManager>();
+            var manager = _container.Resolve<ICommandManager>();
             if (workspace.ActiveDocument != null)
             {
                 workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument, true);
                 manager.Refresh();
             }
         }
+
         #endregion
 
         #region Theme
@@ -312,7 +333,7 @@ namespace Hypertest.Core
             var manager = _container.Resolve<IThemeManager>();
             var menuService = _container.Resolve<IMenuService>();
             var win = _container.Resolve<IShell>() as Window;
-            MenuItemViewModel mvm =
+            var mvm =
                 menuService.Get("_View").Get("Themes").Get(manager.CurrentTheme.Name) as MenuItemViewModel;
 
             if (manager.CurrentTheme.Name != s)
@@ -345,17 +366,32 @@ namespace Hypertest.Core
             }
         }
 
+        private void ToggleToolbox()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            var menuService = _container.Resolve<IMenuService>();
+            ToolViewModel toolbox = workspace.Tools.First(f => f.ContentId == "Toolbox");
+            if (toolbox != null)
+            {
+                toolbox.IsVisible = !toolbox.IsVisible;
+                var mi = menuService.Get("_View").Get("_Toolbox") as MenuItemViewModel;
+                mi.IsChecked = toolbox.IsVisible;
+            }
+        }
+
         #endregion
 
         #region Run
+
         private void RunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
             if (workspace.ActiveDocument != null)
             {
-                if(workspace.ActiveDocument.Model is TestScenario)
+                if (workspace.ActiveDocument.Model is TestScenario)
                 {
-                    WebTestResultViewModel cvm = workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
+                    var cvm =
+                        workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
                     if (cvm != null)
                     {
                         workspace.ActiveDocument = cvm;
@@ -363,7 +399,8 @@ namespace Hypertest.Core
                     else
                     {
                         cvm = _container.Resolve<WebTestResultViewModel>();
-                        WebScenarioRunner.Current.Initialize((workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
+                        WebScenarioRunner.Current.Initialize(
+                            (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
                         cvm.Refresh();
                         workspace.Documents.Add(cvm);
                         workspace.ActiveDocument = cvm;
@@ -381,15 +418,19 @@ namespace Hypertest.Core
             }
             return false;
         }
+
         #endregion
 
         #region Close
+
         private void CloseCommandExecute()
         {
-            IShell shell = _container.Resolve<IShell>();
+            var shell = _container.Resolve<IShell>();
             shell.Close();
         }
+
         #endregion
+
         #endregion
     }
 }

@@ -129,6 +129,11 @@
     <Compile Include="Tests\WebTestScenarioView.xaml.cs">
       <DependentUpon>WebTestScenarioView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Toolbox\ToolboxModel.cs" />
+    <Compile Include="Toolbox\ToolboxView.xaml.cs">
+      <DependentUpon>ToolboxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toolbox\ToolboxViewModel.cs" />
     <Compile Include="Utils\SerializationHelper.cs" />
     <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="WebTestScenarioViewModel.cs" />
@@ -148,7 +153,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Toolbox\ToolboxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

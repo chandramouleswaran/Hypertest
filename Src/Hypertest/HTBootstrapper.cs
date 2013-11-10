@@ -43,7 +43,7 @@ namespace Hypertest
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            var catalog = new MultipleDirectoryModuleCatalog(new List<string>() { @".\External", @".",  @".\Test"});
+            var catalog = new MultipleDirectoryModuleCatalog(new List<string> {@".\External", @".", @".\Test"});
             return catalog;
         }
     }

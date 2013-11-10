@@ -1,4 +1,16 @@
-﻿using System;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,20 +23,22 @@ namespace Hypertest.Core.Manager
 {
     public class StateManager
     {
-
         #region Members
-        private Stack<ChangeSet> _undoStack;
-        private Stack<ChangeSet> _redoStack;
-        private bool _isWorking;
-        private bool _isBatch;
-        private int _batchCounter = 0;
+
+        private readonly ObservableCollection<INotifyCollectionChanged> _collections;
+        private readonly Stack<ChangeSet> _redoStack;
+        private readonly ObservableCollection<INotifyPropertyChanged> _targets;
+        private readonly Stack<ChangeSet> _undoStack;
+        private int _batchCounter;
         private ChangeSet _currentBatch;
-        private ObservableCollection<INotifyPropertyChanged> _targets;
-        private ObservableCollection<INotifyCollectionChanged> _collections;
+        private bool _isBatch;
+        private bool _isWorking;
         public event EventHandler StateChange;
+
         #endregion
 
         #region CTOR
+
         public StateManager()
         {
             _undoStack = new Stack<ChangeSet>();
@@ -33,9 +47,11 @@ namespace Hypertest.Core.Manager
             _targets = new ObservableCollection<INotifyPropertyChanged>();
             _collections = new ObservableCollection<INotifyCollectionChanged>();
         }
+
         #endregion
 
         #region Property
+
         public IEnumerable<ChangeSet> UndoStack
         {
             get { return _undoStack; }
@@ -50,6 +66,7 @@ namespace Hypertest.Core.Manager
         {
             get { return _isBatch; }
         }
+
         #endregion
 
         #region Batch
@@ -111,7 +128,7 @@ namespace Hypertest.Core.Manager
 
         public void AddChange(Change change, string description)
         {
-            if (_isWorking == true)
+            if (_isWorking)
                 return;
             if (_isBatch)
             {
@@ -176,7 +193,7 @@ namespace Hypertest.Core.Manager
 
         public void Undo()
         {
-            var last = _undoStack.FirstOrDefault();
+            ChangeSet last = _undoStack.FirstOrDefault();
             if (null != last)
                 Undo(last);
         }
@@ -190,7 +207,7 @@ namespace Hypertest.Core.Manager
             {
                 do
                 {
-                    var changeSet = _undoStack.Pop();
+                    ChangeSet changeSet = _undoStack.Pop();
 
                     if (changeSet == value || _undoStack.Count == 0)
                         done = true;
@@ -200,7 +217,6 @@ namespace Hypertest.Core.Manager
 
                     _redoStack.Push(changeSet);
                     RaiseStateChangeEvent();
-
                 } while (!done);
             }
             finally
@@ -216,7 +232,7 @@ namespace Hypertest.Core.Manager
 
         public void Redo()
         {
-            var last = _redoStack.FirstOrDefault();
+            ChangeSet last = _redoStack.FirstOrDefault();
             if (null != last)
                 Redo(last);
         }
@@ -230,7 +246,7 @@ namespace Hypertest.Core.Manager
             {
                 do
                 {
-                    var changeSet = _redoStack.Pop();
+                    ChangeSet changeSet = _redoStack.Pop();
 
                     if (changeSet == value || _redoStack.Count == 0)
                         done = true;
@@ -240,7 +256,6 @@ namespace Hypertest.Core.Manager
 
                     _undoStack.Push(changeSet);
                     RaiseStateChangeEvent();
-
                 } while (!done);
             }
             finally
@@ -255,10 +270,10 @@ namespace Hypertest.Core.Manager
 
         private void target_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_isWorking == true)
+            if (_isWorking)
                 return;
 
-            PropertyChangedExtendedEventArgs newArgs = e as PropertyChangedExtendedEventArgs;
+            var newArgs = e as PropertyChangedExtendedEventArgs;
             if (newArgs != null)
             {
                 if (_isBatch)
@@ -278,7 +293,7 @@ namespace Hypertest.Core.Manager
 
         private void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (_isWorking == true)
+            if (_isWorking)
                 return;
 
             if (e != null)
@@ -321,6 +336,5 @@ namespace Hypertest.Core.Manager
         }
 
         #endregion
-
     }
 }

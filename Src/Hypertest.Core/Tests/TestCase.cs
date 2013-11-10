@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Wide.Interfaces.Services;
 using Wide.Interfaces;
-using System.Xml.Serialization;
-using System.Collections.ObjectModel;
+using Wide.Interfaces.Services;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
-
     public enum TestCaseResult
     {
         None,
@@ -29,25 +39,28 @@ namespace Hypertest.Core.Tests
     }
 
     /// <summary>
-    /// The basic unit of a test case in the Hypertest framework
+    ///     The basic unit of a test case in the Hypertest framework
     /// </summary>
     [DataContract]
     [Serializable]
     public abstract class TestCase : ContentModel, ICloneable, ICustomTypeDescriptor
     {
         #region Members
-        private FolderTestCase _parent;
-        private string _description;
-        protected bool _isSelected;
-        protected bool _isExpanded;
-        protected TestCaseResult _expectedResult;
+
         protected TestCaseResult _actualResult;
+        private string _description;
+        protected TestCaseResult _expectedResult;
+        protected bool _isExpanded;
+        protected bool _isSelected;
         protected bool _markedForExecution;
-        private ObservableCollection<Variable> _variables;
+        private FolderTestCase _parent;
         private TestRunState _runState;
+        private ObservableCollection<Variable> _variables;
+
         #endregion
 
         #region CTOR
+
         protected TestCase()
         {
             Initialize();
@@ -62,9 +75,11 @@ namespace Hypertest.Core.Tests
             _expectedResult = TestCaseResult.Passed;
             _runState = TestRunState.NotStarted;
         }
+
         #endregion
 
         #region Deserialize
+
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
@@ -74,12 +89,20 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Virtuals
-        public virtual void Setup(){}
-        public virtual void Body(){}
+
+        public virtual void Setup()
+        {
+        }
+
+        public virtual void Body()
+        {
+        }
+
         public virtual void Cleanup(Exception e = null)
         {
             //Need to access logger
         }
+
         #endregion
 
         public void Run()
@@ -110,18 +133,18 @@ namespace Hypertest.Core.Tests
 
         private void InitRun()
         {
-            foreach (var variable in Variables)
+            foreach (Variable variable in Variables)
             {
-                
             }
         }
-        
+
         private void FinalizeRun()
         {
             //This is where we want to look at the properties and assign it to variables
         }
 
         #region Properties
+
         [DataMember]
         [Description("Enter the description for the test case")]
         [Category("General")]
@@ -179,15 +202,14 @@ namespace Hypertest.Core.Tests
             {
                 if (_expectedResult == TestCaseResult.None)
                     return TestCaseResult.Passed;
-                else if (_expectedResult != _actualResult)
+                if (_expectedResult != _actualResult)
                     return TestCaseResult.Failed;
-                else
-                    return TestCaseResult.Passed;
+                return TestCaseResult.Passed;
             }
         }
 
         [DataMember]
-        [NewItemTypes(typeof(Variable))]
+        [NewItemTypes(typeof (Variable))]
         public virtual ObservableCollection<Variable> Variables
         {
             get { return _variables; }
@@ -235,8 +257,8 @@ namespace Hypertest.Core.Tests
             {
                 bool oldValue = _isExpanded;
                 _isExpanded = value;
-                if(oldValue != value)
-                    RaisePropertyChangedWithValues(oldValue, _isExpanded, "Expand - " + _isExpanded.ToString());
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _isExpanded, "Expand - " + _isExpanded);
             }
         }
 
@@ -267,7 +289,7 @@ namespace Hypertest.Core.Tests
         }
 
         [DataMember]
-        [Browsable(false),RefreshProperties(RefreshProperties.All)]
+        [Browsable(false), RefreshProperties(RefreshProperties.All)]
         public TestRunState RunState
         {
             get { return _runState; }
@@ -281,6 +303,7 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Internal Properties
+
         [XmlIgnore]
         [Browsable(false)]
         protected internal virtual ITestRegistry TestRegistry
@@ -296,7 +319,7 @@ namespace Hypertest.Core.Tests
             get { return Scenario.LoggerService; }
             set { }
         }
-        
+
         [XmlIgnore]
         [Browsable(false)]
         protected internal virtual IRunner Runner
@@ -304,29 +327,30 @@ namespace Hypertest.Core.Tests
             get { return Scenario.Runner; }
             set { }
         }
+
         #endregion
 
         #region ICloneable
+
         public object Clone()
         {
-            if (this.TestRegistry != null)
+            if (TestRegistry != null)
             {
-                var serializer = new DataContractSerializer(this.GetType(), this.TestRegistry.Tests);
-                using (var ms = new System.IO.MemoryStream())
+                var serializer = new DataContractSerializer(GetType(), TestRegistry.Tests);
+                using (var ms = new MemoryStream())
                 {
                     serializer.WriteObject(ms, this);
                     ms.Position = 0;
-                    return (TestCase) serializer.ReadObject(ms);
+                    return serializer.ReadObject(ms);
                 }
             }
-            else
-            {
-                throw new Exception("Test registry is null - please set the scenario's registry");
-            }
+            throw new Exception("Test registry is null - please set the scenario's registry");
         }
+
         #endregion
 
         #region ICustomTypeDescriptor
+
         public AttributeCollection GetAttributes()
         {
             return TypeDescriptor.GetAttributes(this, true);
@@ -374,7 +398,7 @@ namespace Hypertest.Core.Tests
 
         public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
         {
-            return this.GetProperties();
+            return GetProperties();
         }
 
         public PropertyDescriptorCollection GetProperties()
@@ -386,6 +410,7 @@ namespace Hypertest.Core.Tests
         {
             return this;
         }
+
         #endregion
     }
 }

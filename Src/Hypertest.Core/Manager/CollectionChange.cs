@@ -1,4 +1,16 @@
-﻿using System.Collections;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System.Collections;
 using System.Collections.Specialized;
 
 namespace Hypertest.Core.Manager
@@ -9,7 +21,7 @@ namespace Hypertest.Core.Manager
         {
             this.args = args;
             this.target = target;
-            this.property = property;
+            property = property;
         }
 
         public object target { get; internal set; }
@@ -30,12 +42,12 @@ namespace Hypertest.Core.Manager
 
         private void CollectionUndo()
         {
-            NotifyCollectionChangedEventArgs e = args as NotifyCollectionChangedEventArgs;
-            IList collection = target as IList;
+            NotifyCollectionChangedEventArgs e = args;
+            var collection = target as IList;
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
+                    foreach (object item in e.NewItems)
                     {
                         collection.Remove(item);
                     }
@@ -43,7 +55,7 @@ namespace Hypertest.Core.Manager
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (var item in e.OldItems)
+                    foreach (object item in e.OldItems)
                     {
                         collection.Insert(e.OldStartingIndex, item);
                     }
@@ -54,12 +66,12 @@ namespace Hypertest.Core.Manager
 
         private void CollectionRedo()
         {
-            NotifyCollectionChangedEventArgs e = args as NotifyCollectionChangedEventArgs;
-            IList collection = target as IList;
+            NotifyCollectionChangedEventArgs e = args;
+            var collection = target as IList;
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    foreach (var item in e.NewItems)
+                    foreach (object item in e.NewItems)
                     {
                         collection.Insert(e.NewStartingIndex, item);
                     }
@@ -67,7 +79,7 @@ namespace Hypertest.Core.Manager
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (var item in e.OldItems)
+                    foreach (object item in e.OldItems)
                     {
                         collection.Remove(item);
                     }

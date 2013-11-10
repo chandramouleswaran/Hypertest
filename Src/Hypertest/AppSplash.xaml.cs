@@ -16,7 +16,7 @@ using Wide.Splash;
 namespace Hypertest
 {
     /// <summary>
-    /// Interaction logic for AppSplash.xaml
+    ///     Interaction logic for AppSplash.xaml
     /// </summary>
     public partial class AppSplash : Window, ISplashView
     {

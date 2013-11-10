@@ -1,51 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+using Hypertest.Core.Interfaces;
 using Hypertest.Core.Tests;
 using Microsoft.Practices.Unity;
 using Microsoft.Win32;
 using Wide.Core.Attributes;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
-using Hypertest.Core.Interfaces;
 
 namespace Hypertest.Core.Handlers
 {
     [FileContent("Web test scenario", "*.wts", 1)]
-    [NewContent("Web test scenario files", 1, "Creates a Web test scenario", "pack://application:,,,/Hypertest;component/Hypertest.png")]
+    [NewContent("Web test scenario files", 1, "Creates a Web test scenario",
+        "pack://application:,,,/Hypertest;component/Hypertest.png")]
     internal class WebTestScenarioHandler : IContentHandler
     {
         /// <summary>
-        /// The injected container
+        ///     The injected container
         /// </summary>
         private readonly IUnityContainer _container;
 
         /// <summary>
-        /// The injected logger service
+        ///     The save file dialog
+        /// </summary>
+        private readonly SaveFileDialog _dialog;
+
+        /// <summary>
+        ///     The injected logger service
         /// </summary>
         private readonly ILoggerService _loggerService;
 
         /// <summary>
-        /// The test registry
+        ///     The test registry
         /// </summary>
         private readonly ITestRegistry _testRegistry;
 
         /// <summary>
-        /// The save file dialog
-        /// </summary>
-        private SaveFileDialog _dialog;
-
-        /// <summary>
-        /// Constructor of MDHandler - all parameters are injected
+        ///     Constructor of MDHandler - all parameters are injected
         /// </summary>
         /// <param name="container">The injected container of the application</param>
         /// <param name="loggerService">The injected logger service of the application</param>
-        public WebTestScenarioHandler(IUnityContainer container, ILoggerService loggerService, ITestRegistry testRegistry)
+        public WebTestScenarioHandler(IUnityContainer container, ILoggerService loggerService,
+            ITestRegistry testRegistry)
         {
             _container = container;
             _loggerService = loggerService;
@@ -60,7 +71,7 @@ namespace Hypertest.Core.Handlers
             var vm = _container.Resolve<WebTestScenarioViewModel>();
             var model = _container.Resolve<WebTestScenario>();
             model.Description = "wow another scenario!";
-            model.Children.Add(new FolderTestCase() { Description = "My dear folder" });
+            model.Children.Add(new FolderTestCase {Description = "My dear folder"});
             model.IsSelected = true;
             model.Manager.Clear();
             var view = _container.Resolve<WebTestScenarioView>();
@@ -82,13 +93,13 @@ namespace Hypertest.Core.Handlers
         }
 
         /// <summary>
-        /// Validates the content by checking if a file exists for the specified location
+        ///     Validates the content by checking if a file exists for the specified location
         /// </summary>
         /// <param name="info">The string containing the file location</param>
         /// <returns>True, if the file exists and has a .md extension - false otherwise</returns>
         public bool ValidateContentType(object info)
         {
-            string location = info as string;
+            var location = info as string;
             string extension = "";
 
             if (location == null)
@@ -101,10 +112,10 @@ namespace Hypertest.Core.Handlers
         }
 
         /// <summary>
-        /// Opens a file and returns the corresponding MDViewModel
+        ///     Opens a file and returns the corresponding MDViewModel
         /// </summary>
         /// <param name="info">The string location of the file</param>
-        /// <returns>The <see cref="MDViewModel"/> for the file.</returns>
+        /// <returns>The <see cref="MDViewModel" /> for the file.</returns>
         public ContentViewModel OpenContent(object info)
         {
             var location = info as string;
@@ -113,13 +124,14 @@ namespace Hypertest.Core.Handlers
                 try
                 {
                     WebTestScenario model;
-                    using (FileStream reader = new FileStream(location, FileMode.Open, FileAccess.Read))
+                    using (var reader = new FileStream(location, FileMode.Open, FileAccess.Read))
                     {
-                        DataContractSerializer ser = new DataContractSerializer(typeof(WebTestScenario), _testRegistry.Tests);
-                        model = (WebTestScenario)ser.ReadObject(reader);
+                        var ser = new DataContractSerializer(typeof (WebTestScenario),
+                            _testRegistry.Tests);
+                        model = (WebTestScenario) ser.ReadObject(reader);
                     }
 
-                    WebTestScenarioViewModel vm = _container.Resolve<WebTestScenarioViewModel>();
+                    var vm = _container.Resolve<WebTestScenarioViewModel>();
                     var view = _container.Resolve<WebTestScenarioView>();
 
                     //Model details
@@ -139,9 +151,7 @@ namespace Hypertest.Core.Handlers
                 }
                 catch (Exception e)
                 {
-                    
                 }
-                
             }
             return null;
         }
@@ -162,7 +172,7 @@ namespace Hypertest.Core.Handlers
         }
 
         /// <summary>
-        /// Saves the content of the TextViewModel
+        ///     Saves the content of the TextViewModel
         /// </summary>
         /// <param name="contentViewModel">This needs to be a TextViewModel that needs to be saved</param>
         /// <param name="saveAs">Pass in true if you need to Save As?</param>
@@ -173,7 +183,8 @@ namespace Hypertest.Core.Handlers
 
             if (scenarioViewModel == null)
             {
-                _loggerService.Log("ContentViewModel needs to be a Web test scenario to save details", LogCategory.Exception, LogPriority.High);
+                _loggerService.Log("ContentViewModel needs to be a Web test scenario to save details",
+                    LogCategory.Exception, LogPriority.High);
                 throw new ArgumentException("ContentViewModel needs to be a WebTestScenarioViewModel to save details");
             }
 
@@ -181,8 +192,11 @@ namespace Hypertest.Core.Handlers
 
             if (scenario == null)
             {
-                _loggerService.Log("WebTestScenarioViewModel does not have a WebTestScenario which should have the content", LogCategory.Exception, LogPriority.High);
-                throw new ArgumentException("WebTestScenarioViewModel does not have a WebTestScenario which should have the text");
+                _loggerService.Log(
+                    "WebTestScenarioViewModel does not have a WebTestScenario which should have the content",
+                    LogCategory.Exception, LogPriority.High);
+                throw new ArgumentException(
+                    "WebTestScenarioViewModel does not have a WebTestScenario which should have the text");
             }
 
             var location = scenario.Location as string;
@@ -209,9 +223,10 @@ namespace Hypertest.Core.Handlers
                     scenarioViewModel.Title = Path.GetFileName(location);
                     try
                     {
-                        using (FileStream writer = new FileStream(location, FileMode.Create, FileAccess.Write))
+                        using (var writer = new FileStream(location, FileMode.Create, FileAccess.Write))
                         {
-                            DataContractSerializer ser = new DataContractSerializer(typeof(WebTestScenario), _testRegistry.Tests);
+                            var ser = new DataContractSerializer(typeof (WebTestScenario),
+                                _testRegistry.Tests);
                             ser.WriteObject(writer, scenario);
                             scenario.SetDirty(false);
                         }
@@ -229,9 +244,10 @@ namespace Hypertest.Core.Handlers
             {
                 try
                 {
-                    using (FileStream writer = new FileStream(location, FileMode.Create, FileAccess.Write))
+                    using (var writer = new FileStream(location, FileMode.Create, FileAccess.Write))
                     {
-                        DataContractSerializer ser = new DataContractSerializer(typeof(WebTestScenario), _testRegistry.Tests);
+                        var ser = new DataContractSerializer(typeof (WebTestScenario),
+                            _testRegistry.Tests);
                         ser.WriteObject(writer, scenario);
                         scenario.SetDirty(false);
                     }
@@ -249,7 +265,7 @@ namespace Hypertest.Core.Handlers
         }
 
         /// <summary>
-        /// Validates the content from an ID - the ContentID from the ContentViewModel
+        ///     Validates the content from an ID - the ContentID from the ContentViewModel
         /// </summary>
         /// <param name="contentId">The content ID which needs to be validated</param>
         /// <returns>True, if valid from content ID - false, otherwise</returns>

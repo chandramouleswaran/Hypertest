@@ -11,27 +11,27 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using Wide.Interfaces;
 using Wide.Interfaces.Events;
-using System.ComponentModel;
 using Wide.Interfaces.Services;
 
 namespace Hypertest
 {
     internal class HTWorkspace : AbstractWorkspace
     {
+        private const string _title = "Hypertest";
         private string _document;
         private ILoggerService _logger;
-        private const string _title = "Hypertest";
 
         public HTWorkspace(IUnityContainer container, IEventAggregator eventAggregator)
             : base(container, eventAggregator)
         {
-            IEventAggregator aggregator = container.Resolve<IEventAggregator>();
+            var aggregator = container.Resolve<IEventAggregator>();
             aggregator.GetEvent<ActiveContentChangedEvent>().Subscribe(ContentChanged);
             _document = "";
         }
@@ -40,7 +40,8 @@ namespace Hypertest
         {
             get
             {
-                ImageSource imageSource = new BitmapImage(new Uri("pack://application:,,,/Hypertest;component/Hypertest.png"));
+                ImageSource imageSource =
+                    new BitmapImage(new Uri("pack://application:,,,/Hypertest;component/Hypertest.png"));
                 return imageSource;
             }
         }

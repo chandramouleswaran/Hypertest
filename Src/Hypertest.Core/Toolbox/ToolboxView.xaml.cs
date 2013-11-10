@@ -10,34 +10,19 @@
 
 #endregion
 
-using Hypertest.Core.Handlers;
-using Hypertest.Core.Tests;
-using Wide.Core.TextDocument;
+using System.Windows.Controls;
 using Wide.Interfaces;
-using Wide.Interfaces.Services;
 
-namespace Hypertest.Core
+namespace Hypertest.Core.Toolbox
 {
-    internal class WebTestScenarioViewModel : TextViewModel
+    /// <summary>
+    ///     Interaction logic for Toolbox.xaml
+    /// </summary>
+    public partial class ToolboxView : UserControl, IContentView
     {
-        public WebTestScenarioViewModel(AbstractWorkspace workspace, ICommandManager commandManager,
-            ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
+        public ToolboxView()
         {
-        }
-
-        internal void SetModel(WebTestScenario model)
-        {
-            Model = model;
-        }
-
-        internal void SetView(WebTestScenarioView view)
-        {
-            View = view;
-        }
-
-        internal void SetHandler(WebTestScenarioHandler webTestScenarioHandler)
-        {
-            Handler = webTestScenarioHandler;
+            InitializeComponent();
         }
     }
 }

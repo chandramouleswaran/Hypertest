@@ -1,13 +1,24 @@
-﻿using System;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 namespace Hypertest.Core.Interfaces
 {
-
     /// <summary>
-    /// DataType enum
+    ///     DataType enum
     /// </summary>
     public enum DataType
     {
@@ -18,7 +29,7 @@ namespace Hypertest.Core.Interfaces
     }
 
     /// <summary>
-    /// The variable class
+    ///     The variable class
     /// </summary>
     [DataContract]
     public class Variable : INotifyPropertyChanged
@@ -26,12 +37,13 @@ namespace Hypertest.Core.Interfaces
         #region Members
 
         private string _name;
-        private object _value;
         private DataType _type;
+        private object _value;
 
         #endregion
 
         #region Property
+
         [DataMember]
         public string Name
         {
@@ -65,6 +77,7 @@ namespace Hypertest.Core.Interfaces
                 RaisePropertyChanged();
             }
         }
+
         #endregion
 
         #region Overrides
@@ -76,17 +89,17 @@ namespace Hypertest.Core.Interfaces
 
         public override bool Equals(object obj)
         {
-            Variable v = obj as Variable;
+            var v = obj as Variable;
             if (v != null)
             {
-                return this.Name == v.Name;
+                return Name == v.Name;
             }
             return false;
         }
 
         public override string ToString()
         {
-            return _name + "=" + _value.ToString() + " (" + _type.ToString() + ")";
+            return _name + "=" + _value + " (" + _type + ")";
         }
 
         #endregion
@@ -97,7 +110,7 @@ namespace Hypertest.Core.Interfaces
         {
             double dVal;
             bool bVal;
-            this.Name = name;
+            Name = name;
             if (double.TryParse(strValue, out dVal))
             {
                 Value = dVal;
@@ -110,32 +123,32 @@ namespace Hypertest.Core.Interfaces
             }
             else
             {
-                this.Value = strValue;
+                Value = strValue;
                 Type = DataType.String;
             }
         }
 
         public Variable(string name, object val)
         {
-            this.Name = name;
+            Name = name;
             if (val != null)
             {
-                this.Type = DataType.Object;
+                Type = DataType.Object;
                 Type t = val.GetType();
 
                 if (t == typeof (string) || t == typeof (String))
                 {
-                    this.Type = DataType.String;
+                    Type = DataType.String;
                 }
                 if (t == typeof (double) || t == typeof (Double) || t == typeof (int) || t == typeof (Int32))
                 {
-                    this.Type = DataType.Number;
+                    Type = DataType.Number;
                 }
                 if (t == typeof (bool) || t == typeof (Boolean))
                 {
-                    this.Type = DataType.Boolean;
+                    Type = DataType.Boolean;
                 }
-                this.Value = val;
+                Value = val;
             }
         }
 
@@ -159,6 +172,5 @@ namespace Hypertest.Core.Interfaces
         }
 
         #endregion
-
     }
 }

@@ -1,31 +1,46 @@
-﻿using System.Runtime.Serialization;
-using Hypertest.Core.Interfaces;
-using Wide.Interfaces.Services;
+﻿#region License
+
+// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#endregion
+
 using System;
-using Hypertest.Core.Manager;
 using System.Collections.Specialized;
+using System.Runtime.Serialization;
+using Hypertest.Core.Interfaces;
+using Hypertest.Core.Manager;
+using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
     /// <summary>
-    /// The basic unit of a test scenario in the Hypertest framework
+    ///     The basic unit of a test scenario in the Hypertest framework
     /// </summary>
     [DataContract]
     [Serializable]
     public abstract class TestScenario : FolderTestCase
     {
         #region Member
+
         protected StateManager _manager;
+
         #endregion
 
         #region CTOR and other initializers
-        protected TestScenario() : base()
+
+        protected TestScenario()
         {
             Initialize();
             _children.CollectionChanged += _children_CollectionChanged;
             BulkMonitor(this);
-            this.IsSelected = true;
-            this.IsExpanded = true;
+            IsSelected = true;
+            IsExpanded = true;
             _manager.Clear();
         }
 
@@ -35,10 +50,11 @@ namespace Hypertest.Core.Tests
             _manager.StateChange += _manager_StateChange;
         }
 
-        void _manager_StateChange(object sender, EventArgs e)
+        private void _manager_StateChange(object sender, EventArgs e)
         {
-            this.IsDirty = true;
+            IsDirty = true;
         }
+
         #endregion
 
         #region Deserialize
@@ -53,8 +69,8 @@ namespace Hypertest.Core.Tests
             }
             _children.CollectionChanged += _children_CollectionChanged;
             BulkMonitor(this);
-            this.IsSelected = true;
-            this.IsExpanded = true;
+            IsSelected = true;
+            IsExpanded = true;
             _manager.Clear();
         }
 
@@ -66,7 +82,7 @@ namespace Hypertest.Core.Tests
         {
             _manager.MonitorObject(testCase);
             _manager.MonitorCollection(testCase.Variables);
-            FolderTestCase ftc = testCase as FolderTestCase;
+            var ftc = testCase as FolderTestCase;
             if (ftc != null)
             {
                 ftc.Children.CollectionChanged += _children_CollectionChanged;
@@ -81,7 +97,7 @@ namespace Hypertest.Core.Tests
         protected void BulkUnmonitor(TestCase testCase)
         {
             _manager.UnmonitorObject(testCase);
-            FolderTestCase ftc = testCase as FolderTestCase;
+            var ftc = testCase as FolderTestCase;
             if (ftc != null)
             {
                 ftc.Children.CollectionChanged += _children_CollectionChanged;
@@ -105,7 +121,7 @@ namespace Hypertest.Core.Tests
 
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                if (this._manager != null && e.NewItems != null)
+                if (_manager != null && e.NewItems != null)
                 {
                     foreach (TestCase test in e.NewItems)
                     {
@@ -114,7 +130,7 @@ namespace Hypertest.Core.Tests
                 }
             }
 
-            if (this._manager != null && e.OldItems != null)
+            if (_manager != null && e.OldItems != null)
             {
                 foreach (TestCase test in e.OldItems)
                 {
@@ -129,38 +145,31 @@ namespace Hypertest.Core.Tests
 
         internal void SetDirty(bool p)
         {
-            this.IsDirty = p;
+            IsDirty = p;
         }
 
         internal void SetLocation(object info)
         {
-            this.Location = info;
-            this.IsDirty = false;
+            Location = info;
+            IsDirty = false;
             RaisePropertyChanged("Location");
         }
 
         #endregion
 
         #region Property
-        protected internal override ITestRegistry TestRegistry
+
+        protected internal override ITestRegistry TestRegistry { get; set; }
+
+        protected internal StateManager Manager
         {
-            get;
-            set;
+            get { return _manager; }
         }
 
-        protected internal StateManager Manager { get { return _manager; } }
+        protected internal override ILoggerService LoggerService { get; set; }
 
-        protected internal override ILoggerService LoggerService
-        {
-            get;
-            set;
-        }
+        protected internal override IRunner Runner { get; set; }
 
-        protected internal override IRunner Runner
-        {
-            get;
-            set;
-        }
         #endregion
     }
 }

@@ -24,9 +24,9 @@ namespace Hypertest.Core.Utils
             if (obj == null)
                 return null;
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
-                DataContractSerializer dcs = new DataContractSerializer(typeof (T), extraTypes);
+                var dcs = new DataContractSerializer(typeof (T), extraTypes);
                 dcs.WriteObject(ms, obj);
                 return ms.ToArray();
             }
@@ -37,12 +37,12 @@ namespace Hypertest.Core.Utils
             if (data.Length == 0)
                 return default(T);
 
-            using (MemoryStream ms = new MemoryStream())
+            using (var ms = new MemoryStream())
             {
                 ms.Write(data, 0, data.Length);
                 ms.Seek(0, 0);
 
-                DataContractSerializer dcs = new DataContractSerializer(typeof (T), extraTypes);
+                var dcs = new DataContractSerializer(typeof (T), extraTypes);
                 return (T) dcs.ReadObject(ms);
             }
         }
