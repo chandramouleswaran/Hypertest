@@ -50,7 +50,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         [DataMember]
         [Browsable(false)]
         public ObservableCollection<TestCase> Children
@@ -86,7 +85,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Events
-
         //USED ONLY TO SET THE PARENT - NOTHING TO DO WITH STATE MANAGER.
         private void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

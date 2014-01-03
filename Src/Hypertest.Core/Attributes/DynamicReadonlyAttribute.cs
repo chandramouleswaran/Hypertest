@@ -15,6 +15,7 @@ using System.ComponentModel;
 
 namespace Hypertest.Core.Attributes
 {
+    //Concept from: http://www.codeproject.com/Articles/18092/Dynamic-Property-Attribute-Evaluation-at-Run-and-D
     public class DynamicReadonlyAttribute : DependsOnPropertyAttribute
     {
         public DynamicReadonlyAttribute(string property) : base(property)
@@ -32,7 +33,7 @@ namespace Hypertest.Core.Attributes
             {
                 // check if value is provided
                 if (value == null)
-                    value = false; // asume default
+                    value = false; // assume default
                 // create attribute
                 output = new ReadOnlyAttribute((bool) value);
             }

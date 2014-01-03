@@ -167,6 +167,7 @@ namespace Hypertest.Core.Tests
         [DisplayName("Expected Result")]
         [Description("The expected end result of the test case")]
         [Category("General")]
+        [DynamicReadonly("RunState")]
         public TestCaseResult ExpectedResult
         {
             get { return _expectedResult; }
@@ -181,7 +182,7 @@ namespace Hypertest.Core.Tests
         [DisplayName("Actual Result")]
         [Description("The actual end result of the test case")]
         [Category("General")]
-        [Browsable(false)]
+        [DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
         public TestCaseResult ActualResult
         {
             get { return _actualResult; }
@@ -195,7 +196,7 @@ namespace Hypertest.Core.Tests
         [DisplayName("Expected vs Actual Result")]
         [Description("The final result of the test case")]
         [Category("Results")]
-        [DynamicBrowsable("RunState")]
+        [DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
         public TestCaseResult ExpectedVsActual
         {
             get

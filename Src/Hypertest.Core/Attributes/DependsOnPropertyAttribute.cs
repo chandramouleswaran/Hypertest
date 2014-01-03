@@ -65,6 +65,7 @@ namespace Hypertest.Core.Attributes
 
         private class RuntimeEvaluator
         {
+            //Concept from: http://www.codeproject.com/Articles/18092/Dynamic-Property-Attribute-Evaluation-at-Run-and-D
             public static object Eval(object container, string property, object[] index)
             {
                 PropertyInfo pInfo = container.GetType().GetProperty(property);

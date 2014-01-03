@@ -16,6 +16,7 @@ using System.Reflection;
 
 namespace Hypertest.Core.Attributes
 {
+    //Concept from: http://www.codeproject.com/Articles/18092/Dynamic-Property-Attribute-Evaluation-at-Run-and-D
     public class PropertyInfoDescriptor : PropertyDescriptor
     {
         private readonly PropertyInfo propInfo;
