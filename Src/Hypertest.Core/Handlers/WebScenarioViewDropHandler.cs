@@ -105,7 +105,11 @@ namespace Hypertest.Core.Handlers
                     }
                 }
             }
-            if (!directlyOverItem)
+            if (item == null && view != null)
+            {
+                //TODO: (if needed) Case when you just dropping anywhere on the tree and not on an item - IGNORE THIS CASE
+            }
+            else if (!directlyOverItem)
             {
                 base.Drop(dropInfo);
             }

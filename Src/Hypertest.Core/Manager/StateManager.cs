@@ -201,7 +201,6 @@ namespace Hypertest.Core.Manager
         public void Undo(ChangeSet value)
         {
             bool done = false;
-            bool actionDone = false;
             _isWorking = true;
             try
             {
@@ -213,7 +212,6 @@ namespace Hypertest.Core.Manager
                         done = true;
 
                     changeSet.Undo();
-                    actionDone = true;
 
                     _redoStack.Push(changeSet);
                     RaiseStateChangeEvent();
@@ -240,7 +238,6 @@ namespace Hypertest.Core.Manager
         public void Redo(ChangeSet value)
         {
             bool done = false;
-            bool actionDone = false;
             _isWorking = true;
             try
             {
@@ -252,7 +249,6 @@ namespace Hypertest.Core.Manager
                         done = true;
 
                     changeSet.Redo();
-                    actionDone = true;
 
                     _undoStack.Push(changeSet);
                     RaiseStateChangeEvent();
