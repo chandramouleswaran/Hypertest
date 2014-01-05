@@ -25,14 +25,14 @@ namespace Hypertest.Core.Toolbox
         private ToolboxView _view;
         private IWorkspace _workspace;
 
-        public ToolboxViewModel(IUnityContainer container, AbstractWorkspace workspace, ITestRegistry registry)
+        public ToolboxViewModel(IUnityContainer container, AbstractWorkspace workspace, ToolboxModel model)
         {
             _workspace = workspace;
             _container = container;
             Name = "Toolbox";
             Title = "Toolbox";
             ContentId = "Toolbox";
-            _model = new ToolboxModel(registry);
+            _model = model;
             Model = _model;
             IsVisible = false;
 

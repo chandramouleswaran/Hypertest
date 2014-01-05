@@ -32,7 +32,7 @@ namespace Hypertest.Core.Service
         {
             if (!testCase.IsSubclassOf(typeof (TestCase)))
             {
-                throw new Exception("The type you are trying to add needs to be a TestCase");
+                throw new ArgumentException("The type you are trying to add needs to be a TestCase", "testCase");
             }
 
             if (!_types.Contains(testCase))
