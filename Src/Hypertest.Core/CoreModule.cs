@@ -390,8 +390,7 @@ namespace Hypertest.Core
             {
                 if (workspace.ActiveDocument.Model is TestScenario)
                 {
-                    var cvm =
-                        workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
+                    var cvm = workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
                     if (cvm != null)
                     {
                         workspace.ActiveDocument = cvm;
@@ -399,8 +398,10 @@ namespace Hypertest.Core
                     else
                     {
                         cvm = _container.Resolve<WebTestResultViewModel>();
-                        WebScenarioRunner.Current.Initialize(
-                            (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
+                        if (WebScenarioRunner.Current.IsRunning == false)
+                        {
+                            WebScenarioRunner.Current.Initialize((workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
+                        }
                         cvm.Refresh();
                         workspace.Documents.Add(cvm);
                         workspace.ActiveDocument = cvm;

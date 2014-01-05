@@ -31,8 +31,7 @@ namespace Hypertest.Core
         }
 
         /// <summary>
-        ///     The content ID - unique value for each document. For TextViewModels, the contentID is "FILE:##:" + location of the
-        ///     file.
+        /// The content ID - unique value for each document. "WEBTESTRESULT:##:" + location of the file.
         /// </summary>
         /// <value>The content id.</value>
         public override string ContentId
@@ -41,7 +40,7 @@ namespace Hypertest.Core
         }
 
         /// <summary>
-        ///     Refreshes the Web test result view model
+        /// Refreshes the Web test result view model
         /// </summary>
         public void Refresh()
         {
