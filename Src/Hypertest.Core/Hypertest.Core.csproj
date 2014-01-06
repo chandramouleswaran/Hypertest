@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
+    <Compile Include="Converters\TestRegistryToToolboxConverter.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />

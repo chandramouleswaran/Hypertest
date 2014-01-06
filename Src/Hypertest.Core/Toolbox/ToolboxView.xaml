@@ -7,15 +7,9 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <converters:ScenarioToObservableCollectionConverter x:Key="TestConverter" />
+        <converters:TestRegistryToToolboxConverter x:Key="RegistryConverter" />
     </UserControl.Resources>
     <Grid>
-        <!--<TreeView Name="TreeView1" ItemsSource="{Binding ., Mode=OneWay, Converter={StaticResource ResourceKey=TestConverter}}" >
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
-                    <TextBlock Text="{Binding Name}" Margin="4,0,4,0" ToolTip="{Binding Description}"/>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>-->
+        <TreeView Name="toolboxTree" Background="{DynamicResource WindowTitleColorBrush}" ItemsSource="{Binding Path=Registry, Mode=OneWay, Converter={StaticResource ResourceKey=RegistryConverter}}" />
     </Grid>
 </UserControl>
