@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// Copyright (c) 2014 Chandramouleswaran Ravichandran
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // 
@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Tests;
@@ -35,6 +36,16 @@ namespace Hypertest.Core.Service
                 throw new ArgumentException("The type you are trying to add needs to be a TestCase", "testCase");
             }
 
+            CategoryAttribute attributeExists =
+                testCase.GetCustomAttributes(typeof (CategoryAttribute), true).FirstOrDefault() as CategoryAttribute;
+
+            if (attributeExists == null)
+            {
+                throw new ArgumentException(
+                    "Your test case needs to belong to a category which needs to be listed in the Toolbox. If you do not want to see it in the Toolbox, do not add it to the registry.",
+                    "testCase");
+            }
+
             if (!_types.Contains(testCase))
             {
                 _types.Add(testCase);
@@ -42,7 +53,7 @@ namespace Hypertest.Core.Service
             }
         }
 
-        public IEnumerable<Type> Tests
+        public IReadOnlyList<Type> Tests
         {
             get { return _types; }
         }

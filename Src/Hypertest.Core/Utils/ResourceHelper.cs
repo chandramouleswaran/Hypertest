@@ -11,39 +11,34 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Reflection;
+using System.Windows.Media.Imaging;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Utils
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    public static class ResourceHelper
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        /// <summary>
+        /// Load a resource WPF-BitmapImage (png, bmp, ...) from embedded resource defined as 'Resource' not as 'Embedded resource'.
+        /// </summary>
+        /// <param name="pathInApplication">Path without starting slash</param>
+        /// <param name="assembly">Usually 'Assembly.GetExecutingAssembly()'. If not mentionned, I will use the calling assembly</param>
+        /// <returns></returns>
+        public static BitmapImage LoadBitmapFromResource(string pathInApplication, Assembly assembly = null)
         {
-        }
-
-        [DataMember]
-        [Category("General")]
-        public string URL
-        {
-            get { return _url; }
-            set
+            if (assembly == null)
             {
-                string oldValue = _url;
-                if (oldValue != value)
-                {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
-                }
+                assembly = Assembly.GetCallingAssembly();
             }
+
+            if (pathInApplication[0] == '/')
+            {
+                pathInApplication = pathInApplication.Substring(1);
+            }
+            return
+                new BitmapImage(
+                    new Uri(@"pack://application:,,,/" + assembly.GetName().Name + ";component/" + pathInApplication,
+                        UriKind.Absolute));
         }
     }
 }

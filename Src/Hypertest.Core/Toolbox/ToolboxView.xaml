@@ -4,12 +4,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:converters="clr-namespace:Hypertest.Core.Converters"
+             xmlns:toolbox="clr-namespace:Hypertest.Core.Toolbox"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+             xmlns:handlers="clr-namespace:Hypertest.Core.Handlers"
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <converters:TestRegistryToToolboxConverter x:Key="RegistryConverter" />
+        <converters:CategoryAttributeToStringConverter x:Key="CategoryConverter" />
+        <converters:TypeToDisplayNameConverter x:Key="NameConverter" />
+        <converters:TypeToDescriptionConverter x:Key="DescriptionConverter" />
+        <converters:TypeToTestImageConverter x:Key="ImageConverter" />
+        <handlers:ToolboxDragHandler x:Key="ToolboxDragHandler" />
     </UserControl.Resources>
     <Grid>
-        <TreeView Name="toolboxTree" Background="{DynamicResource WindowTitleColorBrush}" ItemsSource="{Binding Path=Registry, Mode=OneWay, Converter={StaticResource ResourceKey=RegistryConverter}}" />
+        <TreeView Name="toolboxTree" Background="{DynamicResource WindowTitleColorBrush}" ItemsSource="{Binding Path=Registry, Mode=OneWay, Converter={StaticResource ResourceKey=RegistryConverter}}" 
+                  dd:DragDrop.IsDragSource="True"
+                  dd:DragDrop.UseDefaultDragAdorner="True"
+                  dd:DragDrop.DragHandler="{StaticResource ToolboxDragHandler}">
+            <TreeView.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="{DynamicResource AccentColor}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="{DynamicResource BlackBrush}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource AccentColor}" />
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="{DynamicResource BlackBrush}" />
+            </TreeView.Resources>
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type toolbox:CategoryNode}" ItemsSource="{Binding Nodes, Mode=OneWay}">
+                    <TextBlock Text="{Binding Category, Converter={StaticResource ResourceKey=CategoryConverter}}" Foreground="{DynamicResource BlackBrush}" Margin="4,0,4,0"/>
+                    <HierarchicalDataTemplate.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type system:Type}" >
+                            <StackPanel Orientation="Horizontal" ToolTip="{Binding ., Converter={StaticResource ResourceKey=DescriptionConverter}}">
+                                <Image Source="{Binding ., Converter={StaticResource ResourceKey=ImageConverter}}" Height="16" Width="16"/>
+                                <TextBlock Text="{Binding ., Converter={StaticResource ResourceKey=NameConverter}}" Foreground="{DynamicResource BlackBrush}" Margin="4,0,4,0"/>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </HierarchicalDataTemplate.ItemTemplate>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
     </Grid>
 </UserControl>

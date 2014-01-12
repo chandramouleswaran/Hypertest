@@ -2,17 +2,18 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:hyConv="clr-namespace:Hypertest.Core.Converters"
-             xmlns:hyHand="clr-namespace:Hypertest.Core.Handlers"
+             xmlns:converters="clr-namespace:Hypertest.Core.Converters"
+             xmlns:handlers="clr-namespace:Hypertest.Core.Handlers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:xwt="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
-        <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
-        <hyHand:WebScenarioViewDragHandler x:Key="webScenarioViewDragHandler" />
-        <hyHand:WebScenarioViewDropHandler x:Key="webScenarioViewDropHandler" />
+        <converters:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
+        <converters:TypeToTestImageConverter x:Key="TypeToTestImageConverter" />
+        <handlers:WebScenarioViewDragHandler x:Key="webScenarioViewDragHandler" />
+        <handlers:WebScenarioViewDropHandler x:Key="webScenarioViewDropHandler" />
     </UserControl.Resources>
     <UserControl.CommandBindings>
         <CommandBinding Command="Copy" CanExecute="CommandBinding_CanCopy" Executed="CommandBinding_CopyExecuted" />
@@ -39,7 +40,10 @@
                   dd:DragDrop.DropHandler="{StaticResource webScenarioViewDropHandler}">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
-                    <TextBlock Text="{Binding Description}" Margin="4,0,4,0" />
+                    <StackPanel Orientation="Horizontal" ToolTip="{Binding Description}">
+                        <Image Source="{Binding ., Converter={StaticResource ResourceKey=TypeToTestImageConverter}}" Height="16" Width="16"/>
+                        <TextBlock Text="{Binding Description}" Margin="4,0,4,0"/>
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
             <TreeView.ItemContainerStyle>

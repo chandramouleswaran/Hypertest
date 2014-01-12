@@ -91,9 +91,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
+    <Compile Include="Attributes\TestImageAttribute.cs" />
+    <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
     <Compile Include="Converters\TestRegistryToToolboxConverter.cs" />
+    <Compile Include="Converters\TypeToDescriptionConverter.cs" />
+    <Compile Include="Converters\TypeToTestImageConverter.cs" />
+    <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Handlers\ToolboxDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
     <Compile Include="Handlers\WebTestScenarioHandler.cs" />
@@ -130,11 +136,14 @@
     <Compile Include="Tests\WebTestScenarioView.xaml.cs">
       <DependentUpon>WebTestScenarioView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Toolbox\CategoryNode.cs" />
     <Compile Include="Toolbox\ToolboxModel.cs" />
     <Compile Include="Toolbox\ToolboxView.xaml.cs">
       <DependentUpon>ToolboxView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Toolbox\ToolboxViewModel.cs" />
+    <Compile Include="Utils\AttributeHelper.cs" />
+    <Compile Include="Utils\ResourceHelper.cs" />
     <Compile Include="Utils\SerializationHelper.cs" />
     <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="WebTestScenarioViewModel.cs" />
@@ -160,6 +169,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Folder.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

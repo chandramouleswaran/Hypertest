@@ -12,38 +12,26 @@
 
 using System;
 using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Globalization;
+using System.Windows.Data;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Converters
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    internal class CategoryAttributeToStringConverter : IValueConverter
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            var attribute = value as CategoryAttribute;
+            if (attribute != null)
+                return attribute.Category;
+
+            return null;
         }
 
-        [DataMember]
-        [Category("General")]
-        public string URL
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            get { return _url; }
-            set
-            {
-                string oldValue = _url;
-                if (oldValue != value)
-                {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
-                }
-            }
+            throw new NotImplementedException(
+                "Cannot convert string to a category attribute. Use converter for one way binding only.");
         }
     }
 }

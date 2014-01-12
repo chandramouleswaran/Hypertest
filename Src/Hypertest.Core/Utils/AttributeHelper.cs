@@ -11,39 +11,21 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Linq;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Utils
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    public static class AttributeHelper
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        public static TValue GetAttributeValue<TAttribute, TValue>(this Type type,
+            Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute
         {
-        }
-
-        [DataMember]
-        [Category("General")]
-        public string URL
-        {
-            get { return _url; }
-            set
+            var att = type.GetCustomAttributes(typeof (TAttribute), true).FirstOrDefault() as TAttribute;
+            if (att != null)
             {
-                string oldValue = _url;
-                if (oldValue != value)
-                {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
-                }
+                return valueSelector(att);
             }
+            return default(TValue);
         }
     }
 }

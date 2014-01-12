@@ -11,39 +11,34 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Globalization;
+using System.Windows.Data;
+using Hypertest.Core.Attributes;
+using Hypertest.Core.Tests;
+using Hypertest.Core.Utils;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Converters
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    internal class TypeToTestImageConverter : IValueConverter
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            var type = value as Type;
+            var testCase = value as TestCase;
+            if (type == null && testCase == null)
+            {
+                throw new ArgumentException("value can be a Type or TestCase only", "value");
+            }
+            string path = "";
+            if (testCase != null) type = testCase.GetType();
+            if (type != null) path = type.GetAttributeValue((TestImageAttribute attr) => attr.Path);
+            if (path == null) return null;
+            return ResourceHelper.LoadBitmapFromResource(path, type.Assembly);
         }
 
-        [DataMember]
-        [Category("General")]
-        public string URL
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            get { return _url; }
-            set
-            {
-                string oldValue = _url;
-                if (oldValue != value)
-                {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
-                }
-            }
+            throw new NotImplementedException("Cannot convert string to a Type. Use converter for one way binding only.");
         }
     }
 }

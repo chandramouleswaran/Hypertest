@@ -11,39 +11,17 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Attributes
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class TestImageAttribute : Attribute
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        public TestImageAttribute(string Path)
         {
+            this.Path = Path;
         }
 
-        [DataMember]
-        [Category("General")]
-        public string URL
-        {
-            get { return _url; }
-            set
-            {
-                string oldValue = _url;
-                if (oldValue != value)
-                {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
-                }
-            }
-        }
+        public string Path { get; private set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// Copyright (c) 2014 Chandramouleswaran Ravichandran
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // 
@@ -55,7 +55,6 @@ namespace Hypertest.Core.Tests
         protected bool _markedForExecution;
         private FolderTestCase _parent;
         private TestRunState _runState;
-        private ObservableCollection<Variable> _variables;
 
         #endregion
 
@@ -68,10 +67,6 @@ namespace Hypertest.Core.Tests
 
         private void Initialize(bool create = true)
         {
-            if (_variables == null)
-            {
-                _variables = new ObservableCollection<Variable>();
-            }
             _expectedResult = TestCaseResult.Passed;
             _runState = TestRunState.NotStarted;
         }
@@ -109,7 +104,6 @@ namespace Hypertest.Core.Tests
         {
             try
             {
-                InitRun();
                 Setup();
                 RunState = TestRunState.Executing;
                 Body();
@@ -129,13 +123,6 @@ namespace Hypertest.Core.Tests
         protected internal TestCase ObjectToRun()
         {
             return this;
-        }
-
-        private void InitRun()
-        {
-            foreach (Variable variable in Variables)
-            {
-            }
         }
 
         private void FinalizeRun()
@@ -206,18 +193,6 @@ namespace Hypertest.Core.Tests
                 if (_expectedResult != _actualResult)
                     return TestCaseResult.Failed;
                 return TestCaseResult.Passed;
-            }
-        }
-
-        [DataMember]
-        [NewItemTypes(typeof (Variable))]
-        public virtual ObservableCollection<Variable> Variables
-        {
-            get { return _variables; }
-            set
-            {
-                _variables = value;
-                RaisePropertyChanged();
             }
         }
 

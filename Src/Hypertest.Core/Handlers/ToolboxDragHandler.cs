@@ -11,37 +11,27 @@
 #endregion
 
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
+using System.Windows;
+using GongSolutions.Wpf.DragDrop;
+using Hypertest.Core.Tests;
+using Hypertest.Core.Toolbox;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Handlers
 {
-    /// <summary>
-    ///     The basic unit of a web test scenario
-    /// </summary>
-    [DataContract]
-    [Serializable]
-    [DisplayName("Web test scenario")]
-    public class WebTestScenario : TestScenario
+    public class ToolboxDragHandler : DefaultDragHandler
     {
-        private string _url;
-
-        public WebTestScenario() : base()
+        public override void StartDrag(IDragInfo dragInfo)
         {
-        }
-
-        [DataMember]
-        [Category("General")]
-        public string URL
-        {
-            get { return _url; }
-            set
+            if (dragInfo.SourceItem != null)
             {
-                string oldValue = _url;
-                if (oldValue != value)
+                if (dragInfo.SourceItem.GetType() == typeof (CategoryNode))
                 {
-                    _url = value;
-                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
+                    dragInfo.Effects = DragDropEffects.None;
+                }
+                else
+                {
+                    base.StartDrag(dragInfo);
+                    dragInfo.Data = Activator.CreateInstance(dragInfo.SourceItem as Type);
                 }
             }
         }

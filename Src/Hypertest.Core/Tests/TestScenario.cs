@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) 2013 Chandramouleswaran Ravichandran
+// Copyright (c) 2014 Chandramouleswaran Ravichandran
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 // 
@@ -11,11 +11,13 @@
 #endregion
 
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Runtime.Serialization;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Manager;
 using Wide.Interfaces.Services;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
@@ -29,6 +31,9 @@ namespace Hypertest.Core.Tests
         #region Member
 
         protected StateManager _manager;
+
+        private ObservableCollection<Variable> _variables;
+            //TODO: Should this participate in Undo/Redo? Not necessary as it is not viewable and not apparent to end users
 
         #endregion
 
@@ -48,6 +53,10 @@ namespace Hypertest.Core.Tests
         {
             _manager = new StateManager();
             _manager.StateChange += _manager_StateChange;
+            if (_variables == null)
+            {
+                _variables = new ObservableCollection<Variable>();
+            }
         }
 
         private void _manager_StateChange(object sender, EventArgs e)
@@ -81,7 +90,6 @@ namespace Hypertest.Core.Tests
         protected void BulkMonitor(TestCase testCase)
         {
             _manager.MonitorObject(testCase);
-            _manager.MonitorCollection(testCase.Variables);
             var ftc = testCase as FolderTestCase;
             if (ftc != null)
             {
@@ -169,6 +177,18 @@ namespace Hypertest.Core.Tests
         protected internal override ILoggerService LoggerService { get; set; }
 
         protected internal override IRunner Runner { get; set; }
+
+        [DataMember]
+        [NewItemTypes(typeof (Variable))]
+        public virtual ObservableCollection<Variable> Variables
+        {
+            get { return _variables; }
+            set
+            {
+                _variables = value;
+                RaisePropertyChanged();
+            }
+        }
 
         #endregion
     }
