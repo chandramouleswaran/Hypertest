@@ -103,6 +103,7 @@
     <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
     <Compile Include="Handlers\WebTestScenarioHandler.cs" />
+    <Compile Include="Interfaces\PostRunPairs.cs" />
     <Compile Include="Interfaces\Variable.cs" />
     <Compile Include="Manager\Change.cs" />
     <Compile Include="Manager\ChangeSet.cs" />

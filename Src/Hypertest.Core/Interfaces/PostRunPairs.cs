@@ -11,20 +11,54 @@
 #endregion
 
 using System;
-using System.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
-namespace Hypertest.Core.Utils
+namespace Hypertest.Core.Interfaces
 {
-    public static class AttributeHelper
-    {
-        public static TValue GetAttributeValue<TAttribute, TValue>(this Type type, Func<TAttribute, TValue> valueSelector) where TAttribute : Attribute
-        {
-            var att = type.GetCustomAttributes(typeof (TAttribute), true).FirstOrDefault() as TAttribute;
-            if (att != null)
-            {
-                return valueSelector(att);
-            }
-            return default(TValue);
-        }
-    }
+	/// <summary>
+	/// The post run pairs class
+	/// </summary>
+	[DataContract]
+	[Serializable]
+	public class PostRunPairs : INotifyPropertyChanged
+	{
+		#region Members
+		private string _variableName;
+		private string _propertyName; 
+		#endregion
+
+		#region CTOR
+		public PostRunPairs()
+		{
+			this.VariableName = "";
+			this.PropertyName = "";
+		} 
+		#endregion
+
+		#region Properties
+		public string VariableName
+		{
+			get { return _variableName; }
+			set { _variableName = value; RaisePropertyChanged(); }
+		}
+
+		public string PropertyName
+		{
+			get { return _propertyName; }
+			set { _propertyName = value; }
+		} 
+		#endregion
+
+		#region INotifyPropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+		{
+			PropertyChangedEventHandler handler = PropertyChanged;
+			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+		} 
+		#endregion
+	}
 }

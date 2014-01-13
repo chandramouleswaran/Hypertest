@@ -64,6 +64,20 @@
         </TreeView>
         <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1"
                       ResizeBehavior="PreviousAndNext" Width="5" Background="#FFBCBCBC" />
-        <xwt:PropertyGrid SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" Grid.Column="2" />
+        <Grid Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <xwt:PropertyGrid Grid.Row="0" SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" />
+                <DataGrid Grid.Row="1" Name="Variables" ItemsSource="{Binding ElementName=treeView1,Path=SelectedItem.PostValues, Mode=TwoWay}" ScrollViewer.CanContentScroll="True" ColumnWidth="*" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=VariableName, Mode=TwoWay}" Header="Variable" />
+                        <DataGridComboBoxColumn TextBinding="{Binding Path=PropertyName, Mode=TwoWay}" Header="Property" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
