@@ -73,8 +73,8 @@
                 <xwt:PropertyGrid Grid.Row="0" SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" />
                 <DataGrid Grid.Row="1" Name="Variables" ItemsSource="{Binding ElementName=treeView1,Path=SelectedItem.PostValues, Mode=TwoWay}" ScrollViewer.CanContentScroll="True" ColumnWidth="*" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=VariableName, Mode=TwoWay}" Header="Variable" />
-                        <DataGridComboBoxColumn TextBinding="{Binding Path=PropertyName, Mode=TwoWay}" Header="Property" />
+                        <DataGridComboBoxColumn TextBinding="{Binding Path=PropertyName, Mode=TwoWay}" Header="Get values from Property" />
+                        <DataGridTextColumn Binding="{Binding Path=VariableName, Mode=TwoWay}" Header="Store To" />
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

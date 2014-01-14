@@ -11,6 +11,7 @@
 #endregion
 
 using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -246,8 +247,7 @@ namespace Hypertest.Core.Handlers
                 {
                     using (var writer = new FileStream(location, FileMode.Create, FileAccess.Write))
                     {
-                        var ser = new DataContractSerializer(typeof (WebTestScenario),
-                            _testRegistry.Tests);
+                        var ser = new DataContractSerializer(typeof(WebTestScenario), _testRegistry.Tests);
                         ser.WriteObject(writer, scenario);
                         scenario.SetDirty(false);
                     }

@@ -62,13 +62,13 @@ namespace Hypertest.Core.Tests
 		protected TestCase()
 		{
 			Initialize();
+            _postValues = new ObservableCollection<PostRunPairs>();
 		}
 
 		private void Initialize(bool create = true)
 		{
 			_expectedResult = TestCaseResult.Passed;
 			_runState = TestRunState.NotStarted;
-			_postValues = new ObservableCollection<PostRunPairs>();
 		}
 
 		#endregion

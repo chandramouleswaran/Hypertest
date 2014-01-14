@@ -38,13 +38,15 @@ namespace Hypertest.Core.Interfaces
 		#endregion
 
 		#region Properties
+        [DataMember]
 		public string VariableName
 		{
 			get { return _variableName; }
 			set { _variableName = value; RaisePropertyChanged(); }
 		}
 
-		public string PropertyName
+        [DataMember]
+        public string PropertyName
 		{
 			get { return _propertyName; }
 			set { _propertyName = value; }
