@@ -14,7 +14,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Drawing;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 
@@ -49,6 +48,7 @@ namespace Hypertest.Core.Tests
                 _children = new ObservableCollection<TestCase>();
             }
             this.Description = "Folder Test Case";
+            this.MarkedForExecution = true;
         }
 
         #endregion
@@ -107,14 +107,14 @@ namespace Hypertest.Core.Tests
 
         public override void Body()
         {
-            _actualResult = TestCaseResult.Passed;
+            this.ActualResult = TestCaseResult.Passed;
             foreach (TestCase child in _children)
             {
                 if (child.MarkedForExecution)
                 {
                     child.Run();
                     if (child.ExpectedVsActual == TestCaseResult.Failed)
-                        _actualResult = TestCaseResult.Failed;
+                        this.ActualResult = TestCaseResult.Failed;
                 }
             }
         }

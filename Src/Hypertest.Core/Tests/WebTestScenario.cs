@@ -13,6 +13,8 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Hypertest.Core.Interfaces;
+using Hypertest.Core.Runners;
 
 namespace Hypertest.Core.Tests
 {
@@ -25,13 +27,16 @@ namespace Hypertest.Core.Tests
     public class WebTestScenario : TestScenario
     {
         private string _url;
+        private BrowserType _type;
 
         public WebTestScenario() : base()
         {
         }
 
         [DataMember]
-        [Category("General")]
+        [Category("Scenario Settings")]
+        [DisplayName("Starting URL")]
+        [Description("Enter the URL")]
         public string URL
         {
             get { return _url; }
@@ -43,6 +48,32 @@ namespace Hypertest.Core.Tests
                     _url = value;
                     RaisePropertyChangedWithValues(oldValue, value, "URL change");
                 }
+            }
+        }
+
+        [DataMember]
+        [Category("Scenario Settings")]
+        [DisplayName("Browser Type")]
+        [Description("Select the browser type")]
+        public BrowserType BrowserType
+        {
+            get { return _type; }
+            set
+            {
+                BrowserType oldValue = _type;
+                if (oldValue != value)
+                {
+                    _type = value;
+                    RaisePropertyChangedWithValues(oldValue, value, "Type change");
+                }
+            }
+        }
+
+        public override void Setup()
+        {
+            foreach (Variable variable in Variables)
+            {
+                WebScenarioRunner.Current.AddVariable(variable);
             }
         }
     }

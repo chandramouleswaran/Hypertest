@@ -13,6 +13,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Manager;
@@ -180,6 +181,7 @@ namespace Hypertest.Core.Tests
 
 		[DataMember]
 		[NewItemTypes(typeof (Variable))]
+        [Category("Scenario Settings")]
 		public virtual ObservableCollection<Variable> Variables
 		{
 			get { return _variables; }

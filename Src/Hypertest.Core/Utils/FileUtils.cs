@@ -10,29 +10,44 @@
 
 #endregion
 
-using System;
-using Hypertest.Core.Tests;
-using OpenQA.Selenium;
+using System.IO;
+using System.Reflection;
 
-namespace Hypertest.Core.Interfaces
+namespace Hypertest.Core.Utils
 {
-    public interface IRunner
+    public static class FileUtils
     {
-        string UniqueID { get; }
-        string RunFolder { get; }
-        bool IsRunning { get; }
-        IWebDriver Driver { get; }
-        TestScenario Scenario { get; }
+        /// <summary>
+        /// Gets the application path.
+        /// </summary>
+        public static string AppPath
+        {
+            get
+            {
+                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            }
+        }
 
-        void Initialize(TestScenario scenario);
-        void Pause();
-        void Resume();
-        void Stop();
-        void Wait(int milliseconds);
-        bool AddVariable(Variable variable);
-        void Clear();
-        void CleanUp();
+        /// <summary>
+        /// Gets the driver path.
+        /// </summary>
+        public static string DriverPath
+        {
+            get
+            {
+                return AppPath + Path.DirectorySeparatorChar + "Driver";
+            }
+        }
 
-        Variable GetVariable(String name);
+        /// <summary>
+        /// Gets the result path.
+        /// </summary>
+        public static string ResultPath
+        {
+            get
+            {
+                return AppPath + Path.DirectorySeparatorChar + "Results";
+            }
+        }
     }
 }

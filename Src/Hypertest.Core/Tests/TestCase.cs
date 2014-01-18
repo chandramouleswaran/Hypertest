@@ -15,12 +15,15 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Security.AccessControl;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
-using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
@@ -48,6 +51,7 @@ namespace Hypertest.Core.Tests
 		#region Members
 		protected TestCaseResult _actualResult;
 		private string _description;
+	    private int _waitTime;
 		protected TestCaseResult _expectedResult;
 		protected bool _isExpanded;
 		protected bool _isSelected;
@@ -93,6 +97,11 @@ namespace Hypertest.Core.Tests
 		{
 		}
 
+        public virtual void Wait()
+        {
+            Thread.Sleep(this.WaitTime);
+        }
+
 		public virtual void Cleanup(Exception e = null)
 		{
 			//Need to access logger
@@ -105,8 +114,9 @@ namespace Hypertest.Core.Tests
 			try
 			{
 				Setup();
-				RunState = TestRunState.Executing;
+				Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Executing);
 				Body();
+                Wait();
 				FinalizeRun();
 				Cleanup();
 			}
@@ -116,7 +126,7 @@ namespace Hypertest.Core.Tests
 			}
 			finally
 			{
-				RunState = TestRunState.Done;
+                Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
 			}
 		}
 
@@ -127,7 +137,7 @@ namespace Hypertest.Core.Tests
 
 		private void FinalizeRun()
 		{
-			//This is where we want to look at the properties and assign it to variables
+			//This is where we want to look at the properties and assign it to variables[DynamicReadonly("RunState")]
 		}
 
 		#region Properties
@@ -135,6 +145,7 @@ namespace Hypertest.Core.Tests
 		[DataMember]
 		[Description("Enter the description for the test case")]
 		[Category("General")]
+        [DynamicReadonly("RunState")]
 		public string Description
 		{
 			get { return _description; }
@@ -150,10 +161,31 @@ namespace Hypertest.Core.Tests
 			}
 		}
 
+        [DataMember]
+        [DisplayName("Wait Time")]
+        [Description("Enter the time to wait in milli seconds before executing the next step")]
+        [Category("General")]
+        [DefaultValue(0)]
+        [DynamicReadonly("RunState")]
+        public int WaitTime
+        {
+            get { return _waitTime; }
+            set
+            {
+                if (value != _waitTime)
+                {
+                    int oldValue = _waitTime;
+                    _waitTime = value;
+                    if (oldValue != value)
+                        RaisePropertyChangedWithValues(oldValue, _waitTime, "Wait change");
+                }
+            }
+        }
+
 		[DataMember]
 		[DisplayName("Expected Result")]
 		[Description("The expected end result of the test case")]
-		[Category("General")]
+		[Category("Results")]
 		[DynamicReadonly("RunState")]
 		public TestCaseResult ExpectedResult
 		{
@@ -168,7 +200,7 @@ namespace Hypertest.Core.Tests
 		[DataMember]
 		[DisplayName("Actual Result")]
 		[Description("The actual end result of the test case")]
-		[Category("General")]
+		[Category("Results")]
 		[DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
 		public TestCaseResult ActualResult
 		{
@@ -177,6 +209,7 @@ namespace Hypertest.Core.Tests
 			{
 				_actualResult = value;
 				RaisePropertyChanged();
+                RaisePropertyChanged("ExpectedVsActual");
 			}
 		}
 

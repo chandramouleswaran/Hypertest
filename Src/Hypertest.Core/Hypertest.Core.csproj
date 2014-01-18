@@ -93,6 +93,7 @@
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
     <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
+    <Compile Include="Converters\TestCaseStatusToImageConverter.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
     <Compile Include="Converters\TestRegistryToToolboxConverter.cs" />
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
@@ -144,6 +145,7 @@
     </Compile>
     <Compile Include="Toolbox\ToolboxViewModel.cs" />
     <Compile Include="Utils\AttributeHelper.cs" />
+    <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\ResourceHelper.cs" />
     <Compile Include="Utils\SerializationHelper.cs" />
     <Compile Include="WebTestResultViewModel.cs" />
@@ -169,7 +171,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Images\Executing.png" />
+    <Resource Include="Images\Failed.png" />
+    <Resource Include="Images\None.png" />
+    <Resource Include="Images\Passed.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Folder.png" />
   </ItemGroup>

@@ -310,7 +310,10 @@ namespace Hypertest.Core
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
             var manager = _container.Resolve<ICommandManager>();
-            workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument);
+            if (workspace.ActiveDocument.Handler != null)
+            {
+                workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument);
+            }
             manager.Refresh();
         }
 

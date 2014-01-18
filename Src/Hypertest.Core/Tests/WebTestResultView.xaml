@@ -8,7 +8,8 @@
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged">
     <UserControl.Resources>
-        <hyConv:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
+        <hyConv:ScenarioToObservableCollectionConverter x:Key="ScenarioConverter" />
+        <hyConv:TestCaseStatusToImageConverter x:Key="IconConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -17,11 +18,21 @@
             <ColumnDefinition Width="*" MinWidth="200" />
         </Grid.ColumnDefinitions>
         <TreeView Name="treeView1"
-                  ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=scenarioConverter}}"
+                  ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=ScenarioConverter}}"
                   Grid.Column="0" ScrollViewer.CanContentScroll="True">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">
-                    <TextBlock Text="{Binding Description}" Margin="4,0,4,0" />
+                    <StackPanel Orientation="Horizontal">
+                        <Image Height="16" Width="16">
+                            <Image.Source>
+                                <MultiBinding Converter="{StaticResource IconConverter}">
+                                    <Binding Path="RunState" />
+                                    <Binding Path="ExpectedVsActual" />
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
+                        <TextBlock Text="{Binding Description}" Margin="4,0,4,0" />
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
             <TreeView.ItemContainerStyle>
