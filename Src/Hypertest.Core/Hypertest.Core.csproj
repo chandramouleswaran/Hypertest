@@ -145,6 +145,8 @@
     </Compile>
     <Compile Include="Toolbox\ToolboxViewModel.cs" />
     <Compile Include="Utils\AttributeHelper.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+    <Compile Include="Utils\EvalCode.cs" />
     <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\ResourceHelper.cs" />
     <Compile Include="Utils\SerializationHelper.cs" />
