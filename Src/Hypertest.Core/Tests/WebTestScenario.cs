@@ -13,6 +13,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Runners;
 
@@ -37,6 +38,7 @@ namespace Hypertest.Core.Tests
         [Category("Scenario Settings")]
         [DisplayName("Starting URL")]
         [Description("Enter the URL")]
+        [DynamicReadonly("RunState")]
         public string URL
         {
             get { return _url; }
@@ -55,6 +57,7 @@ namespace Hypertest.Core.Tests
         [Category("Scenario Settings")]
         [DisplayName("Browser Type")]
         [Description("Select the browser type")]
+        [DynamicReadonly("RunState")]
         public BrowserType BrowserType
         {
             get { return _type; }

@@ -108,6 +108,8 @@ namespace Hypertest.Core
 
             //Register the test cases that you want to be able to participate
             registry.Add(typeof (FolderTestCase));
+            registry.Add(typeof(ExpressionTestCase));
+            registry.Add(typeof(LooperTestCase));
 
             //Add the toolbox to the workspace
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
@@ -405,8 +407,9 @@ namespace Hypertest.Core
                         cvm = _container.Resolve<WebTestResultViewModel>();
                         if (WebScenarioRunner.Current.IsRunning == false)
                         {
-                            WebScenarioRunner.Current.Initialize(
-                                (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario);
+                            TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
+                            scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
+                            WebScenarioRunner.Current.Initialize(scenario);
                         }
                         cvm.Refresh();
                         workspace.Documents.Add(cvm);

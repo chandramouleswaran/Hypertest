@@ -118,6 +118,8 @@
     <Compile Include="Attributes\DynamicReadonlyAttribute.cs" />
     <Compile Include="Attributes\DynamicTypeDescriptor.cs" />
     <Compile Include="Service\TestRegistry.cs" />
+    <Compile Include="Tests\LooperTestCase.cs" />
+    <Compile Include="Tests\ExpressionTestCase.cs" />
     <Compile Include="Tests\WebTestScenario.cs" />
     <Compile Include="Tests\FolderTestCase.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -181,6 +183,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Expression.png" />
+    <Resource Include="Images\Looper.png" />
+    <Resource Include="Images\RunScenario.png" />
+    <Resource Include="Images\SetVariable.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

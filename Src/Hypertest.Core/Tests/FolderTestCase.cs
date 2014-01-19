@@ -35,7 +35,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region CTOR
-
         public FolderTestCase()
         {
             Initialize();
@@ -50,11 +49,9 @@ namespace Hypertest.Core.Tests
             this.Description = "Folder Test Case";
             this.MarkedForExecution = true;
         }
-
         #endregion
 
         #region Property
-
         [DataMember]
         [Browsable(false)]
         public ObservableCollection<TestCase> Children
@@ -66,11 +63,9 @@ namespace Hypertest.Core.Tests
                 RaisePropertyChanged("Children");
             }
         }
-
         #endregion
 
         #region Deserialize
-
         [OnDeserializing]
         private void OnDeserializing(StreamingContext context)
         {
@@ -86,7 +81,6 @@ namespace Hypertest.Core.Tests
             }
             _children.CollectionChanged += _children_CollectionChanged;
         }
-
         #endregion
 
         #region Events
@@ -105,6 +99,7 @@ namespace Hypertest.Core.Tests
 
         #endregion
 
+        #region Override
         public override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
@@ -117,6 +112,7 @@ namespace Hypertest.Core.Tests
                         this.ActualResult = TestCaseResult.Failed;
                 }
             }
-        }
+        } 
+        #endregion
     }
 }
