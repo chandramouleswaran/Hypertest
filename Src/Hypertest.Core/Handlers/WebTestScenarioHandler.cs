@@ -127,8 +127,7 @@ namespace Hypertest.Core.Handlers
                     WebTestScenario model;
                     using (var reader = new FileStream(location, FileMode.Open, FileAccess.Read))
                     {
-                        var ser = new DataContractSerializer(typeof (WebTestScenario),
-                            _testRegistry.Tests);
+                        var ser = new DataContractSerializer(typeof (WebTestScenario), _testRegistry.Tests);
                         model = (WebTestScenario) ser.ReadObject(reader);
                     }
 

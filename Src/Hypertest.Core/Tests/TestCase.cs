@@ -51,7 +51,7 @@ namespace Hypertest.Core.Tests
 		#region Members
 		protected TestCaseResult _actualResult;
 		private string _description;
-	    private int _waitTime;
+		private int _waitTime;
 		protected TestCaseResult _expectedResult;
 		protected bool _isExpanded;
 		protected bool _isSelected;
@@ -66,7 +66,7 @@ namespace Hypertest.Core.Tests
 		protected TestCase()
 		{
 			Initialize();
-            _postValues = new ObservableCollection<PostRunPairs>();
+			_postValues = new ObservableCollection<PostRunPairs>();
 		}
 
 		private void Initialize(bool create = true)
@@ -97,10 +97,10 @@ namespace Hypertest.Core.Tests
 		{
 		}
 
-        public virtual void Wait()
-        {
-            Thread.Sleep(this.WaitTime);
-        }
+		public virtual void Wait()
+		{
+			Thread.Sleep(this.WaitTime);
+		}
 
 		public virtual void Cleanup(Exception e = null)
 		{
@@ -116,7 +116,7 @@ namespace Hypertest.Core.Tests
 				Setup();
 				Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Executing);
 				Body();
-                Wait();
+				Wait();
 				FinalizeRun();
 				Cleanup();
 			}
@@ -126,13 +126,8 @@ namespace Hypertest.Core.Tests
 			}
 			finally
 			{
-                Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
+				Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
 			}
-		}
-
-		protected internal TestCase ObjectToRun()
-		{
-			return this;
 		}
 
 		private void FinalizeRun()
@@ -145,7 +140,7 @@ namespace Hypertest.Core.Tests
 		[DataMember]
 		[Description("Enter the description for the test case")]
 		[Category("General")]
-        [DynamicReadonly("RunState")]
+		[DynamicReadonly("RunState")]
 		public string Description
 		{
 			get { return _description; }
@@ -161,26 +156,26 @@ namespace Hypertest.Core.Tests
 			}
 		}
 
-        [DataMember]
-        [DisplayName("Wait Time")]
-        [Description("Enter the time to wait in milli seconds before executing the next step")]
-        [Category("General")]
-        [DefaultValue(0)]
-        [DynamicReadonly("RunState")]
-        public int WaitTime
-        {
-            get { return _waitTime; }
-            set
-            {
-                if (value != _waitTime)
-                {
-                    int oldValue = _waitTime;
-                    _waitTime = value;
-                    if (oldValue != value)
-                        RaisePropertyChangedWithValues(oldValue, _waitTime, "Wait change");
-                }
-            }
-        }
+		[DataMember]
+		[DisplayName("Wait Time")]
+		[Description("Enter the time to wait in milli seconds before executing the next step")]
+		[Category("General")]
+		[DefaultValue(0)]
+		[DynamicReadonly("RunState")]
+		public int WaitTime
+		{
+			get { return _waitTime; }
+			set
+			{
+				if (value != _waitTime)
+				{
+					int oldValue = _waitTime;
+					_waitTime = value;
+					if (oldValue != value)
+						RaisePropertyChangedWithValues(oldValue, _waitTime, "Wait change");
+				}
+			}
+		}
 
 		[DataMember]
 		[DisplayName("Expected Result")]
@@ -209,7 +204,7 @@ namespace Hypertest.Core.Tests
 			{
 				_actualResult = value;
 				RaisePropertyChanged();
-                RaisePropertyChanged("ExpectedVsActual");
+				RaisePropertyChanged("ExpectedVsActual");
 			}
 		}
 

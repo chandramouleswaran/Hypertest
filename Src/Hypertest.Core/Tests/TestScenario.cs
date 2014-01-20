@@ -167,21 +167,20 @@ namespace Hypertest.Core.Tests
 		#endregion
 
 		#region Property
-
-		protected internal override ITestRegistry TestRegistry { get; set; }
-
 		protected internal StateManager Manager
 		{
 			get { return _manager; }
 		}
 
-		protected internal override ILoggerService LoggerService { get; set; }
+		protected internal override ITestRegistry TestRegistry { get; set; }
 
-		protected internal override IRunner Runner { get; set; }
+		protected internal override ILoggerService LoggerService { get; set; }
 
 		[DataMember]
 		[NewItemTypes(typeof (Variable))]
-        [Category("Scenario Settings")]
+		[DisplayName("Variables")]
+		[Description("Click to create and initialize variables")]
+		[Category("Scenario Settings")]
 		public virtual ObservableCollection<Variable> Variables
 		{
 			get { return _variables; }
@@ -191,7 +190,6 @@ namespace Hypertest.Core.Tests
 				RaisePropertyChanged();
 			}
 		}
-
 		#endregion
 	}
 }

@@ -118,6 +118,8 @@
     <Compile Include="Attributes\DynamicReadonlyAttribute.cs" />
     <Compile Include="Attributes\DynamicTypeDescriptor.cs" />
     <Compile Include="Service\TestRegistry.cs" />
+    <Compile Include="Tests\SetVariableTestCase.cs" />
+    <Compile Include="Tests\RunScenarioTestCase.cs" />
     <Compile Include="Tests\LooperTestCase.cs" />
     <Compile Include="Tests\ExpressionTestCase.cs" />
     <Compile Include="Tests\WebTestScenario.cs" />

@@ -11,67 +11,72 @@
 #endregion
 
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Runners;
+using Hypertest.Core.Utils;
+using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
-	/// <summary>
-	///     The basic unit of a web test scenario
-	/// </summary>
 	[DataContract]
 	[Serializable]
-	[DisplayName("Web test scenario")]
-	public class WebTestScenario : TestScenario
+	[DisplayName("Variable")]
+	[Description("Create and set initial values for variables")]
+	[Category("General")]
+	[TestImage("Images/SetVariable.png")]
+	public class SetVariableTestCase : TestCase
 	{
-		private string _url;
-		private BrowserType _type;
+		#region Members
+		private ObservableCollection<Variable> _variables;
+		#endregion
 
-		public WebTestScenario() : base()
+		#region CTOR
+		public SetVariableTestCase()
 		{
+			Initialize();
 		}
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Starting URL")]
-		[Description("Enter the URL")]
-		[DynamicReadonly("RunState")]
-		public string URL
+		private void Initialize(bool create = true)
 		{
-			get { return _url; }
+			if (_variables == null)
+			{
+				_variables = new ObservableCollection<Variable>();
+			}
+			this.Description = "Create and set initial variables";
+			this.MarkedForExecution = true;
+		}
+		#endregion
+
+		#region Property
+		[DataMember]
+		[DisplayName("Variables")]
+		[Description("Click to create and initialize variables")]
+		[NewItemTypes(typeof(Variable))]
+		[Category("Settings")]
+		public virtual ObservableCollection<Variable> Variables
+		{
+			get { return _variables; }
 			set
 			{
-				string oldValue = _url;
-				if (oldValue != value)
-				{
-					_url = value;
-					RaisePropertyChangedWithValues(oldValue, value, "URL change");
-				}
+				_variables = value;
+				RaisePropertyChanged();
 			}
 		}
+		#endregion
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Browser Type")]
-		[Description("Select the browser type")]
-		[DynamicReadonly("RunState")]
-		public BrowserType BrowserType
+		#region Deserialize
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext context)
 		{
-			get { return _type; }
-			set
-			{
-				BrowserType oldValue = _type;
-				if (oldValue != value)
-				{
-					_type = value;
-					RaisePropertyChangedWithValues(oldValue, value, "Type change");
-				}
-			}
+			Initialize();
 		}
+		#endregion
 
+		#region Override
 		public override void Setup()
 		{
 			foreach (Variable variable in Variables)
@@ -79,5 +84,11 @@ namespace Hypertest.Core.Tests
 				WebScenarioRunner.Current.AddVariable(variable);
 			}
 		}
+
+		public override void Body()
+		{
+			this.ActualResult = TestCaseResult.Passed;
+		} 
+		#endregion
 	}
 }

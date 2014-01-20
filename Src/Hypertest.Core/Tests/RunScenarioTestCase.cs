@@ -12,72 +12,82 @@
 
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
+using Hypertest.Core.Utils;
 
 namespace Hypertest.Core.Tests
 {
-	/// <summary>
-	///     The basic unit of a web test scenario
-	/// </summary>
 	[DataContract]
 	[Serializable]
-	[DisplayName("Web test scenario")]
-	public class WebTestScenario : TestScenario
+	[DisplayName("Run Scenario")]
+	[Description("Specify the scenario to run")]
+	[Category("General")]
+	[TestImage("Images/RunScenario.png")]
+	public class RunScenarioTestCase : FolderTestCase
 	{
-		private string _url;
-		private BrowserType _type;
+		#region Members
+		private string _filePath;
+		#endregion
 
-		public WebTestScenario() : base()
+		#region CTOR
+		public RunScenarioTestCase()
 		{
+			Initialize();
 		}
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Starting URL")]
-		[Description("Enter the URL")]
-		[DynamicReadonly("RunState")]
-		public string URL
+		private void Initialize(bool create = true)
 		{
-			get { return _url; }
+			this.Description = "Evaluates the expression";
+			this.MarkedForExecution = true;
+		}
+		#endregion
+
+		#region Property
+		[DataMember]
+		[DisplayName("File Path")]
+		[Description("Enter the file path for the scenario to run")]
+		[DynamicReadonly("RunState")]
+		[Category("Settings")]
+		public string FilePath
+		{
+			get { return _filePath; }
 			set
 			{
-				string oldValue = _url;
+				string oldValue = _filePath;
+				_filePath = value;
 				if (oldValue != value)
-				{
-					_url = value;
-					RaisePropertyChangedWithValues(oldValue, value, "URL change");
-				}
+					RaisePropertyChangedWithValues(oldValue, _filePath,"File path change");
 			}
 		}
+		#endregion
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Browser Type")]
-		[Description("Select the browser type")]
-		[DynamicReadonly("RunState")]
-		public BrowserType BrowserType
+		#region Deserialize
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext context)
 		{
-			get { return _type; }
-			set
-			{
-				BrowserType oldValue = _type;
-				if (oldValue != value)
-				{
-					_type = value;
-					RaisePropertyChangedWithValues(oldValue, value, "Type change");
-				}
-			}
+			Initialize();
 		}
+		#endregion
 
+		#region Override
 		public override void Setup()
 		{
-			foreach (Variable variable in Variables)
+			TestScenario scenario;
+			using (var reader = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read))
 			{
-				WebScenarioRunner.Current.AddVariable(variable);
+				var ser = new DataContractSerializer(typeof(WebTestScenario), this.TestRegistry.Tests);
+				scenario = (WebTestScenario)ser.ReadObject(reader);
 			}
-		}
+
+			if (scenario != null)
+			{
+				scenario.TestRegistry = this.Scenario.TestRegistry;
+				scenario.LoggerService = this.Scenario.LoggerService;
+				this.Children = scenario.Children;
+			}
+		} 
+		#endregion
 	}
 }
