@@ -17,50 +17,62 @@ using System.Runtime.Serialization;
 
 namespace Hypertest.Core.Interfaces
 {
-	/// <summary>
-	/// The post run pairs class
-	/// </summary>
-	[DataContract]
-	[Serializable]
-	public class PostRunPairs : INotifyPropertyChanged
-	{
-		#region Members
-		private string _variableName;
-		private string _propertyName; 
-		#endregion
+    /// <summary>
+    /// The post run pairs class
+    /// </summary>
+    [DataContract]
+    [Serializable]
+    public class PostRunPairs : INotifyPropertyChanged
+    {
+        #region Members
 
-		#region CTOR
-		public PostRunPairs()
-		{
-			this.VariableName = "";
-			this.PropertyName = "";
-		} 
-		#endregion
+        private string _variableName;
+        private string _propertyName;
 
-		#region Properties
+        #endregion
+
+        #region CTOR
+
+        public PostRunPairs()
+        {
+            this.VariableName = "";
+            this.PropertyName = "";
+        }
+
+        #endregion
+
+        #region Properties
+
         [DataMember]
-		public string VariableName
-		{
-			get { return _variableName; }
-			set { _variableName = value; RaisePropertyChanged(); }
-		}
+        public string VariableName
+        {
+            get { return _variableName; }
+            set
+            {
+                _variableName = value;
+                RaisePropertyChanged();
+            }
+        }
 
         [DataMember]
         public string PropertyName
-		{
-			get { return _propertyName; }
-			set { _propertyName = value; }
-		} 
-		#endregion
+        {
+            get { return _propertyName; }
+            set { _propertyName = value; }
+        }
 
-		#region INotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-		protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
-		{
-			PropertyChangedEventHandler handler = PropertyChanged;
-			if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-		} 
-		#endregion
-	}
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+    }
 }

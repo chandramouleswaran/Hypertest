@@ -12,9 +12,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Tests;
@@ -27,185 +25,194 @@ using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Runners
 {
-	public enum BrowserType
-	{
-		InternetExplorer,
-		Chrome,
-		Firefox
-	}
+    public enum BrowserType
+    {
+        InternetExplorer,
+        Chrome,
+        Firefox
+    }
 
-	public class WebScenarioRunner : IRunner
-	{
-		#region Members
-		private readonly Dictionary<String, Variable> _globals;
-		private WebTestScenario _scenario;
-		#endregion
+    public class WebScenarioRunner : IRunner
+    {
+        #region Members
 
-		#region CTOR
-		private WebScenarioRunner()
-		{
-			_globals = new Dictionary<string, Variable>();
-		} 
-		#endregion
+        private readonly Dictionary<String, Variable> _globals;
+        private WebTestScenario _scenario;
 
-		#region Statics
-		private static WebScenarioRunner _runner;
+        #endregion
 
-		public static WebScenarioRunner Current
-		{
-			get { return _runner ?? (_runner = new WebScenarioRunner()); }
-		} 
-		#endregion
+        #region CTOR
 
-		#region IRunner
-		public TestScenario Scenario
-		{
-			get { return _scenario; }
-		}
+        private WebScenarioRunner()
+        {
+            _globals = new Dictionary<string, Variable>();
+        }
 
-		public void Initialize(TestScenario scenario)
-		{
-			if (this.IsRunning == false)
-			{
-				this.IsRunning = true;
-				_scenario = scenario as WebTestScenario;
-				Task.Factory.StartNew(() =>
-									  {
-										  this.BackRun();
-										  this.WorkComplete();
-									  });
+        #endregion
 
-			}
-		}
+        #region Statics
 
-		public void Pause()
-		{
-			throw new NotImplementedException();
-		}
+        private static WebScenarioRunner _runner;
 
-		public void Resume()
-		{
-			throw new NotImplementedException();
-		}
+        public static WebScenarioRunner Current
+        {
+            get { return _runner ?? (_runner = new WebScenarioRunner()); }
+        }
 
-		public void Stop()
-		{
-			throw new NotImplementedException();
-		}
+        #endregion
 
-		public void Wait(int milliseconds)
-		{
-			throw new NotImplementedException();
-		}
+        #region IRunner
 
-		public bool AddVariable(Variable variable)
-		{
-			return InternalAddVariable(variable);
-		}
+        public TestScenario Scenario
+        {
+            get { return _scenario; }
+        }
 
-		public void Clear()
-		{
-			throw new NotImplementedException();
-		}
+        public void Initialize(TestScenario scenario)
+        {
+            if (this.IsRunning == false)
+            {
+                this.IsRunning = true;
+                _scenario = scenario as WebTestScenario;
+                Task.Factory.StartNew(() =>
+                                      {
+                                          this.BackRun();
+                                          this.WorkComplete();
+                                      });
+            }
+        }
 
-		public void CleanUp()
-		{
-			this._scenario = null;
-			if (this.Driver != null)
-			{
-				this.Driver.Quit();
-				this.Driver = null;
-			}
-			//TODO: This is where we will create a TestResult class - add Scenario inside it and add some analysis
-		}
+        public void Pause()
+        {
+            throw new NotImplementedException();
+        }
 
-		public Variable GetVariable(string name)
-		{
-			if (_globals.ContainsKey(name))
-			{
-				return _globals[name];
-			}
-			return null;
-		}
+        public void Resume()
+        {
+            throw new NotImplementedException();
+        }
 
-		public string UniqueID { get; private set; }
-		public string RunFolder { get; private set; }
-		public bool IsRunning { get; private set; }
-		public IWebDriver Driver { get; private set; } 
-		#endregion
+        public void Stop()
+        {
+            throw new NotImplementedException();
+        }
 
-		#region Methods
-		private bool InternalAddVariable(Variable variable, bool force = true)
-		{
-			if (_globals.ContainsKey(variable.Name))
-			{
-				if (force)
-				{
-					_globals.Remove(variable.Name);
-				}
-				else
-				{
-					_scenario.LoggerService.Log("Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn, LogPriority.Low);
-				}
-			}
-			_globals.Add(variable.Name, variable);
-			return true;
-		}
+        public void Wait(int milliseconds)
+        {
+            throw new NotImplementedException();
+        }
 
-		private void Create(BrowserType type)
-		{
-			if (this.Driver != null)
-			{
-				throw new Exception("Browser already created for this run");
-			}
+        public bool AddVariable(Variable variable)
+        {
+            return InternalAddVariable(variable);
+        }
 
-			switch (type)
-			{
-				case BrowserType.InternetExplorer:
-					this.Driver = new InternetExplorerDriver(FileUtils.DriverPath);
-					break;
-				case BrowserType.Chrome:
-					this.Driver = new ChromeDriver(FileUtils.DriverPath);
-					break;
-				case BrowserType.Firefox:
-					this.Driver = new FirefoxDriver();
-					break;
-			}
-		}
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
 
-		private void WorkComplete()
-		{
-			this.CleanUp();
-			this.IsRunning = false;
-			//TODO: Create a Result structure and store it in a file
-		}
+        public void CleanUp()
+        {
+            this._scenario = null;
+            if (this.Driver != null)
+            {
+                this.Driver.Quit();
+                this.Driver = null;
+            }
+            //TODO: This is where we will create a TestResult class - add Scenario inside it and add some analysis
+        }
 
-		private void BackRun()
-		{
-			do
-			{
-				this.UniqueID = DateTime.Now.Ticks.ToString();
-			}
-			while (Directory.Exists(FileUtils.AppPath + Path.DirectorySeparatorChar + this.UniqueID));
+        public Variable GetVariable(string name)
+        {
+            if (_globals.ContainsKey(name))
+            {
+                return _globals[name];
+            }
+            return null;
+        }
 
-			this.RunFolder = FileUtils.ResultPath + Path.DirectorySeparatorChar + this.UniqueID;
-			Directory.CreateDirectory(this.RunFolder);
+        public string UniqueID { get; private set; }
+        public string RunFolder { get; private set; }
+        public bool IsRunning { get; private set; }
+        public IWebDriver Driver { get; private set; }
 
-			_globals.Clear();
-			try
-			{
-				Create(_scenario.BrowserType);
-			}
-			catch (Exception)
-			{
+        #endregion
 
-			}
-			if (_scenario.URL != null)
-			{
-				this.Driver.Navigate().GoToUrl(_scenario.URL);
-			}
-			_scenario.Run();
-		}
-		#endregion
-	}
+        #region Methods
+
+        private bool InternalAddVariable(Variable variable, bool force = true)
+        {
+            if (_globals.ContainsKey(variable.Name))
+            {
+                if (force)
+                {
+                    _globals.Remove(variable.Name);
+                }
+                else
+                {
+                    _scenario.LoggerService.Log(
+                        "Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn,
+                        LogPriority.Low);
+                }
+            }
+            _globals.Add(variable.Name, variable);
+            return true;
+        }
+
+        private void Create(BrowserType type)
+        {
+            if (this.Driver != null)
+            {
+                throw new Exception("Browser already created for this run");
+            }
+
+            switch (type)
+            {
+                case BrowserType.InternetExplorer:
+                    this.Driver = new InternetExplorerDriver(FileUtils.DriverPath);
+                    break;
+                case BrowserType.Chrome:
+                    this.Driver = new ChromeDriver(FileUtils.DriverPath);
+                    break;
+                case BrowserType.Firefox:
+                    this.Driver = new FirefoxDriver();
+                    break;
+            }
+        }
+
+        private void WorkComplete()
+        {
+            this.CleanUp();
+            this.IsRunning = false;
+            //TODO: Create a Result structure and store it in a file
+        }
+
+        private void BackRun()
+        {
+            do
+            {
+                this.UniqueID = DateTime.Now.Ticks.ToString();
+            } while (Directory.Exists(FileUtils.AppPath + Path.DirectorySeparatorChar + this.UniqueID));
+
+            this.RunFolder = FileUtils.ResultPath + Path.DirectorySeparatorChar + this.UniqueID;
+            Directory.CreateDirectory(this.RunFolder);
+
+            _globals.Clear();
+            try
+            {
+                Create(_scenario.BrowserType);
+            }
+            catch (Exception)
+            {
+            }
+            if (_scenario.URL != null)
+            {
+                this.Driver.Navigate().GoToUrl(_scenario.URL);
+            }
+            _scenario.Run();
+        }
+
+        #endregion
+    }
 }

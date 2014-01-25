@@ -34,416 +34,417 @@ using Wide.Interfaces.Themes;
 
 namespace Hypertest.Core
 {
-	[Module(ModuleName = "Hypertest.Core")]
-	[ModuleDependency("Wide.Tools.Logger")]
-	public class CoreModule : IModule
-	{
-		private readonly IUnityContainer _container;
-		private readonly IEventAggregator _eventAggregator;
+    [Module(ModuleName = "Hypertest.Core")]
+    [ModuleDependency("Wide.Tools.Logger")]
+    public class CoreModule : IModule
+    {
+        private readonly IUnityContainer _container;
+        private readonly IEventAggregator _eventAggregator;
 
-		public CoreModule(IUnityContainer container, IEventAggregator eventAggregator)
-		{
-			_container = container;
-			_eventAggregator = eventAggregator;
-		}
+        public CoreModule(IUnityContainer container, IEventAggregator eventAggregator)
+        {
+            _container = container;
+            _eventAggregator = eventAggregator;
+        }
 
-		public void Initialize()
-		{
-			_eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-				.Publish(new SplashMessageUpdateEvent {Message = "Loading Core Module"});
-			RegisterParts();
-			LoadTheme();
-			LoadCommands();
-			LoadMenus();
-			LoadToolbar();
-			LoadSettings();
-		}
+        public void Initialize()
+        {
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Loading Core Module"});
+            RegisterParts();
+            LoadTheme();
+            LoadCommands();
+            LoadMenus();
+            LoadToolbar();
+            LoadSettings();
+        }
 
-		private void LoadToolbar()
-		{
-			_eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-				.Publish(new SplashMessageUpdateEvent {Message = "Toolbar.."});
-			var toolbarService = _container.Resolve<IToolbarService>();
-			var menuService = _container.Resolve<IMenuService>();
+        private void LoadToolbar()
+        {
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Toolbar.."});
+            var toolbarService = _container.Resolve<IToolbarService>();
+            var menuService = _container.Resolve<IMenuService>();
 
-			toolbarService.Add(new ToolbarViewModel("Standard", 1) {Band = 1, BandIndex = 1});
-			toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_New"));
-			toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_Open"));
+            toolbarService.Add(new ToolbarViewModel("Standard", 1) {Band = 1, BandIndex = 1});
+            toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_New"));
+            toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_Open"));
 
-			toolbarService.Add(new ToolbarViewModel("Edit", 1) {Band = 1, BandIndex = 2});
-			toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Undo"));
-			toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Redo"));
-			toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Cut"));
-			toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Copy"));
-			toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Paste"));
+            toolbarService.Add(new ToolbarViewModel("Edit", 1) {Band = 1, BandIndex = 2});
+            toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Undo"));
+            toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Redo"));
+            toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Cut"));
+            toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Copy"));
+            toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Paste"));
 
-			menuService.Get("_Tools").Add(toolbarService.RightClickMenu);
+            menuService.Get("_Tools").Add(toolbarService.RightClickMenu);
 
-			//Initiate the position settings changes for toolbar
-			_container.Resolve<IToolbarPositionSettings>();
-		}
+            //Initiate the position settings changes for toolbar
+            _container.Resolve<IToolbarPositionSettings>();
+        }
 
-		private void LoadSettings()
-		{
-			var manager = _container.Resolve<ISettingsManager>();
-		}
+        private void LoadSettings()
+        {
+            var manager = _container.Resolve<ISettingsManager>();
+        }
 
-		private void RegisterParts()
-		{
-			_container.RegisterType<WebTestScenarioHandler>();
-			_container.RegisterType<WebTestScenarioViewModel>();
-			_container.RegisterType<WebTestScenarioView>();
-			_container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
-			_container.RegisterType<ToolboxModel>();
-			_container.RegisterType<ToolboxViewModel>();
+        private void RegisterParts()
+        {
+            _container.RegisterType<WebTestScenarioHandler>();
+            _container.RegisterType<WebTestScenarioViewModel>();
+            _container.RegisterType<WebTestScenarioView>();
+            _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ToolboxModel>();
+            _container.RegisterType<ToolboxViewModel>();
 
-			_container.RegisterType<WebTestResultViewModel>(new ContainerControlledLifetimeManager());
-			_container.Resolve<WebTestResultViewModel>();
-
-
-			IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
-			_container.Resolve<IContentHandlerRegistry>().Register(handler);
-
-			var registry = _container.Resolve<ITestRegistry>();
-
-			//Register the test cases that you want to be able to participate
-			registry.Add(typeof (FolderTestCase));
-			registry.Add(typeof(ExpressionTestCase));
-			registry.Add(typeof(LooperTestCase));
-			registry.Add(typeof(RunScenarioTestCase));
-			registry.Add(typeof(SetVariableTestCase));
-
-			//Add the toolbox to the workspace
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			workspace.Tools.Add(_container.Resolve<ToolboxViewModel>());
-		}
-
-		private void LoadTheme()
-		{
-			_eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-				.Publish(new SplashMessageUpdateEvent {Message = "Themes.."});
-			var manager = _container.Resolve<IThemeManager>();
-			var themeSettings = _container.Resolve<IThemeSettings>();
-			var win = _container.Resolve<IShell>() as Window;
-			manager.AddTheme(new LightTheme());
-			manager.AddTheme(new DarkTheme());
-			win.Dispatcher.Invoke(() => manager.SetCurrent(themeSettings.SelectedTheme));
-		}
-
-		private void LoadCommands()
-		{
-			_eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-				.Publish(new SplashMessageUpdateEvent {Message = "Commands.."});
-			var manager = _container.Resolve<ICommandManager>();
-
-			var openCommand = new DelegateCommand(OpenModule);
-			var exitCommand = new DelegateCommand(CloseCommandExecute);
-			var saveCommand = new DelegateCommand(SaveDocument, CanExecuteSaveDocument);
-			var saveAsCommand = new DelegateCommand(SaveAsDocument, CanExecuteSaveAsDocument);
-			var themeCommand = new DelegateCommand<string>(ThemeChangeCommand);
-			var loggerCommand = new DelegateCommand(ToggleLogger);
-			var toolboxCommand = new DelegateCommand(ToggleToolbox);
-			var runCommand = new DelegateCommand(RunTest, CanRunTest);
+            _container.RegisterType<WebTestResultViewModel>(new ContainerControlledLifetimeManager());
+            _container.Resolve<WebTestResultViewModel>();
 
 
-			manager.RegisterCommand("OPEN", openCommand);
-			manager.RegisterCommand("SAVE", saveCommand);
-			manager.RegisterCommand("SAVEAS", saveAsCommand);
-			manager.RegisterCommand("EXIT", exitCommand);
-			manager.RegisterCommand("LOGSHOW", loggerCommand);
-			manager.RegisterCommand("TOOLBOXSHOW", toolboxCommand);
-			manager.RegisterCommand("THEMECHANGE", themeCommand);
-			manager.RegisterCommand("RUNTEST", runCommand);
-		}
+            IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
+            _container.Resolve<IContentHandlerRegistry>().Register(handler);
 
-		private void LoadMenus()
-		{
-			_eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-				.Publish(new SplashMessageUpdateEvent {Message = "Menus.."});
-			var manager = _container.Resolve<ICommandManager>();
-			var menuService = _container.Resolve<IMenuService>();
-			var settingsManager = _container.Resolve<ISettingsManager>();
-			var themeSettings = _container.Resolve<IThemeSettings>();
-			var recentFiles = _container.Resolve<IRecentViewSettings>();
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			ToolViewModel logger = workspace.Tools.FirstOrDefault(f => f.ContentId == "Logger");
-			ToolViewModel toolbox = workspace.Tools.FirstOrDefault(f => f.ContentId == "Toolbox");
+            var registry = _container.Resolve<ITestRegistry>();
 
-			menuService.Add(new MenuItemViewModel("_File", 1));
+            //Register the test cases that you want to be able to participate
+            registry.Add(typeof (FolderTestCase));
+            registry.Add(typeof (ExpressionTestCase));
+            registry.Add(typeof (LooperTestCase));
+            registry.Add(typeof (RunScenarioTestCase));
+            registry.Add(typeof (SetVariableTestCase));
 
-			menuService.Get("_File").Add(
-				(new MenuItemViewModel("_New", 3,
-					new BitmapImage(
-						new Uri(
-							@"pack://application:,,,/Hypertest;component/Images/new.png")),
-					manager.GetCommand("NEW"),
-					new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl + N"))));
+            //Add the toolbox to the workspace
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            workspace.Tools.Add(_container.Resolve<ToolboxViewModel>());
+        }
 
-			menuService.Get("_File").Add(
-				(new MenuItemViewModel("_Open", 4,
-					new BitmapImage(
-						new Uri(
-							@"pack://application:,,,/Hypertest;component/Images/open.png")),
-					manager.GetCommand("OPEN"),
-					new KeyGesture(Key.O, ModifierKeys.Control, "Ctrl + O"))));
-			menuService.Get("_File").Add(new MenuItemViewModel("_Save", 5,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/save.png")),
-				manager.GetCommand("SAVE"),
-				new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl + S")));
-			menuService.Get("_File").Add(new SaveAsMenuItemViewModel("Save As..", 6,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/save.png")),
-				manager.GetCommand("SAVEAS"), null, false, false, _container));
+        private void LoadTheme()
+        {
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Themes.."});
+            var manager = _container.Resolve<IThemeManager>();
+            var themeSettings = _container.Resolve<IThemeSettings>();
+            var win = _container.Resolve<IShell>() as Window;
+            manager.AddTheme(new LightTheme());
+            manager.AddTheme(new DarkTheme());
+            win.Dispatcher.Invoke(() => manager.SetCurrent(themeSettings.SelectedTheme));
+        }
 
-			menuService.Get("_File").Add(new MenuItemViewModel("Close", 8, null, manager.GetCommand("CLOSE"),
-				new KeyGesture(Key.F4, ModifierKeys.Control, "Ctrl + F4")));
+        private void LoadCommands()
+        {
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Commands.."});
+            var manager = _container.Resolve<ICommandManager>();
 
-			menuService.Get("_File").Add(recentFiles.RecentMenu);
-
-			menuService.Get("_File").Add(new MenuItemViewModel("E_xit", 101, null, manager.GetCommand("EXIT"),
-				new KeyGesture(Key.F4, ModifierKeys.Alt, "Alt + F4")));
+            var openCommand = new DelegateCommand(OpenModule);
+            var exitCommand = new DelegateCommand(CloseCommandExecute);
+            var saveCommand = new DelegateCommand(SaveDocument, CanExecuteSaveDocument);
+            var saveAsCommand = new DelegateCommand(SaveAsDocument, CanExecuteSaveAsDocument);
+            var themeCommand = new DelegateCommand<string>(ThemeChangeCommand);
+            var loggerCommand = new DelegateCommand(ToggleLogger);
+            var toolboxCommand = new DelegateCommand(ToggleToolbox);
+            var runCommand = new DelegateCommand(RunTest, CanRunTest);
 
 
-			menuService.Add(new MenuItemViewModel("_Edit", 2));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("_Undo", 1,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/undo.png")),
-				ApplicationCommands.Undo));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("_Redo", 2,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/redo.png")),
-				ApplicationCommands.Redo));
-			menuService.Get("_Edit").Add(MenuItemViewModel.Separator(15));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("Cut", 20,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/cut.png")),
-				ApplicationCommands.Cut));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("Copy", 21,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/copy.png")),
-				ApplicationCommands.Copy));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("_Paste", 22,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/paste.png")),
-				ApplicationCommands.Paste));
-			menuService.Get("_Edit").Add(new MenuItemViewModel("Run", 23,
-				new BitmapImage(
-					new Uri(
-						@"pack://application:,,,/Hypertest;component/Images/paste.png")),
-				manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
+            manager.RegisterCommand("OPEN", openCommand);
+            manager.RegisterCommand("SAVE", saveCommand);
+            manager.RegisterCommand("SAVEAS", saveAsCommand);
+            manager.RegisterCommand("EXIT", exitCommand);
+            manager.RegisterCommand("LOGSHOW", loggerCommand);
+            manager.RegisterCommand("TOOLBOXSHOW", toolboxCommand);
+            manager.RegisterCommand("THEMECHANGE", themeCommand);
+            manager.RegisterCommand("RUNTEST", runCommand);
+        }
 
-			menuService.Add(new MenuItemViewModel("_View", 3));
+        private void LoadMenus()
+        {
+            _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
+                .Publish(new SplashMessageUpdateEvent {Message = "Menus.."});
+            var manager = _container.Resolve<ICommandManager>();
+            var menuService = _container.Resolve<IMenuService>();
+            var settingsManager = _container.Resolve<ISettingsManager>();
+            var themeSettings = _container.Resolve<IThemeSettings>();
+            var recentFiles = _container.Resolve<IRecentViewSettings>();
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            ToolViewModel logger = workspace.Tools.FirstOrDefault(f => f.ContentId == "Logger");
+            ToolViewModel toolbox = workspace.Tools.FirstOrDefault(f => f.ContentId == "Toolbox");
 
-			if (logger != null)
-				menuService.Get("_View").Add(new MenuItemViewModel("_Logger", 1,
-					new BitmapImage(
-						new Uri(
-							@"pack://application:,,,/Hypertest;component/Images/undo.png")),
-					manager.GetCommand("LOGSHOW")) {IsCheckable = true, IsChecked = logger.IsVisible});
+            menuService.Add(new MenuItemViewModel("_File", 1));
 
-			if (toolbox != null)
-				menuService.Get("_View").Add(new MenuItemViewModel("_Toolbox", 2,
-					new BitmapImage(
-						new Uri(
-							@"pack://application:,,,/Hypertest;component/Images/undo.png")),
-					manager.GetCommand("TOOLBOXSHOW")) {IsCheckable = true, IsChecked = toolbox.IsVisible});
+            menuService.Get("_File").Add(
+                (new MenuItemViewModel("_New", 3,
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/new.png")),
+                    manager.GetCommand("NEW"),
+                    new KeyGesture(Key.N, ModifierKeys.Control, "Ctrl + N"))));
 
-			menuService.Get("_View").Add(new MenuItemViewModel("Themes", 1));
+            menuService.Get("_File").Add(
+                (new MenuItemViewModel("_Open", 4,
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/open.png")),
+                    manager.GetCommand("OPEN"),
+                    new KeyGesture(Key.O, ModifierKeys.Control, "Ctrl + O"))));
+            menuService.Get("_File").Add(new MenuItemViewModel("_Save", 5,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/save.png")),
+                manager.GetCommand("SAVE"),
+                new KeyGesture(Key.S, ModifierKeys.Control, "Ctrl + S")));
+            menuService.Get("_File").Add(new SaveAsMenuItemViewModel("Save As..", 6,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/save.png")),
+                manager.GetCommand("SAVEAS"), null, false, false, _container));
 
-			//Set the checkmark of the theme menu's based on which is currently selected
-			menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Dark", 1, null,
-				manager.GetCommand("THEMECHANGE"))
-													   {
-														   IsCheckable = true,
-														   IsChecked = (themeSettings.SelectedTheme == "Dark"),
-														   CommandParameter = "Dark"
-													   });
-			menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Light", 2, null,
-				manager.GetCommand("THEMECHANGE"))
-													   {
-														   IsCheckable = true,
-														   IsChecked = (themeSettings.SelectedTheme == "Light"),
-														   CommandParameter = "Light"
-													   });
+            menuService.Get("_File").Add(new MenuItemViewModel("Close", 8, null, manager.GetCommand("CLOSE"),
+                new KeyGesture(Key.F4, ModifierKeys.Control, "Ctrl + F4")));
 
-			menuService.Add(new MenuItemViewModel("_Tools", 4));
-			menuService.Get("_Tools").Add(new MenuItemViewModel("Settings", 1, null, settingsManager.SettingsCommand));
+            menuService.Get("_File").Add(recentFiles.RecentMenu);
 
-			menuService.Add(new MenuItemViewModel("_Help", 4));
-		}
+            menuService.Get("_File").Add(new MenuItemViewModel("E_xit", 101, null, manager.GetCommand("EXIT"),
+                new KeyGesture(Key.F4, ModifierKeys.Alt, "Alt + F4")));
 
-		#region Commands
 
-		#region Open
+            menuService.Add(new MenuItemViewModel("_Edit", 2));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("_Undo", 1,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                ApplicationCommands.Undo));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("_Redo", 2,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/redo.png")),
+                ApplicationCommands.Redo));
+            menuService.Get("_Edit").Add(MenuItemViewModel.Separator(15));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("Cut", 20,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/cut.png")),
+                ApplicationCommands.Cut));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("Copy", 21,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/copy.png")),
+                ApplicationCommands.Copy));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("_Paste", 22,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
+                ApplicationCommands.Paste));
+            menuService.Get("_Edit").Add(new MenuItemViewModel("Run", 23,
+                new BitmapImage(
+                    new Uri(
+                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
+                manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
 
-		private void OpenModule()
-		{
-			var service = _container.Resolve<IOpenDocumentService>();
-			service.Open();
-		}
+            menuService.Add(new MenuItemViewModel("_View", 3));
 
-		#endregion
+            if (logger != null)
+                menuService.Get("_View").Add(new MenuItemViewModel("_Logger", 1,
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                    manager.GetCommand("LOGSHOW")) {IsCheckable = true, IsChecked = logger.IsVisible});
 
-		#region Save
+            if (toolbox != null)
+                menuService.Get("_View").Add(new MenuItemViewModel("_Toolbox", 2,
+                    new BitmapImage(
+                        new Uri(
+                            @"pack://application:,,,/Hypertest;component/Images/undo.png")),
+                    manager.GetCommand("TOOLBOXSHOW")) {IsCheckable = true, IsChecked = toolbox.IsVisible});
 
-		private bool CanExecuteSaveDocument()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			if (workspace.ActiveDocument != null)
-			{
-				return workspace.ActiveDocument.Model.IsDirty;
-			}
-			return false;
-		}
+            menuService.Get("_View").Add(new MenuItemViewModel("Themes", 1));
 
-		private bool CanExecuteSaveAsDocument()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			return (workspace.ActiveDocument != null);
-		}
+            //Set the checkmark of the theme menu's based on which is currently selected
+            menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Dark", 1, null,
+                manager.GetCommand("THEMECHANGE"))
+                                                       {
+                                                           IsCheckable = true,
+                                                           IsChecked = (themeSettings.SelectedTheme == "Dark"),
+                                                           CommandParameter = "Dark"
+                                                       });
+            menuService.Get("_View").Get("Themes").Add(new MenuItemViewModel("Light", 2, null,
+                manager.GetCommand("THEMECHANGE"))
+                                                       {
+                                                           IsCheckable = true,
+                                                           IsChecked = (themeSettings.SelectedTheme == "Light"),
+                                                           CommandParameter = "Light"
+                                                       });
 
-		private void SaveDocument()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			var manager = _container.Resolve<ICommandManager>();
-			if (workspace.ActiveDocument.Handler != null)
-			{
-				workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument);
-			}
-			manager.Refresh();
-		}
+            menuService.Add(new MenuItemViewModel("_Tools", 4));
+            menuService.Get("_Tools").Add(new MenuItemViewModel("Settings", 1, null, settingsManager.SettingsCommand));
 
-		private void SaveAsDocument()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			var manager = _container.Resolve<ICommandManager>();
-			if (workspace.ActiveDocument != null)
-			{
-				workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument, true);
-				manager.Refresh();
-			}
-		}
+            menuService.Add(new MenuItemViewModel("_Help", 4));
+        }
 
-		#endregion
+        #region Commands
 
-		#region Theme
+        #region Open
 
-		private void ThemeChangeCommand(string s)
-		{
-			var manager = _container.Resolve<IThemeManager>();
-			var menuService = _container.Resolve<IMenuService>();
-			var win = _container.Resolve<IShell>() as Window;
-			var mvm =
-				menuService.Get("_View").Get("Themes").Get(manager.CurrentTheme.Name) as MenuItemViewModel;
+        private void OpenModule()
+        {
+            var service = _container.Resolve<IOpenDocumentService>();
+            service.Open();
+        }
 
-			if (manager.CurrentTheme.Name != s)
-			{
-				if (mvm != null)
-					mvm.IsChecked = false;
-				win.Dispatcher.InvokeAsync(() => manager.SetCurrent(s));
-			}
-			else
-			{
-				if (mvm != null)
-					mvm.IsChecked = true;
-			}
-		}
+        #endregion
 
-		#endregion
+        #region Save
 
-		#region Logger click
+        private bool CanExecuteSaveDocument()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            if (workspace.ActiveDocument != null)
+            {
+                return workspace.ActiveDocument.Model.IsDirty;
+            }
+            return false;
+        }
 
-		private void ToggleLogger()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			var menuService = _container.Resolve<IMenuService>();
-			ToolViewModel logger = workspace.Tools.First(f => f.ContentId == "Logger");
-			if (logger != null)
-			{
-				logger.IsVisible = !logger.IsVisible;
-				var mi = menuService.Get("_View").Get("_Logger") as MenuItemViewModel;
-				mi.IsChecked = logger.IsVisible;
-			}
-		}
+        private bool CanExecuteSaveAsDocument()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            return (workspace.ActiveDocument != null);
+        }
 
-		private void ToggleToolbox()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			var menuService = _container.Resolve<IMenuService>();
-			ToolViewModel toolbox = workspace.Tools.First(f => f.ContentId == "Toolbox");
-			if (toolbox != null)
-			{
-				toolbox.IsVisible = !toolbox.IsVisible;
-				var mi = menuService.Get("_View").Get("_Toolbox") as MenuItemViewModel;
-				mi.IsChecked = toolbox.IsVisible;
-			}
-		}
+        private void SaveDocument()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            var manager = _container.Resolve<ICommandManager>();
+            if (workspace.ActiveDocument.Handler != null)
+            {
+                workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument);
+            }
+            manager.Refresh();
+        }
 
-		#endregion
+        private void SaveAsDocument()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            var manager = _container.Resolve<ICommandManager>();
+            if (workspace.ActiveDocument != null)
+            {
+                workspace.ActiveDocument.Handler.SaveContent(workspace.ActiveDocument, true);
+                manager.Refresh();
+            }
+        }
 
-		#region Run
+        #endregion
 
-		private void RunTest()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			if (workspace.ActiveDocument != null)
-			{
-				if (workspace.ActiveDocument.Model is TestScenario)
-				{
-					var cvm =
-						workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
-					if (cvm != null)
-					{
-						workspace.ActiveDocument = cvm;
-					}
-					else
-					{
-						cvm = _container.Resolve<WebTestResultViewModel>();
-						if (WebScenarioRunner.Current.IsRunning == false)
-						{
-							TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
-							scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
-							scenario.LoggerService = (workspace.ActiveDocument.Model as TestScenario).LoggerService;
-							WebScenarioRunner.Current.Initialize(scenario);
-						}
-						cvm.Refresh();
-						workspace.Documents.Add(cvm);
-						workspace.ActiveDocument = cvm;
-					}
-				}
-			}
-		}
+        #region Theme
 
-		private bool CanRunTest()
-		{
-			IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-			if (workspace.ActiveDocument != null)
-			{
-				return (workspace.ActiveDocument.Model is TestScenario);
-			}
-			return false;
-		}
+        private void ThemeChangeCommand(string s)
+        {
+            var manager = _container.Resolve<IThemeManager>();
+            var menuService = _container.Resolve<IMenuService>();
+            var win = _container.Resolve<IShell>() as Window;
+            var mvm =
+                menuService.Get("_View").Get("Themes").Get(manager.CurrentTheme.Name) as MenuItemViewModel;
 
-		#endregion
+            if (manager.CurrentTheme.Name != s)
+            {
+                if (mvm != null)
+                    mvm.IsChecked = false;
+                win.Dispatcher.InvokeAsync(() => manager.SetCurrent(s));
+            }
+            else
+            {
+                if (mvm != null)
+                    mvm.IsChecked = true;
+            }
+        }
 
-		#region Close
+        #endregion
 
-		private void CloseCommandExecute()
-		{
-			var shell = _container.Resolve<IShell>();
-			shell.Close();
-		}
+        #region Logger click
 
-		#endregion
+        private void ToggleLogger()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            var menuService = _container.Resolve<IMenuService>();
+            ToolViewModel logger = workspace.Tools.First(f => f.ContentId == "Logger");
+            if (logger != null)
+            {
+                logger.IsVisible = !logger.IsVisible;
+                var mi = menuService.Get("_View").Get("_Logger") as MenuItemViewModel;
+                mi.IsChecked = logger.IsVisible;
+            }
+        }
 
-		#endregion
-	}
+        private void ToggleToolbox()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            var menuService = _container.Resolve<IMenuService>();
+            ToolViewModel toolbox = workspace.Tools.First(f => f.ContentId == "Toolbox");
+            if (toolbox != null)
+            {
+                toolbox.IsVisible = !toolbox.IsVisible;
+                var mi = menuService.Get("_View").Get("_Toolbox") as MenuItemViewModel;
+                mi.IsChecked = toolbox.IsVisible;
+            }
+        }
+
+        #endregion
+
+        #region Run
+
+        private void RunTest()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            if (workspace.ActiveDocument != null)
+            {
+                if (workspace.ActiveDocument.Model is TestScenario)
+                {
+                    var cvm =
+                        workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
+                    if (cvm != null)
+                    {
+                        workspace.ActiveDocument = cvm;
+                    }
+                    else
+                    {
+                        cvm = _container.Resolve<WebTestResultViewModel>();
+                        if (WebScenarioRunner.Current.IsRunning == false)
+                        {
+                            TestScenario scenario =
+                                (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
+                            scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
+                            scenario.LoggerService = (workspace.ActiveDocument.Model as TestScenario).LoggerService;
+                            WebScenarioRunner.Current.Initialize(scenario);
+                        }
+                        cvm.Refresh();
+                        workspace.Documents.Add(cvm);
+                        workspace.ActiveDocument = cvm;
+                    }
+                }
+            }
+        }
+
+        private bool CanRunTest()
+        {
+            IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
+            if (workspace.ActiveDocument != null)
+            {
+                return (workspace.ActiveDocument.Model is TestScenario);
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region Close
+
+        private void CloseCommandExecute()
+        {
+            var shell = _container.Resolve<IShell>();
+            shell.Close();
+        }
+
+        #endregion
+
+        #endregion
+    }
 }

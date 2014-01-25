@@ -18,92 +18,102 @@ using Hypertest.Core.Attributes;
 
 namespace Hypertest.Core.Tests
 {
-	[DataContract]
-	[Serializable]
-	[DisplayName("Loop")]
-	[Description("Equivalent of a for loop")]
-	[Category("General")]
-	[TestImage("Images/Looper.png")]
-	public class LooperTestCase : FolderTestCase
-	{
-		#region Members
-		private int _counter;
-		private int _loopCount;
-		#endregion
+    [DataContract]
+    [Serializable]
+    [DisplayName("Loop")]
+    [Description("Equivalent of a for loop")]
+    [Category("General")]
+    [TestImage("Images/Looper.png")]
+    public class LooperTestCase : FolderTestCase
+    {
+        #region Members
 
-		#region CTOR
-		public LooperTestCase()
-		{
-			Initialize();
-		}
+        private int _counter;
+        private int _loopCount;
 
-		private void Initialize(bool create = true)
-		{
-			this.Description = "Runs a loop";
-			this.MarkedForExecution = true;
-		}
-		#endregion
+        #endregion
 
-		#region Property
-		[DataMember]
-		[DisplayName("Counter")]
-		[Description("The property which holds the count at which the loop exits")]
-		[DynamicReadonly("RunState"), DynamicBrowsable("RunState")]
-		[Category("Settings")]
-		public int Counter
-		{
-			get { return _counter; }
-			set
-			{
-				int oldValue = _counter;
-				_counter = value;
-				if (oldValue != value)
-					RaisePropertyChangedWithValues(oldValue, _counter, "Counter value change");
-			}
-		}
+        #region CTOR
 
-		[DataMember]
-		[DisplayName("Loop Count")]
-		[Description("The number of times you want to execute the children")]
-		[DynamicReadonly("RunState")]
-		[Category("Settings")]
-		public int LoopCount
-		{
-			get { return _loopCount; }
-			set
-			{
-				int oldValue = _loopCount;
-				_loopCount = value;
-				if (oldValue != value)
-					RaisePropertyChangedWithValues(oldValue, _loopCount, "Loop count value change");
-			}
-		}
-		#endregion
+        public LooperTestCase()
+        {
+            Initialize();
+        }
 
-		#region Deserialize
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext context)
-		{
-			Initialize();
-		}
-		#endregion
+        private void Initialize(bool create = true)
+        {
+            this.Description = "Runs a loop";
+            this.MarkedForExecution = true;
+        }
 
-		#region Override
-		public override void Setup()
-		{
-			ObservableCollection<TestCase> newChildren = new ObservableCollection<TestCase>();
-			for (int i = 0; i < this.LoopCount; i++)
-			{
-				LooperTestCase cloneTestCase = this.Clone() as LooperTestCase;
-				FolderTestCase folder = new FolderTestCase();
-				folder.Description = "For loop " + i;
-				folder.Children = cloneTestCase.Children;
-				newChildren.Add(folder);
-			}
+        #endregion
 
-			this.Children = newChildren;
-			//If you want to add break and if its a future requirement - override the Body specifically for a Break test case
-		} 
-		#endregion
-	}
+        #region Property
+
+        [DataMember]
+        [DisplayName("Counter")]
+        [Description("The property which holds the count at which the loop exits")]
+        [DynamicReadonly("RunState"), DynamicBrowsable("RunState")]
+        [Category("Settings")]
+        public int Counter
+        {
+            get { return _counter; }
+            set
+            {
+                int oldValue = _counter;
+                _counter = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _counter, "Counter value change");
+            }
+        }
+
+        [DataMember]
+        [DisplayName("Loop Count")]
+        [Description("The number of times you want to execute the children")]
+        [DynamicReadonly("RunState")]
+        [Category("Settings")]
+        public int LoopCount
+        {
+            get { return _loopCount; }
+            set
+            {
+                int oldValue = _loopCount;
+                _loopCount = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _loopCount, "Loop count value change");
+            }
+        }
+
+        #endregion
+
+        #region Deserialize
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            Initialize();
+        }
+
+        #endregion
+
+        #region Override
+
+        public override void Setup()
+        {
+            ObservableCollection<TestCase> newChildren = new ObservableCollection<TestCase>();
+            for (int i = 0; i < this.LoopCount; i++)
+            {
+                LooperTestCase cloneTestCase = this.Clone() as LooperTestCase;
+                FolderTestCase folder = new FolderTestCase();
+                folder.Description = "For loop " + i;
+                folder.Children = cloneTestCase.Children;
+                newChildren.Add(folder);
+            }
+
+            this.Children = newChildren;
+            //If you want to add break and if its a future requirement - override the Body specifically for a Break test case
+        }
+
+        #endregion
+    }
 }

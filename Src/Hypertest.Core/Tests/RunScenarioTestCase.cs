@@ -15,79 +15,88 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Utils;
 
 namespace Hypertest.Core.Tests
 {
-	[DataContract]
-	[Serializable]
-	[DisplayName("Run Scenario")]
-	[Description("Specify the scenario to run")]
-	[Category("General")]
-	[TestImage("Images/RunScenario.png")]
-	public class RunScenarioTestCase : FolderTestCase
-	{
-		#region Members
-		private string _filePath;
-		#endregion
+    [DataContract]
+    [Serializable]
+    [DisplayName("Run Scenario")]
+    [Description("Specify the scenario to run")]
+    [Category("General")]
+    [TestImage("Images/RunScenario.png")]
+    public class RunScenarioTestCase : FolderTestCase
+    {
+        #region Members
 
-		#region CTOR
-		public RunScenarioTestCase()
-		{
-			Initialize();
-		}
+        private string _filePath;
 
-		private void Initialize(bool create = true)
-		{
-			this.Description = "Evaluates the expression";
-			this.MarkedForExecution = true;
-		}
-		#endregion
+        #endregion
 
-		#region Property
-		[DataMember]
-		[DisplayName("File Path")]
-		[Description("Enter the file path for the scenario to run")]
-		[DynamicReadonly("RunState")]
-		[Category("Settings")]
-		public string FilePath
-		{
-			get { return _filePath; }
-			set
-			{
-				string oldValue = _filePath;
-				_filePath = value;
-				if (oldValue != value)
-					RaisePropertyChangedWithValues(oldValue, _filePath,"File path change");
-			}
-		}
-		#endregion
+        #region CTOR
 
-		#region Deserialize
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext context)
-		{
-			Initialize();
-		}
-		#endregion
+        public RunScenarioTestCase()
+        {
+            Initialize();
+        }
 
-		#region Override
-		public override void Setup()
-		{
-			TestScenario scenario;
-			using (var reader = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read))
-			{
-				var ser = new DataContractSerializer(typeof(WebTestScenario), this.TestRegistry.Tests);
-				scenario = (WebTestScenario)ser.ReadObject(reader);
-			}
+        private void Initialize(bool create = true)
+        {
+            this.Description = "Evaluates the expression";
+            this.MarkedForExecution = true;
+        }
 
-			if (scenario != null)
-			{
-				scenario.TestRegistry = this.Scenario.TestRegistry;
-				scenario.LoggerService = this.Scenario.LoggerService;
-				this.Children = scenario.Children;
-			}
-		} 
-		#endregion
-	}
+        #endregion
+
+        #region Property
+
+        [DataMember]
+        [DisplayName("File Path")]
+        [Description("Enter the file path for the scenario to run")]
+        [DynamicReadonly("RunState")]
+        [Category("Settings")]
+        public string FilePath
+        {
+            get { return _filePath; }
+            set
+            {
+                string oldValue = _filePath;
+                _filePath = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _filePath, "File path change");
+            }
+        }
+
+        #endregion
+
+        #region Deserialize
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            Initialize();
+        }
+
+        #endregion
+
+        #region Override
+
+        public override void Setup()
+        {
+            TestScenario scenario;
+            using (var reader = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read))
+            {
+                var ser = new DataContractSerializer(typeof (WebTestScenario), this.TestRegistry.Tests);
+                scenario = (WebTestScenario) ser.ReadObject(reader);
+            }
+
+            if (scenario != null)
+            {
+                scenario.TestRegistry = this.Scenario.TestRegistry;
+                scenario.LoggerService = this.Scenario.LoggerService;
+                this.Children = scenario.Children;
+            }
+        }
+
+        #endregion
+    }
 }

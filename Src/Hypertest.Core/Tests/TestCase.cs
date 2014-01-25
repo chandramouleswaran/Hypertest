@@ -15,9 +15,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Security.AccessControl;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
@@ -27,406 +25,409 @@ using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
-	public enum TestCaseResult
-	{
-		None,
-		Passed,
-		Failed
-	}
+    public enum TestCaseResult
+    {
+        None,
+        Passed,
+        Failed
+    }
 
-	public enum TestRunState
-	{
-		NotStarted = 0,
-		Executing = 1,
-		Done = 2
-	}
+    public enum TestRunState
+    {
+        NotStarted = 0,
+        Executing = 1,
+        Done = 2
+    }
 
-	/// <summary>
-	///     The basic unit of a test case in the Hypertest framework
-	/// </summary>
-	[DataContract]
-	[Serializable]
-	public abstract class TestCase : ContentModel, ICloneable, ICustomTypeDescriptor
-	{
-		#region Members
-		protected TestCaseResult _actualResult;
-		private string _description;
-		private int _waitTime;
-		protected TestCaseResult _expectedResult;
-		protected bool _isExpanded;
-		protected bool _isSelected;
-		protected bool _markedForExecution;
-		private FolderTestCase _parent;
-		private TestRunState _runState;
-		private ObservableCollection<PostRunPairs> _postValues;
-		#endregion
+    /// <summary>
+    ///     The basic unit of a test case in the Hypertest framework
+    /// </summary>
+    [DataContract]
+    [Serializable]
+    public abstract class TestCase : ContentModel, ICloneable, ICustomTypeDescriptor
+    {
+        #region Members
 
-		#region CTOR
+        protected TestCaseResult _actualResult;
+        private string _description;
+        private int _waitTime;
+        protected TestCaseResult _expectedResult;
+        protected bool _isExpanded;
+        protected bool _isSelected;
+        protected bool _markedForExecution;
+        private FolderTestCase _parent;
+        private TestRunState _runState;
+        private ObservableCollection<PostRunPairs> _postValues;
 
-		protected TestCase()
-		{
-			Initialize();
-			_postValues = new ObservableCollection<PostRunPairs>();
-		}
+        #endregion
 
-		private void Initialize(bool create = true)
-		{
-			_expectedResult = TestCaseResult.Passed;
-			_runState = TestRunState.NotStarted;
-		}
+        #region CTOR
 
-		#endregion
+        protected TestCase()
+        {
+            Initialize();
+            _postValues = new ObservableCollection<PostRunPairs>();
+        }
 
-		#region Deserialize
+        private void Initialize(bool create = true)
+        {
+            _expectedResult = TestCaseResult.Passed;
+            _runState = TestRunState.NotStarted;
+        }
 
-		[OnDeserialized]
-		private void OnDeserialized(StreamingContext context)
-		{
-			Initialize();
-		}
+        #endregion
 
-		#endregion
+        #region Deserialize
 
-		#region Virtuals
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Initialize();
+        }
 
-		public virtual void Setup()
-		{
-		}
+        #endregion
 
-		public virtual void Body()
-		{
-		}
+        #region Virtuals
 
-		public virtual void Wait()
-		{
-			Thread.Sleep(this.WaitTime);
-		}
+        public virtual void Setup()
+        {
+        }
 
-		public virtual void Cleanup(Exception e = null)
-		{
-			//Need to access logger
-		}
+        public virtual void Body()
+        {
+        }
 
-		#endregion
+        public virtual void Wait()
+        {
+            Thread.Sleep(this.WaitTime);
+        }
 
-		public void Run()
-		{
-			try
-			{
-				Setup();
-				Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Executing);
-				Body();
-				Wait();
-				FinalizeRun();
-				Cleanup();
-			}
-			catch (Exception e)
-			{
-				Cleanup(e);
-			}
-			finally
-			{
-				Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
-			}
-		}
+        public virtual void Cleanup(Exception e = null)
+        {
+            //Need to access logger
+        }
 
-		private void FinalizeRun()
-		{
-			//This is where we want to look at the properties and assign it to variables[DynamicReadonly("RunState")]
-		}
+        #endregion
 
-		#region Properties
+        public void Run()
+        {
+            try
+            {
+                Setup();
+                Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Executing);
+                Body();
+                Wait();
+                FinalizeRun();
+                Cleanup();
+            }
+            catch (Exception e)
+            {
+                this.ActualResult = TestCaseResult.Failed;
+                Cleanup(e);
+            }
+            finally
+            {
+                Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
+            }
+        }
 
-		[DataMember]
-		[Description("Enter the description for the test case")]
-		[Category("General")]
-		[DynamicReadonly("RunState")]
-		public string Description
-		{
-			get { return _description; }
-			set
-			{
-				if (value != _description)
-				{
-					string oldValue = _description;
-					_description = value;
-					if (oldValue != value)
-						RaisePropertyChangedWithValues(oldValue, _description, "Description change");
-				}
-			}
-		}
+        private void FinalizeRun()
+        {
+            //This is where we want to look at the properties and assign it to variables[DynamicReadonly("RunState")]
+        }
 
-		[DataMember]
-		[DisplayName("Wait Time")]
-		[Description("Enter the time to wait in milli seconds before executing the next step")]
-		[Category("General")]
-		[DefaultValue(0)]
-		[DynamicReadonly("RunState")]
-		public int WaitTime
-		{
-			get { return _waitTime; }
-			set
-			{
-				if (value != _waitTime)
-				{
-					int oldValue = _waitTime;
-					_waitTime = value;
-					if (oldValue != value)
-						RaisePropertyChangedWithValues(oldValue, _waitTime, "Wait change");
-				}
-			}
-		}
+        #region Properties
 
-		[DataMember]
-		[DisplayName("Expected Result")]
-		[Description("The expected end result of the test case")]
-		[Category("Results")]
-		[DynamicReadonly("RunState")]
-		public TestCaseResult ExpectedResult
-		{
-			get { return _expectedResult; }
-			set
-			{
-				_expectedResult = value;
-				RaisePropertyChanged();
-			}
-		}
+        [DataMember]
+        [Description("Enter the description for the test case")]
+        [Category("General")]
+        [DynamicReadonly("RunState")]
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                if (value != _description)
+                {
+                    string oldValue = _description;
+                    _description = value;
+                    if (oldValue != value)
+                        RaisePropertyChangedWithValues(oldValue, _description, "Description change");
+                }
+            }
+        }
 
-		[DataMember]
-		[DisplayName("Actual Result")]
-		[Description("The actual end result of the test case")]
-		[Category("Results")]
-		[DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
-		public TestCaseResult ActualResult
-		{
-			get { return _actualResult; }
-			set
-			{
-				_actualResult = value;
-				RaisePropertyChanged();
-				RaisePropertyChanged("ExpectedVsActual");
-			}
-		}
+        [DataMember]
+        [DisplayName("Wait Time")]
+        [Description("Enter the time to wait in milli seconds before executing the next step")]
+        [Category("General")]
+        [DefaultValue(0)]
+        [DynamicReadonly("RunState")]
+        public int WaitTime
+        {
+            get { return _waitTime; }
+            set
+            {
+                if (value != _waitTime)
+                {
+                    int oldValue = _waitTime;
+                    _waitTime = value;
+                    if (oldValue != value)
+                        RaisePropertyChangedWithValues(oldValue, _waitTime, "Wait change");
+                }
+            }
+        }
 
-		[DisplayName("Expected vs Actual Result")]
-		[Description("The final result of the test case")]
-		[Category("Results")]
-		[DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
-		public TestCaseResult ExpectedVsActual
-		{
-			get
-			{
-				if (_expectedResult == TestCaseResult.None)
-					return TestCaseResult.Passed;
-				if (_expectedResult != _actualResult)
-					return TestCaseResult.Failed;
-				return TestCaseResult.Passed;
-			}
-		}
+        [DataMember]
+        [DisplayName("Expected Result")]
+        [Description("The expected end result of the test case")]
+        [Category("Results")]
+        [DynamicReadonly("RunState")]
+        public TestCaseResult ExpectedResult
+        {
+            get { return _expectedResult; }
+            set
+            {
+                _expectedResult = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        [DataMember]
+        [DisplayName("Actual Result")]
+        [Description("The actual end result of the test case")]
+        [Category("Results")]
+        [DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
+        public TestCaseResult ActualResult
+        {
+            get { return _actualResult; }
+            set
+            {
+                _actualResult = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("ExpectedVsActual");
+            }
+        }
+
+        [DisplayName("Expected vs Actual Result")]
+        [Description("The final result of the test case")]
+        [Category("Results")]
+        [DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
+        public TestCaseResult ExpectedVsActual
+        {
+            get
+            {
+                if (_expectedResult == TestCaseResult.None)
+                    return TestCaseResult.Passed;
+                if (_expectedResult != _actualResult)
+                    return TestCaseResult.Failed;
+                return TestCaseResult.Passed;
+            }
+        }
 
 
-		[XmlIgnore]
-		[Browsable(false)]
-		public FolderTestCase Parent
-		{
-			get { return _parent; }
-			internal set
-			{
-				_parent = value;
-				RaisePropertyChanged();
-			}
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        public FolderTestCase Parent
+        {
+            get { return _parent; }
+            internal set
+            {
+                _parent = value;
+                RaisePropertyChanged();
+            }
+        }
 
-		[XmlIgnore]
-		[Browsable(false)]
-		public virtual bool IsSelected
-		{
-			get { return _isSelected; }
-			internal set
-			{
-				if (_isSelected != value)
-				{
-					_isSelected = value;
-					RaisePropertyChanged();
-				}
-			}
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        public virtual bool IsSelected
+        {
+            get { return _isSelected; }
+            internal set
+            {
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
-		[XmlIgnore]
-		[Browsable(false)]
-		public virtual bool IsExpanded
-		{
-			get { return _isExpanded; }
-			internal set
-			{
-				bool oldValue = _isExpanded;
-				_isExpanded = value;
-				if (oldValue != value)
-					RaisePropertyChangedWithValues(oldValue, _isExpanded, "Expand - " + _isExpanded);
-			}
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        public virtual bool IsExpanded
+        {
+            get { return _isExpanded; }
+            internal set
+            {
+                bool oldValue = _isExpanded;
+                _isExpanded = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _isExpanded, "Expand - " + _isExpanded);
+            }
+        }
 
-		[XmlIgnore]
-		[Browsable(false)]
-		public TestScenario Scenario
-		{
-			get
-			{
-				TestCase test = this;
-				while (test.Parent != null)
-				{
-					test = test.Parent;
-				}
-				return (TestScenario) test;
-			}
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        public TestScenario Scenario
+        {
+            get
+            {
+                TestCase test = this;
+                while (test.Parent != null)
+                {
+                    test = test.Parent;
+                }
+                return (TestScenario) test;
+            }
+        }
 
-		[Browsable(false)]
-		public bool MarkedForExecution
-		{
-			get { return _markedForExecution; }
-			set
-			{
-				_markedForExecution = value;
-				RaisePropertyChanged();
-			}
-		}
+        [Browsable(false)]
+        public bool MarkedForExecution
+        {
+            get { return _markedForExecution; }
+            set
+            {
+                _markedForExecution = value;
+                RaisePropertyChanged();
+            }
+        }
 
-		[DataMember]
-		[Browsable(false), RefreshProperties(RefreshProperties.All)]
-		public TestRunState RunState
-		{
-			get { return _runState; }
-			internal set
-			{
-				_runState = value;
-				RaisePropertyChanged();
-			}
-		}
+        [DataMember]
+        [Browsable(false), RefreshProperties(RefreshProperties.All)]
+        public TestRunState RunState
+        {
+            get { return _runState; }
+            internal set
+            {
+                _runState = value;
+                RaisePropertyChanged();
+            }
+        }
 
-		[DataMember]
-		[Browsable(false)]
-		public ObservableCollection<PostRunPairs> PostValues 
-		{
-			get { return _postValues; }
-			set
-			{
-				_postValues = value;
-				RaisePropertyChanged();
-			}
-		}
+        [DataMember]
+        [Browsable(false)]
+        public ObservableCollection<PostRunPairs> PostValues
+        {
+            get { return _postValues; }
+            set
+            {
+                _postValues = value;
+                RaisePropertyChanged();
+            }
+        }
 
-		#endregion
+        #endregion
 
-		#region Internal Properties
+        #region Internal Properties
 
-		[XmlIgnore]
-		[Browsable(false)]
-		protected internal virtual ITestRegistry TestRegistry
-		{
-			get { return Scenario.TestRegistry; }
-			set { }
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual ITestRegistry TestRegistry
+        {
+            get { return Scenario.TestRegistry; }
+            set { }
+        }
 
-		[XmlIgnore]
-		[Browsable(false)]
-		protected internal virtual ILoggerService LoggerService
-		{
-			get { return Scenario.LoggerService; }
-			set { }
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual ILoggerService LoggerService
+        {
+            get { return Scenario.LoggerService; }
+            set { }
+        }
 
-		[XmlIgnore]
-		[Browsable(false)]
-		protected internal virtual IRunner Runner
-		{
-			get { return Scenario.Runner; }
-			set { }
-		}
+        [XmlIgnore]
+        [Browsable(false)]
+        protected internal virtual IRunner Runner
+        {
+            get { return Scenario.Runner; }
+            set { }
+        }
 
-		#endregion
+        #endregion
 
-		#region ICloneable
+        #region ICloneable
 
-		public object Clone()
-		{
-			if (TestRegistry != null)
-			{
-				var serializer = new DataContractSerializer(GetType(), TestRegistry.Tests);
-				using (var ms = new MemoryStream())
-				{
-					serializer.WriteObject(ms, this);
-					ms.Position = 0;
-					return serializer.ReadObject(ms);
-				}
-			}
-			throw new Exception("Test registry is null - please set the scenario's registry");
-		}
+        public object Clone()
+        {
+            if (TestRegistry != null)
+            {
+                var serializer = new DataContractSerializer(GetType(), TestRegistry.Tests);
+                using (var ms = new MemoryStream())
+                {
+                    serializer.WriteObject(ms, this);
+                    ms.Position = 0;
+                    return serializer.ReadObject(ms);
+                }
+            }
+            throw new Exception("Test registry is null - please set the scenario's registry");
+        }
 
-		#endregion
+        #endregion
 
-		#region ICustomTypeDescriptor
+        #region ICustomTypeDescriptor
 
-		public AttributeCollection GetAttributes()
-		{
-			return TypeDescriptor.GetAttributes(this, true);
-		}
+        public AttributeCollection GetAttributes()
+        {
+            return TypeDescriptor.GetAttributes(this, true);
+        }
 
-		public string GetClassName()
-		{
-			return TypeDescriptor.GetClassName(this, true);
-		}
+        public string GetClassName()
+        {
+            return TypeDescriptor.GetClassName(this, true);
+        }
 
-		public string GetComponentName()
-		{
-			return TypeDescriptor.GetComponentName(this, true);
-		}
+        public string GetComponentName()
+        {
+            return TypeDescriptor.GetComponentName(this, true);
+        }
 
-		public TypeConverter GetConverter()
-		{
-			return TypeDescriptor.GetConverter(this, true);
-		}
+        public TypeConverter GetConverter()
+        {
+            return TypeDescriptor.GetConverter(this, true);
+        }
 
-		public EventDescriptor GetDefaultEvent()
-		{
-			return TypeDescriptor.GetDefaultEvent(this, true);
-		}
+        public EventDescriptor GetDefaultEvent()
+        {
+            return TypeDescriptor.GetDefaultEvent(this, true);
+        }
 
-		public PropertyDescriptor GetDefaultProperty()
-		{
-			return TypeDescriptor.GetDefaultProperty(this, true);
-		}
+        public PropertyDescriptor GetDefaultProperty()
+        {
+            return TypeDescriptor.GetDefaultProperty(this, true);
+        }
 
-		public object GetEditor(Type editorBaseType)
-		{
-			return TypeDescriptor.GetEditor(this, editorBaseType, true);
-		}
+        public object GetEditor(Type editorBaseType)
+        {
+            return TypeDescriptor.GetEditor(this, editorBaseType, true);
+        }
 
-		public EventDescriptorCollection GetEvents(Attribute[] attributes)
-		{
-			return TypeDescriptor.GetEvents(this, attributes, true);
-		}
+        public EventDescriptorCollection GetEvents(Attribute[] attributes)
+        {
+            return TypeDescriptor.GetEvents(this, attributes, true);
+        }
 
-		public EventDescriptorCollection GetEvents()
-		{
-			return TypeDescriptor.GetEvents(this, true);
-		}
+        public EventDescriptorCollection GetEvents()
+        {
+            return TypeDescriptor.GetEvents(this, true);
+        }
 
-		public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-		{
-			return GetProperties();
-		}
+        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
+        {
+            return GetProperties();
+        }
 
-		public PropertyDescriptorCollection GetProperties()
-		{
-			return DynamicTypeDescriptor.GetProperties(this);
-		}
+        public PropertyDescriptorCollection GetProperties()
+        {
+            return DynamicTypeDescriptor.GetProperties(this);
+        }
 
-		public object GetPropertyOwner(PropertyDescriptor pd)
-		{
-			return this;
-		}
+        public object GetPropertyOwner(PropertyDescriptor pd)
+        {
+            return this;
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }

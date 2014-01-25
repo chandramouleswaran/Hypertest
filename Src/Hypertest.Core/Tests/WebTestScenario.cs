@@ -19,65 +19,65 @@ using Hypertest.Core.Runners;
 
 namespace Hypertest.Core.Tests
 {
-	/// <summary>
-	///     The basic unit of a web test scenario
-	/// </summary>
-	[DataContract]
-	[Serializable]
-	[DisplayName("Web test scenario")]
-	public class WebTestScenario : TestScenario
-	{
-		private string _url;
-		private BrowserType _type;
+    /// <summary>
+    ///     The basic unit of a web test scenario
+    /// </summary>
+    [DataContract]
+    [Serializable]
+    [DisplayName("Web test scenario")]
+    public class WebTestScenario : TestScenario
+    {
+        private string _url;
+        private BrowserType _type;
 
-		public WebTestScenario() : base()
-		{
-		}
+        public WebTestScenario() : base()
+        {
+        }
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Starting URL")]
-		[Description("Enter the URL")]
-		[DynamicReadonly("RunState")]
-		public string URL
-		{
-			get { return _url; }
-			set
-			{
-				string oldValue = _url;
-				if (oldValue != value)
-				{
-					_url = value;
-					RaisePropertyChangedWithValues(oldValue, value, "URL change");
-				}
-			}
-		}
+        [DataMember]
+        [Category("Scenario Settings")]
+        [DisplayName("Starting URL")]
+        [Description("Enter the URL")]
+        [DynamicReadonly("RunState")]
+        public string URL
+        {
+            get { return _url; }
+            set
+            {
+                string oldValue = _url;
+                if (oldValue != value)
+                {
+                    _url = value;
+                    RaisePropertyChangedWithValues(oldValue, value, "URL change");
+                }
+            }
+        }
 
-		[DataMember]
-		[Category("Scenario Settings")]
-		[DisplayName("Browser Type")]
-		[Description("Select the browser type")]
-		[DynamicReadonly("RunState")]
-		public BrowserType BrowserType
-		{
-			get { return _type; }
-			set
-			{
-				BrowserType oldValue = _type;
-				if (oldValue != value)
-				{
-					_type = value;
-					RaisePropertyChangedWithValues(oldValue, value, "Type change");
-				}
-			}
-		}
+        [DataMember]
+        [Category("Scenario Settings")]
+        [DisplayName("Browser Type")]
+        [Description("Select the browser type")]
+        [DynamicReadonly("RunState")]
+        public BrowserType BrowserType
+        {
+            get { return _type; }
+            set
+            {
+                BrowserType oldValue = _type;
+                if (oldValue != value)
+                {
+                    _type = value;
+                    RaisePropertyChangedWithValues(oldValue, value, "Type change");
+                }
+            }
+        }
 
-		public override void Setup()
-		{
-			foreach (Variable variable in Variables)
-			{
-				WebScenarioRunner.Current.AddVariable(variable);
-			}
-		}
-	}
+        public override void Setup()
+        {
+            foreach (Variable variable in Variables)
+            {
+                WebScenarioRunner.Current.AddVariable(variable);
+            }
+        }
+    }
 }

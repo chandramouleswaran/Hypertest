@@ -17,78 +17,87 @@ using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Runners;
-using Hypertest.Core.Utils;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
 {
-	[DataContract]
-	[Serializable]
-	[DisplayName("Variable")]
-	[Description("Create and set initial values for variables")]
-	[Category("General")]
-	[TestImage("Images/SetVariable.png")]
-	public class SetVariableTestCase : TestCase
-	{
-		#region Members
-		private ObservableCollection<Variable> _variables;
-		#endregion
+    [DataContract]
+    [Serializable]
+    [DisplayName("Variable")]
+    [Description("Create and set initial values for variables")]
+    [Category("General")]
+    [TestImage("Images/SetVariable.png")]
+    public class SetVariableTestCase : TestCase
+    {
+        #region Members
 
-		#region CTOR
-		public SetVariableTestCase()
-		{
-			Initialize();
-		}
+        private ObservableCollection<Variable> _variables;
 
-		private void Initialize(bool create = true)
-		{
-			if (_variables == null)
-			{
-				_variables = new ObservableCollection<Variable>();
-			}
-			this.Description = "Create and set initial variables";
-			this.MarkedForExecution = true;
-		}
-		#endregion
+        #endregion
 
-		#region Property
-		[DataMember]
-		[DisplayName("Variables")]
-		[Description("Click to create and initialize variables")]
-		[NewItemTypes(typeof(Variable))]
-		[Category("Settings")]
-		public virtual ObservableCollection<Variable> Variables
-		{
-			get { return _variables; }
-			set
-			{
-				_variables = value;
-				RaisePropertyChanged();
-			}
-		}
-		#endregion
+        #region CTOR
 
-		#region Deserialize
-		[OnDeserializing]
-		private void OnDeserializing(StreamingContext context)
-		{
-			Initialize();
-		}
-		#endregion
+        public SetVariableTestCase()
+        {
+            Initialize();
+        }
 
-		#region Override
-		public override void Setup()
-		{
-			foreach (Variable variable in Variables)
-			{
-				WebScenarioRunner.Current.AddVariable(variable);
-			}
-		}
+        private void Initialize(bool create = true)
+        {
+            if (_variables == null)
+            {
+                _variables = new ObservableCollection<Variable>();
+            }
+            this.Description = "Create and set initial variables";
+            this.MarkedForExecution = true;
+        }
 
-		public override void Body()
-		{
-			this.ActualResult = TestCaseResult.Passed;
-		} 
-		#endregion
-	}
+        #endregion
+
+        #region Property
+
+        [DataMember]
+        [DisplayName("Variables")]
+        [Description("Click to create and initialize variables")]
+        [NewItemTypes(typeof (Variable))]
+        [Category("Settings")]
+        public virtual ObservableCollection<Variable> Variables
+        {
+            get { return _variables; }
+            set
+            {
+                _variables = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Deserialize
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            Initialize();
+        }
+
+        #endregion
+
+        #region Override
+
+        public override void Setup()
+        {
+            foreach (Variable variable in Variables)
+            {
+                WebScenarioRunner.Current.AddVariable(variable);
+            }
+        }
+
+        public override void Body()
+        {
+            this.ActualResult = TestCaseResult.Passed;
+        }
+
+        #endregion
+    }
 }

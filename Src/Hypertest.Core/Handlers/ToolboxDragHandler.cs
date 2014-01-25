@@ -13,7 +13,6 @@
 using System;
 using System.Windows;
 using GongSolutions.Wpf.DragDrop;
-using Hypertest.Core.Tests;
 using Hypertest.Core.Toolbox;
 
 namespace Hypertest.Core.Handlers

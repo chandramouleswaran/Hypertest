@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypertest", "Src\Hypertest\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypertest.Core", "Src\Hypertest.Core\Hypertest.Core.csproj", "{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hypertest.Web", "Src\Hypertest.Web\Hypertest.Web.csproj", "{98BCE4FA-3123-4550-A663-B4F6B7864B5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,16 @@ Global
 		{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}.Release|x86.ActiveCfg = Release|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{98BCE4FA-3123-4550-A663-B4F6B7864B5F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

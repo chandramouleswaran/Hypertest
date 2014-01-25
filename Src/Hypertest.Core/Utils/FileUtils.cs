@@ -22,10 +22,7 @@ namespace Hypertest.Core.Utils
         /// </summary>
         public static string AppPath
         {
-            get
-            {
-                return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            }
+            get { return Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location); }
         }
 
         /// <summary>
@@ -33,10 +30,7 @@ namespace Hypertest.Core.Utils
         /// </summary>
         public static string DriverPath
         {
-            get
-            {
-                return AppPath + Path.DirectorySeparatorChar + "Driver";
-            }
+            get { return AppPath + Path.DirectorySeparatorChar + "Driver"; }
         }
 
         /// <summary>
@@ -44,10 +38,7 @@ namespace Hypertest.Core.Utils
         /// </summary>
         public static string ResultPath
         {
-            get
-            {
-                return AppPath + Path.DirectorySeparatorChar + "Results";
-            }
+            get { return AppPath + Path.DirectorySeparatorChar + "Results"; }
         }
     }
 }

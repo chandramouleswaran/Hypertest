@@ -752,6 +752,34 @@
             Gets the element used for the action.
             </summary>
         </member>
+        <member name="T:OpenQA.Selenium.Support.Extensions.WebDriverExtensions">
+            <summary>
+            Provides extension methods for convenience in using WebDriver.
+            </summary>
+        </member>
+        <member name="M:OpenQA.Selenium.Support.Extensions.WebDriverExtensions.TakeScreenshot(OpenQA.Selenium.IWebDriver)">
+            <summary>
+            Gets a <see cref="T:OpenQA.Selenium.Screenshot"/> object representing the image of the page on the screen.
+            </summary>
+            <param name="driver">The driver instance to extend.</param>
+            <returns>A <see cref="T:OpenQA.Selenium.Screenshot"/> object containing the image.</returns>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">Thrown if this <see cref="T:OpenQA.Selenium.IWebDriver"/> instance
+            does not implement <see cref="T:OpenQA.Selenium.ITakesScreenshot"/>, or the capabilities of the driver
+            indicate that it cannot take screenshots.</exception>
+        </member>
+        <member name="M:OpenQA.Selenium.Support.Extensions.WebDriverExtensions.ExecuteJavaScript``1(OpenQA.Selenium.IWebDriver,System.String,System.Object[])">
+            <summary>
+            Executes JavaScript in the context of the currently selected frame or window
+            </summary>
+            <typeparam name="T">Expected return type of the JavaScript execution.</typeparam>
+            <param name="driver">The driver instance to extend.</param>
+            <param name="script">The JavaScript code to execute.</param>
+            <param name="args">The arguments to the script.</param>
+            <returns>The value returned by the script.</returns>
+            <exception cref="T:OpenQA.Selenium.WebDriverException">Thrown if this <see cref="T:OpenQA.Selenium.IWebDriver"/> instance
+            does not implement <see cref="T:OpenQA.Selenium.IJavaScriptExecutor"/>, or if the actual return type
+            of the JavaScript execution does not match the expected type.</exception>
+        </member>
         <member name="T:OpenQA.Selenium.Support.PageObjects.ByChained">
             <summary>
             Mechanism used to locate elements within a document using a series of other lookups.  This class
@@ -1036,11 +1064,6 @@
             Represents a proxy class for a list of elements to be used with the PageFactory.
             </summary>
         </member>
-        <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementListProxy.#ctor">
-            <summary>
-            Prevents a default instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementListProxy"/> class.
-            </summary>
-        </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementListProxy.#ctor(OpenQA.Selenium.ISearchContext,System.Collections.Generic.IEnumerable{OpenQA.Selenium.By},System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementListProxy"/> class.
@@ -1048,6 +1071,11 @@
             <param name="searchContext">The driver used to search for elements.</param>
             <param name="bys">The list of methods by which to search for the elements.</param>
             <param name="cache"><see langword="true"/> to cache the lookup to the element; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementListProxy.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementListProxy"/> class from being created.
+            </summary>
         </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementListProxy.Contains(OpenQA.Selenium.IWebElement)">
             <summary>
@@ -1138,11 +1166,6 @@
             Represents a proxy class for an element to be used with the PageFactory.
             </summary>
         </member>
-        <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.#ctor">
-            <summary>
-            Prevents a default instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementProxy"/> class.
-            </summary>
-        </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.#ctor(OpenQA.Selenium.ISearchContext,System.Collections.Generic.IEnumerable{OpenQA.Selenium.By},System.Boolean)">
             <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementProxy"/> class.
@@ -1150,6 +1173,11 @@
             <param name="searchContext">The driver used to search for elements.</param>
             <param name="bys">The list of methods by which to search for the element.</param>
             <param name="cache"><see langword="true"/> to cache the lookup to the element; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.#ctor">
+            <summary>
+            Prevents a default instance of the <see cref="T:OpenQA.Selenium.Support.PageObjects.WebElementProxy"/> class from being created.
+            </summary>
         </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.Clear">
             <summary>
@@ -1160,6 +1188,7 @@
             <summary>
             Simulates typing text into the element.
             </summary>
+            <param name="text">The keys to send to the element.</param>
         </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.Submit">
             <summary>
@@ -1175,11 +1204,15 @@
             <summary>
             Gets the value of the specified attribute for this element.
             </summary>
+            <param name="attributeName">The attribute name to retrieve the value of.</param>
+            <returns>The value of the attribute. Returns <see langword="null"/> if the attribute does not exist.</returns>
         </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.GetCssValue(System.String)">
             <summary>
             Gets the value of a CSS property of this element.
             </summary>
+            <param name="propertyName">The property name to retrieve the value of.</param>
+            <returns>The value of the CSS property.</returns>
         </member>
         <member name="M:OpenQA.Selenium.Support.PageObjects.WebElementProxy.FindElement(OpenQA.Selenium.By)">
             <summary>
@@ -1261,7 +1294,7 @@
         </member>
         <member name="P:OpenQA.Selenium.Support.PageObjects.WebElementProxy.WrappedElement">
             <summary>
-            Defines the interface through which the user can discover if there is an underlying element to be used.
+            Gets the interface through which the user can discover if there is an underlying element to be used.
             </summary>
         </member>
         <member name="T:OpenQA.Selenium.Support.UI.DefaultWait`1">
