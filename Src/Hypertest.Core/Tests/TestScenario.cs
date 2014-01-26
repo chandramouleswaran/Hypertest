@@ -167,7 +167,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         protected internal StateManager Manager
         {
             get { return _manager; }
@@ -191,7 +190,6 @@ namespace Hypertest.Core.Tests
                 RaisePropertyChanged();
             }
         }
-
         #endregion
     }
 }

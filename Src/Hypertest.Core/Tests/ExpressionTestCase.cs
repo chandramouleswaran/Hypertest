@@ -90,6 +90,7 @@ namespace Hypertest.Core.Tests
         [Description("The evaluated value of the expression")]
         [DynamicReadonly("RunState"), DynamicBrowsable("RunState")]
         [Category("Settings")]
+        [PostRun]
         public object Value
         {
             get { return _expressionValue; }

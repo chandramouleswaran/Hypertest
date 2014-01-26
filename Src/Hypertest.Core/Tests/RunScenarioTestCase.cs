@@ -48,7 +48,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         [DataMember]
         [DisplayName("File Path")]
         [Description("Enter the file path for the scenario to run")]
@@ -65,7 +64,6 @@ namespace Hypertest.Core.Tests
                     RaisePropertyChangedWithValues(oldValue, _filePath, "File path change");
             }
         }
-
         #endregion
 
         #region Deserialize

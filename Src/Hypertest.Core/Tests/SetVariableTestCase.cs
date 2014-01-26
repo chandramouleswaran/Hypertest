@@ -55,7 +55,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         [DataMember]
         [DisplayName("Variables")]
         [Description("Click to create and initialize variables")]

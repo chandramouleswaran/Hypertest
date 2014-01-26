@@ -90,9 +90,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\PostRunAttribute.cs" />
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
     <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
+    <Compile Include="Converters\TypeToPropertyListConverter.cs" />
+    <Compile Include="Converters\RunStateToVisibilityConverter.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
     <Compile Include="Converters\TestCaseStatusToImageConverter.cs" />
     <Compile Include="Converters\CollectionToStringConverter.cs" />

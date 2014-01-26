@@ -16,6 +16,7 @@ using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Utils;
 using Hypertest.Web.Tests;
+using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
@@ -51,7 +52,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-
         public override void Body()
         {
             base.Body();
@@ -62,14 +62,13 @@ namespace Hypertest.Core.Tests
             {
                 this.Element.Click();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
                 this.ActualResult = TestCaseResult.Failed;
-                //TODO:Log
-                return;
             }
         }
-
         #endregion
     }
 }

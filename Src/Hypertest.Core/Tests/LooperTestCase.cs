@@ -49,12 +49,12 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         [DataMember]
         [DisplayName("Counter")]
         [Description("The property which holds the count at which the loop exits")]
         [DynamicReadonly("RunState"), DynamicBrowsable("RunState")]
         [Category("Settings")]
+        [PostRun]
         public int Counter
         {
             get { return _counter; }

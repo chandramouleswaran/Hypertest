@@ -14,12 +14,15 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
+using Hypertest.Core.Runners;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
@@ -103,11 +106,14 @@ namespace Hypertest.Core.Tests
             Thread.Sleep(this.WaitTime);
         }
 
-        public virtual void Cleanup(Exception e = null)
+        public virtual void Cleanup(Exception ex = null)
         {
-            //Need to access logger
+            if (ex != null)
+            {
+                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+            }
         }
-
         #endregion
 
         #region Methods
@@ -124,12 +130,10 @@ namespace Hypertest.Core.Tests
                 FinalizeRun();
                 Cleanup();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                this.Log(string.Format("Exception - {0}", e.Message), LogCategory.Exception, LogPriority.High);
-                this.Log(string.Format("Stack Trace - {0}", e.StackTrace), LogCategory.Exception, LogPriority.High);
                 this.ActualResult = TestCaseResult.Failed;
-                Cleanup(e);
+                Cleanup(ex);
             }
             finally
             {
@@ -140,12 +144,33 @@ namespace Hypertest.Core.Tests
 
         private void FinalizeRun()
         {
-            //This is where we want to look at the properties and assign it to variables[DynamicReadonly("RunState")]
+            //Reflect the property and store the value
+            foreach (PostRunPairs p in PostValues.Where(f => !string.IsNullOrEmpty(f.VariableName)))
+            {
+                PropertyInfo property = this.GetType().GetProperties().First(prop => prop.IsDefined(typeof(PostRunAttribute), false) && prop.Name.Equals(p.PropertyName));
+                if (property != null)
+                {
+                    try
+                    {
+                        Object val = property.GetValue(this, null);
+                        if (val != null)
+                        {
+                            Variable v = new Variable(p.VariableName, val);
+                            WebScenarioRunner.Current.AddVariable(v);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+                        this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+                    }
+                }
+            }
         }
 
-        private void Log(string message, LogCategory category, LogPriority priority)
+        protected void Log(string message, LogCategory category, LogPriority priority)
         {
-            this.LoggerService.Log(message, category, priority);
+            this.LoggerService.Log(string.Format("[{0}] {1}", this.Description, message), category, priority);
             this.LogMessages.Add(string.Format("[{0}] {1}", DateTime.Now.ToString(), message));
         }
         #endregion

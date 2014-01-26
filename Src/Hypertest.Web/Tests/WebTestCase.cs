@@ -14,11 +14,13 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Runners;
 using Hypertest.Core.Tests;
 using Hypertest.Web.Elements;
 using OpenQA.Selenium;
+using Wide.Interfaces.Services;
 
 namespace Hypertest.Web.Tests
 {
@@ -64,7 +66,6 @@ namespace Hypertest.Web.Tests
         #endregion
 
         #region Property
-
         /// <summary>
         /// Gets or sets the value used along with query type.
         /// </summary>
@@ -72,6 +73,7 @@ namespace Hypertest.Web.Tests
         [DisplayName("Query Descriptor")]
         [Description("Based on the \"Query By\" value, set this field")]
         [Category("Query")]
+        [DynamicReadonly("RunState")]
         public String ElementDescriptor
         {
             get { return _elementDescriptor; }
@@ -89,6 +91,7 @@ namespace Hypertest.Web.Tests
         [DisplayName("Query Variable")]
         [Description("The variable which has a web element")]
         [Category("Query")]
+        [DynamicReadonly("RunState")]
         public String ParentVariable
         {
             get { return _parentVariable; }
@@ -106,6 +109,7 @@ namespace Hypertest.Web.Tests
         [DisplayName("Query By")]
         [Description("How do you want to search for the web element?")]
         [Category("Query")]
+        [DynamicReadonly("RunState")]
         public ElementQueryType QueryType
         {
             get { return _queryType; }
@@ -121,11 +125,10 @@ namespace Hypertest.Web.Tests
         /// </summary>
         [DataMember]
         [DisplayName("Element Number")]
-        [Description(
-            "Search may return many elements based on the Query. This field needs to be used to pick the correct element"
-            )]
+        [Description("Search may return many elements based on the Query. This field needs to be used to pick the correct element")]
         [Category("Settings")]
         [DefaultValue(1)]
+        [DynamicReadonly("RunState")]
         public int ElementNumber
         {
             get { return _elementNumber; }
@@ -135,16 +138,15 @@ namespace Hypertest.Web.Tests
                 RaisePropertyChanged();
             }
         }
-
         #endregion
 
         #region Element Based Properties
-
         /// <summary>
         /// Gets the total number of elements returned by the search.
         /// </summary>
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public int TotalElements { get; private set; }
 
         /// <summary>
@@ -152,11 +154,13 @@ namespace Hypertest.Web.Tests
         /// </summary>
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public WebElement Element { get; private set; }
 
         //TODO: LOG EVERY THING
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string ClassName
         {
             get
@@ -174,6 +178,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual bool Displayed
         {
             get
@@ -191,6 +196,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual bool IsEnabled
         {
             get
@@ -208,6 +214,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual bool Exists
         {
             get
@@ -225,6 +232,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual bool HasFocus
         {
             get
@@ -242,6 +250,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string ID
         {
             get
@@ -259,6 +268,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual int LocationX
         {
             get
@@ -276,6 +286,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual int LocationY
         {
             get
@@ -293,6 +304,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string ElementName
         {
             get
@@ -310,6 +322,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual int Height
         {
             get
@@ -327,6 +340,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual int Width
         {
             get
@@ -344,6 +358,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string Style
         {
             get
@@ -361,6 +376,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string Text
         {
             get
@@ -378,6 +394,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string Title
         {
             get
@@ -395,6 +412,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string Value
         {
             get
@@ -412,6 +430,7 @@ namespace Hypertest.Web.Tests
 
         [XmlIgnore]
         [Browsable(false)]
+        [PostRun]
         public virtual string TagName
         {
             get
@@ -426,7 +445,6 @@ namespace Hypertest.Web.Tests
                 }
             }
         }
-
         #endregion
 
         #region Deserialize
@@ -440,23 +458,20 @@ namespace Hypertest.Web.Tests
         #endregion
 
         #region Overrides
-
         public override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
             this.Element = GetWebElement(WebScenarioRunner.Current.Driver);
             if (this.Element == null || this.Element.InnerElement == null)
             {
-                //TODO: Log
+                this.Log("Unable to find the requested element in the Web page to perform the action.", LogCategory.Warn, LogPriority.Medium);
                 this.ActualResult = TestCaseResult.Failed;
                 return;
             }
         }
-
         #endregion
 
         #region Methods
-
         /// <summary>
         /// Gets the query for your web test case based on ElementDescriptor and QueryType
         /// </summary>
@@ -519,7 +534,8 @@ namespace Hypertest.Web.Tests
                 {
                     WebElementCollection c = new WebElementCollection(driver, by);
                     this.TotalElements = c.Count;
-                    element = c[ElementNumber - 1];
+                    if(TotalElements > ElementNumber - 1)
+                        element = c[ElementNumber - 1];
                 }
                 else
                 {
@@ -548,7 +564,6 @@ namespace Hypertest.Web.Tests
             }
             return element;
         }
-
         #endregion
     }
 }

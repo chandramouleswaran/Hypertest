@@ -122,8 +122,13 @@ namespace Hypertest.Core.Utils
             CompilerResults cr = c.CompileAssemblyFromSource(cp, sb.ToString());
             if (cr.Errors.Count > 0)
             {
-                throw new ArgumentException("The expression '" + code +
-                                            "' does not compile to C#, or does not return bool");
+                StringBuilder builder = new StringBuilder();
+                foreach (var error in cr.Errors)
+                {
+                    builder.AppendLine(error.ToString());
+                }
+                builder.Append(string.Format("The expression {0} does not compile to C#, or does not return bool", code));
+                throw new ArgumentException(builder.ToString());
             }
 
             Assembly a = cr.CompiledAssembly;
