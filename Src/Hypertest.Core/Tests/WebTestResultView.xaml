@@ -10,6 +10,7 @@
     <UserControl.Resources>
         <hyConv:ScenarioToObservableCollectionConverter x:Key="ScenarioConverter" />
         <hyConv:TestCaseStatusToImageConverter x:Key="IconConverter" />
+        <hyConv:CollectionToStringConverter x:Key="CollectionConverter" />
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -53,6 +54,15 @@
         </TreeView>
         <GridSplitter HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.Column="1"
                       ResizeBehavior="PreviousAndNext" Width="5" Background="#FFBCBCBC" />
-        <xwt:PropertyGrid SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" Grid.Column="2" />
+        <Grid Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <xwt:PropertyGrid Name="PrpTest" Grid.Row="0" SelectedObject="{Binding ElementName=treeView1,Path=SelectedItem}" />
+                <TextBox Grid.Row="1" Name="LogBlock" Text="{Binding ElementName=PrpTest, Mode=OneWay, Path=SelectedObject.LogMessages,Converter={StaticResource CollectionConverter}}" ScrollViewer.CanContentScroll="True" IsReadOnly="True"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

@@ -93,8 +93,9 @@
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
     <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
-    <Compile Include="Converters\TestCaseStatusToImageConverter.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
+    <Compile Include="Converters\TestCaseStatusToImageConverter.cs" />
+    <Compile Include="Converters\CollectionToStringConverter.cs" />
     <Compile Include="Converters\TestRegistryToToolboxConverter.cs" />
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Converters\TypeToTestImageConverter.cs" />

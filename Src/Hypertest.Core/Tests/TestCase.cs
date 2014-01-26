@@ -58,7 +58,7 @@ namespace Hypertest.Core.Tests
         private FolderTestCase _parent;
         private TestRunState _runState;
         private ObservableCollection<PostRunPairs> _postValues;
-
+        private ObservableCollection<string> _logMessages;
         #endregion
 
         #region CTOR
@@ -73,6 +73,7 @@ namespace Hypertest.Core.Tests
         {
             _expectedResult = TestCaseResult.Passed;
             _runState = TestRunState.NotStarted;
+             this.LogMessages = new ObservableCollection<string>();
         }
 
         #endregion
@@ -109,10 +110,13 @@ namespace Hypertest.Core.Tests
 
         #endregion
 
+        #region Methods
         public void Run()
         {
             try
             {
+                this.LogMessages.Clear();
+                this.Log("Run Started", LogCategory.Info, LogPriority.None);
                 Setup();
                 Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Executing);
                 Body();
@@ -122,12 +126,15 @@ namespace Hypertest.Core.Tests
             }
             catch (Exception e)
             {
+                this.Log(string.Format("Exception - {0}", e.Message), LogCategory.Exception, LogPriority.High);
+                this.Log(string.Format("Stack Trace - {0}", e.StackTrace), LogCategory.Exception, LogPriority.High);
                 this.ActualResult = TestCaseResult.Failed;
                 Cleanup(e);
             }
             finally
             {
                 Dispatcher.CurrentDispatcher.Invoke(() => RunState = TestRunState.Done);
+                this.Log("Run Ended", LogCategory.Info, LogPriority.None);
             }
         }
 
@@ -136,8 +143,14 @@ namespace Hypertest.Core.Tests
             //This is where we want to look at the properties and assign it to variables[DynamicReadonly("RunState")]
         }
 
-        #region Properties
+        private void Log(string message, LogCategory category, LogPriority priority)
+        {
+            this.LoggerService.Log(message, category, priority);
+            this.LogMessages.Add(string.Format("[{0}] {1}", DateTime.Now.ToString(), message));
+        }
+        #endregion
 
+        #region Properties
         [DataMember]
         [Description("Enter the description for the test case")]
         [Category("General")]
@@ -316,7 +329,18 @@ namespace Hypertest.Core.Tests
                 RaisePropertyChanged();
             }
         }
-
+        
+        [DataMember]
+        [Browsable(false)]
+        public ObservableCollection<string> LogMessages
+        {
+            get { return _logMessages; }
+            internal set
+            {
+                _logMessages = value;
+                RaisePropertyChanged();
+            }
+        }
         #endregion
 
         #region Internal Properties
