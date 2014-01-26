@@ -49,7 +49,10 @@ namespace Hypertest.Core.Handlers
                 {
                     folderTest.IsExpanded = true;
                     base.DragOver(dropInfo);
+                    return;
                 }
+
+                base.DragOver(dropInfo);
             }
             else
             {

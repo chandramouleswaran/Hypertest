@@ -38,7 +38,11 @@ namespace Hypertest.Web.Tests
 
     [DataContract]
     [Serializable]
-    public abstract class WebTestCase : TestCase
+    [DisplayName("Search Element")]
+    [Description("Searches for an element in the browser window")]
+    [Category("Web")]
+    [TestImage("Images/Search.png")]
+    public class WebTestCase : TestCase
     {
         #region Members
 
@@ -58,7 +62,7 @@ namespace Hypertest.Web.Tests
 
         private void Initialize(bool create = true)
         {
-            this.Description = "You cannot create instance of abstract class!";
+            this.Description = "Search for an element";
             this.MarkedForExecution = true;
             this.ElementNumber = 1;
         }

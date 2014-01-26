@@ -12,6 +12,7 @@
 
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Tests;
+using Hypertest.Web.Tests;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
@@ -38,6 +39,7 @@ namespace Hypertest.Core
             var registry = _container.Resolve<ITestRegistry>();
 
             //Register the test cases that you want to be able to participate
+            registry.Add(typeof(WebTestCase));
             registry.Add(typeof (SendKeysTestCase));
             registry.Add(typeof(MouseClickTestCase));
         }
