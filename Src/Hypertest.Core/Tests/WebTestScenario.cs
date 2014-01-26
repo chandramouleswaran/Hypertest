@@ -25,15 +25,21 @@ namespace Hypertest.Core.Tests
     [DataContract]
     [Serializable]
     [DisplayName("Web test scenario")]
+    [TestImage("Images/Scenario.png")]
     public class WebTestScenario : TestScenario
     {
+        #region Members
         private string _url;
-        private BrowserType _type;
+        private BrowserType _type; 
+        #endregion
 
+        #region CTOR
         public WebTestScenario() : base()
         {
-        }
+        } 
+        #endregion
 
+        #region Property
         [DataMember]
         [Category("Scenario Settings")]
         [DisplayName("Starting URL")]
@@ -70,14 +76,17 @@ namespace Hypertest.Core.Tests
                     RaisePropertyChangedWithValues(oldValue, value, "Type change");
                 }
             }
-        }
+        } 
+        #endregion
 
-        public override void Setup()
+        #region Override
+        protected override void Setup()
         {
             foreach (Variable variable in Variables)
             {
                 WebScenarioRunner.Current.AddVariable(variable);
             }
-        }
+        } 
+        #endregion
     }
 }

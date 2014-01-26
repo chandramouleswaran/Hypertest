@@ -93,20 +93,20 @@ namespace Hypertest.Core.Tests
 
         #region Virtuals
 
-        public virtual void Setup()
+        protected virtual void Setup()
         {
         }
 
-        public virtual void Body()
+        protected virtual void Body()
         {
         }
 
-        public virtual void Wait()
+        protected virtual void Wait()
         {
             Thread.Sleep(this.WaitTime);
         }
 
-        public virtual void Cleanup(Exception ex = null)
+        protected virtual void Cleanup(Exception ex = null)
         {
             if (ex != null)
             {

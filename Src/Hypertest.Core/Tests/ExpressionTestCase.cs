@@ -117,7 +117,7 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-        public override void Body()
+        protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
             try

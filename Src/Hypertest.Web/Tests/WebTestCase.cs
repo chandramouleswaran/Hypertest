@@ -83,8 +83,10 @@ namespace Hypertest.Web.Tests
             get { return _elementDescriptor; }
             set
             {
+                string oldValue = _elementDescriptor;
                 _elementDescriptor = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _elementDescriptor, "Descriptor change");
             }
         }
 
@@ -101,8 +103,10 @@ namespace Hypertest.Web.Tests
             get { return _parentVariable; }
             set
             {
+                string oldValue = _parentVariable;
                 _parentVariable = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _parentVariable, "Parent Variable change");
             }
         }
 
@@ -119,8 +123,10 @@ namespace Hypertest.Web.Tests
             get { return _queryType; }
             set
             {
+                ElementQueryType oldValue = _queryType;
                 _queryType = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _queryType, "Element Query Type change");
             }
         }
 
@@ -138,8 +144,10 @@ namespace Hypertest.Web.Tests
             get { return _elementNumber; }
             set
             {
+                int oldValue = _elementNumber;
                 _elementNumber = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _elementNumber, "Element Number change");
             }
         }
         #endregion
@@ -480,7 +488,7 @@ namespace Hypertest.Web.Tests
         #endregion
 
         #region Overrides
-        public override void Body()
+        protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
             this.Element = GetWebElement(WebScenarioRunner.Current.Driver);

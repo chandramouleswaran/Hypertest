@@ -76,8 +76,10 @@ namespace Hypertest.Core.Tests
             get { return _keys; }
             set
             {
+                string oldValue = _keys;
                 _keys = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _keys, "Keys change");
             }
         }
 
@@ -91,14 +93,16 @@ namespace Hypertest.Core.Tests
             get { return _clearField; }
             set
             {
+                bool oldValue = _clearField;
                 _clearField = value;
-                RaisePropertyChanged();
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _clearField, "Clear Field change");
             }
         }
         #endregion
 
         #region Override
-        public override void Body()
+        protected override void Body()
         {
             base.Body();
             if (this.ActualResult == TestCaseResult.Failed) return;

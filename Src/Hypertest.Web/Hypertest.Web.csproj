@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Elements\WebElement.cs" />
     <Compile Include="Elements\WebElementCollection.cs" />
+    <Compile Include="Tests\SwitchFrameTestCase.cs" />
     <Compile Include="Tests\MouseClickTestCase.cs" />
     <Compile Include="Tests\SendKeysTestCase.cs" />
     <Compile Include="Tests\WebTestCase.cs" />
@@ -124,7 +125,7 @@
     <Resource Include="Images\SendKeys.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\FrameSwitch.png" />
+    <Resource Include="Images\SwitchFrame.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Search.png" />

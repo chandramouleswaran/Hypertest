@@ -14,22 +14,29 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
+using Hypertest.Core.Runners;
 using Hypertest.Core.Utils;
 using Hypertest.Web.Tests;
+using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
     [DataContract]
     [Serializable]
-    [DisplayName("Click element")]
-    [Description("Clicks the first web element based on the search results")]
+    [DisplayName("Switch Frame")]
+    [Description("Selects the \"iframe\" on which the rest of the actions should take place")]
     [Category("Web")]
-    [TestImage("Images/MouseClick.png")]
-    public class MouseClickTestCase : WebTestCase
+    [TestImage("Images/SwitchFrame.png")]
+    public class SwitchFrameTestCase : WebTestCase
     {
+        #region Member
+		private bool _baseFrame;
+        private string _frameDescriptor; 
+	    #endregion
+
         #region CTOR
-        public MouseClickTestCase()
+        public SwitchFrameTestCase()
         {
             Initialize();
         }
@@ -38,6 +45,7 @@ namespace Hypertest.Core.Tests
         {
             this.Description = "Click a particular web element";
             this.MarkedForExecution = true;
+            this.BaseFrame = false;
         }
         #endregion
 
@@ -51,6 +59,42 @@ namespace Hypertest.Core.Tests
 
         #endregion
 
+        #region Property
+        [DataMember]
+        [DisplayName("Default Content?")]
+        [Description("Switches to the default content")]
+        [Category("Settings")]
+        [DynamicReadonly("RunState")]
+        public bool BaseFrame
+        {
+            get { return _baseFrame; }
+            set
+            {
+                bool oldValue = _baseFrame;
+                _baseFrame = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _baseFrame, "Base Frame change");
+            }
+        }
+
+        [DataMember]
+        [DisplayName("Frame Descriptor")]
+        [Description("Enter frame number or name to switch to")]
+        [Category("Settings")]
+        [DynamicReadonly("RunState")]
+        public string FrameDescriptor
+        {
+            get { return _frameDescriptor; }
+            set
+            {
+                string oldValue = _frameDescriptor;
+                _frameDescriptor = value;
+                if (oldValue != value)
+                    RaisePropertyChangedWithValues(oldValue, _frameDescriptor, "Frame Descriptor change");
+            }
+        }
+        #endregion
+
         #region Override
         protected override void Body()
         {
@@ -58,15 +102,29 @@ namespace Hypertest.Core.Tests
             if (this.ActualResult == TestCaseResult.Failed) return;
 
             //We have reached so far - this means we have an element
+            IWebDriver driver = WebScenarioRunner.Current.Driver;
             try
             {
-                this.Element.Click();
+                if (this.BaseFrame)
+                {
+                    driver.SwitchTo().DefaultContent();
+                }
+                else
+                {
+                    int intVal;
+                    if (int.TryParse(this.FrameDescriptor, out intVal))
+                    {
+                        driver.SwitchTo().Frame(intVal);
+                    }
+                    else
+                    {
+                        driver.SwitchTo().Frame(this.FrameDescriptor);
+                    }
+                }
             }
             catch (Exception ex)
             {
-                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
-                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
-                this.ActualResult = TestCaseResult.Failed;
+                
             }
         }
         #endregion
