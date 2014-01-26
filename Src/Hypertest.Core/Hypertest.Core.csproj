@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D42414F9-AE6A-4C52-ABC0-955B8DEF8950}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Hypertest.Core</RootNamespace>
+    <AssemblyName>Hypertest.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GongSolutions.Wpf.DragDrop">
+      <HintPath>..\..\Libs\GongSolutions.Wpf.DragDrop.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\Libs\Microsoft.Practices.Prism.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.UnityExtensions">
+      <HintPath>..\..\Libs\Microsoft.Practices.Prism.UnityExtensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\..\Libs\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Selenium.WebDriverBackedSelenium">
+      <HintPath>..\..\Libs\Selenium.WebDriverBackedSelenium.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThoughtWorks.Selenium.Core">
+      <HintPath>..\..\Libs\ThoughtWorks.Selenium.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WebDriver">
+      <HintPath>..\..\Libs\WebDriver.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WebDriver.Support">
+      <HintPath>..\..\Libs\WebDriver.Support.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Wide">
+      <HintPath>..\..\Libs\Wide.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xceed.Wpf.Toolkit">
+      <HintPath>..\..\Libs\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\PostRunAttribute.cs" />
+    <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
+    <Compile Include="Attributes\TestImageAttribute.cs" />
+    <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
+    <Compile Include="Converters\TypeToPropertyListConverter.cs" />
+    <Compile Include="Converters\RunStateToVisibilityConverter.cs" />
+    <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
+    <Compile Include="Converters\TestCaseStatusToImageConverter.cs" />
+    <Compile Include="Converters\CollectionToStringConverter.cs" />
+    <Compile Include="Converters\TestRegistryToToolboxConverter.cs" />
+    <Compile Include="Converters\TypeToDescriptionConverter.cs" />
+    <Compile Include="Converters\TypeToTestImageConverter.cs" />
+    <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
+    <Compile Include="CoreModule.cs" />
+    <Compile Include="Handlers\ToolboxDragHandler.cs" />
+    <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
+    <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
+    <Compile Include="Handlers\WebTestScenarioHandler.cs" />
+    <Compile Include="Interfaces\PostRunPairs.cs" />
+    <Compile Include="Interfaces\Variable.cs" />
+    <Compile Include="Manager\Change.cs" />
+    <Compile Include="Manager\ChangeSet.cs" />
+    <Compile Include="Manager\CollectionChange.cs" />
+    <Compile Include="Manager\CommonPropertyChange.cs" />
+    <Compile Include="Manager\PropertyChange.cs" />
+    <Compile Include="Manager\StateManager.cs" />
+    <Compile Include="Runners\WebScenarioRunner.cs" />
+    <Compile Include="Attributes\DependsOnPropertyAttribute.cs" />
+    <Compile Include="Attributes\DynamicBrowsableAttribute.cs" />
+    <Compile Include="Attributes\DynamicReadonlyAttribute.cs" />
+    <Compile Include="Attributes\DynamicTypeDescriptor.cs" />
+    <Compile Include="Service\TestRegistry.cs" />
+    <Compile Include="Tests\SetVariableTestCase.cs" />
+    <Compile Include="Tests\RunScenarioTestCase.cs" />
+    <Compile Include="Tests\LooperTestCase.cs" />
+    <Compile Include="Tests\ExpressionTestCase.cs" />
+    <Compile Include="Tests\WebTestScenario.cs" />
+    <Compile Include="Tests\FolderTestCase.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SaveAsMenuItemViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Interfaces\IRunner.cs" />
+    <Compile Include="Interfaces\IRunnerRegistry.cs" />
+    <Compile Include="Interfaces\ITestRegistry.cs" />
+    <Compile Include="Tests\TestCase.cs" />
+    <Compile Include="Tests\TestScenario.cs" />
+    <Compile Include="Tests\WebTestResultView.xaml.cs">
+      <DependentUpon>WebTestResultView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\WebTestScenarioView.xaml.cs">
+      <DependentUpon>WebTestScenarioView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toolbox\CategoryNode.cs" />
+    <Compile Include="Toolbox\ToolboxModel.cs" />
+    <Compile Include="Toolbox\ToolboxView.xaml.cs">
+      <DependentUpon>ToolboxView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Toolbox\ToolboxViewModel.cs" />
+    <Compile Include="Utils\AttributeHelper.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+    <Compile Include="Utils\EvalCode.cs" />
+    <Compile Include="Utils\FileUtils.cs" />
+    <Compile Include="Utils\ResourceHelper.cs" />
+    <Compile Include="Utils\SerializationHelper.cs" />
+    <Compile Include="WebTestResultViewModel.cs" />
+    <Compile Include="WebTestScenarioViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Tests\WebTestResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Tests\WebTestScenarioView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Toolbox\ToolboxView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Executing.png" />
+    <Resource Include="Images\Failed.png" />
+    <Resource Include="Images\None.png" />
+    <Resource Include="Images\Passed.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Expression.png" />
+    <Resource Include="Images\Looper.png" />
+    <Resource Include="Images\RunScenario.png" />
+    <Resource Include="Images\SetVariable.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
