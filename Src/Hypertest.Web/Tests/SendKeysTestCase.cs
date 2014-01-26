@@ -70,6 +70,7 @@ namespace Hypertest.Core.Tests
         [DisplayName("Keys to send")]
         [Description("Enter the keys to send to the element")]
         [Category("Settings")]
+        [DynamicReadonly("RunState")]
         public String Keys
         {
             get { return _keys; }
@@ -84,6 +85,7 @@ namespace Hypertest.Core.Tests
         [DisplayName("Clear the element?")]
         [Description("Do you want to clear the field before sending key strokes?")]
         [Category("Settings")]
+        [DynamicReadonly("RunState")]
         public bool ClearField
         {
             get { return _clearField; }
