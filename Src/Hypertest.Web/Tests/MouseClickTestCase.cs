@@ -14,7 +14,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Utils;
 using Hypertest.Web.Tests;
 using Wide.Interfaces.Services;
 

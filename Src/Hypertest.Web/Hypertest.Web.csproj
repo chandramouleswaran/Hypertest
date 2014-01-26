@@ -125,10 +125,10 @@
     <Resource Include="Images\SendKeys.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\SwitchFrame.png" />
+    <Resource Include="Images\Search.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Search.png" />
+    <Resource Include="Images\Frame.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

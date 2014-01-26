@@ -15,7 +15,6 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Runners;
-using Hypertest.Core.Utils;
 using Hypertest.Web.Tests;
 using OpenQA.Selenium;
 using Wide.Interfaces.Services;
@@ -27,8 +26,8 @@ namespace Hypertest.Core.Tests
     [DisplayName("Switch Frame")]
     [Description("Selects the \"iframe\" on which the rest of the actions should take place")]
     [Category("Web")]
-    [TestImage("Images/SwitchFrame.png")]
-    public class SwitchFrameTestCase : WebTestCase
+    [TestImage("Images/Frame.png")]
+    public class SwitchFrameTestCase : TestCase
     {
         #region Member
 		private bool _baseFrame;
@@ -98,10 +97,7 @@ namespace Hypertest.Core.Tests
         #region Override
         protected override void Body()
         {
-            base.Body();
-            if (this.ActualResult == TestCaseResult.Failed) return;
-
-            //We have reached so far - this means we have an element
+            this.ActualResult = TestCaseResult.Passed;
             IWebDriver driver = WebScenarioRunner.Current.Driver;
             try
             {
@@ -111,6 +107,7 @@ namespace Hypertest.Core.Tests
                 }
                 else
                 {
+                    //Might be an integer - try and parse it and switch to that iframe
                     int intVal;
                     if (int.TryParse(this.FrameDescriptor, out intVal))
                     {
@@ -124,7 +121,9 @@ namespace Hypertest.Core.Tests
             }
             catch (Exception ex)
             {
-                
+                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+                this.ActualResult = TestCaseResult.Failed;
             }
         }
         #endregion
