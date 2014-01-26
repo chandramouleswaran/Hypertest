@@ -165,6 +165,24 @@ namespace Hypertest.Web.Tests
         [XmlIgnore]
         [Browsable(false)]
         [PostRun]
+        public virtual string CurrentURL
+        {
+            get
+            {
+                try
+                {
+                    return WebScenarioRunner.Current.Driver.Url;
+                }
+                catch (Exception)
+                {
+                    return "";
+                }
+            }
+        }
+
+        [XmlIgnore]
+        [Browsable(false)]
+        [PostRun]
         public virtual string ClassName
         {
             get

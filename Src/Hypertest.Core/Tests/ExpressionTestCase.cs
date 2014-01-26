@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Utils;
+using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
@@ -116,7 +117,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-
         public override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
@@ -128,15 +128,13 @@ namespace Hypertest.Core.Tests
                     if (this.Value.ToString() == this.ExpectedValue)
                     {
                         this.ActualResult = TestCaseResult.Passed;
-                        //result.OutputMessage += "Expression evaluated to the expected value";
-                        //result.Actual = TestStatus.Passed;
+                        this.Log("Expression evaluated to the expected value", LogCategory.Info, LogPriority.None);
                     }
                     else
                     {
                         this.ActualResult = TestCaseResult.Failed;
-                        //result.Actual = TestStatus.Failed;
-                        //result.OutputMessage += "Expression evaluated to: " + this.Value + "\n";
-                        //result.OutputMessage += "Expression expected: " + this.ExpectedValue + "\n";
+                        this.Log(string.Format("Expression evaluated to: {0}", this.Value), LogCategory.Info, LogPriority.None);
+                        this.Log(string.Format("Expression expected: {0}", this.ExpectedValue), LogCategory.Info, LogPriority.None);
                     }
                 }
                 else
@@ -147,24 +145,23 @@ namespace Hypertest.Core.Tests
                     }
                     else if (string.IsNullOrEmpty(this.ExpectedValue))
                     {
-                        //result.Description = "Expression evaluated. No comparison performed.";
-                        //result.Actual = TestStatus.Passed;
+                        this.Log("Expression evaluated. No comparison performed", LogCategory.Info, LogPriority.None);
                         this.ActualResult = TestCaseResult.Passed;
                     }
                     else
                     {
-                        //result.Actual = TestStatus.Failed;
-                        //result.OutputMessage += "Expression evaluated to null";
+                        this.Log("Expression evaluated to null", LogCategory.Info, LogPriority.None);
                         this.ActualResult = TestCaseResult.Failed;
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+                this.ActualResult = TestCaseResult.Failed;
             }
         }
-
         #endregion
     }
 }
