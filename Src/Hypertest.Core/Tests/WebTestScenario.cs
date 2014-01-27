@@ -36,6 +36,7 @@ namespace Hypertest.Core.Tests
         #region CTOR
         public WebTestScenario() : base()
         {
+            this.Description = "Enter Web Scenario Description Here";
         } 
         #endregion
 

@@ -12,16 +12,17 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using Hypertest.Core.Tests;
 using Wide.Interfaces;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Results
 {
     /// <summary>
     ///     Interaction logic for WebTestScenarioView.xaml
     /// </summary>
     public partial class WebTestResultView : UserControl, IContentView
     {
-        private WebTestScenario scenario;
+        private TestResultModel resultModel;
 
         public WebTestResultView()
         {
@@ -30,7 +31,7 @@ namespace Hypertest.Core.Tests
 
         private void UserControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            scenario = DataContext as WebTestScenario;
+            resultModel = DataContext as TestResultModel;
         }
     }
 }

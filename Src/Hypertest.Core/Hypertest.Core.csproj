@@ -116,6 +116,7 @@
     <Compile Include="Manager\CommonPropertyChange.cs" />
     <Compile Include="Manager\PropertyChange.cs" />
     <Compile Include="Manager\StateManager.cs" />
+    <Compile Include="Results\TestResultModel.cs" />
     <Compile Include="Runners\WebScenarioRunner.cs" />
     <Compile Include="Attributes\DependsOnPropertyAttribute.cs" />
     <Compile Include="Attributes\DynamicBrowsableAttribute.cs" />
@@ -140,7 +141,7 @@
     <Compile Include="Interfaces\ITestRegistry.cs" />
     <Compile Include="Tests\TestCase.cs" />
     <Compile Include="Tests\TestScenario.cs" />
-    <Compile Include="Tests\WebTestResultView.xaml.cs">
+    <Compile Include="Results\WebTestResultView.xaml.cs">
       <DependentUpon>WebTestResultView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Tests\WebTestScenarioView.xaml.cs">
@@ -158,7 +159,7 @@
     <Compile Include="Utils\FileUtils.cs" />
     <Compile Include="Utils\ResourceHelper.cs" />
     <Compile Include="Utils\SerializationHelper.cs" />
-    <Compile Include="WebTestResultViewModel.cs" />
+    <Compile Include="WebTestCurrentResultViewModel.cs" />
     <Compile Include="WebTestScenarioViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +169,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Tests\WebTestResultView.xaml">
+    <Page Include="Results\WebTestResultView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -199,6 +200,7 @@
   <ItemGroup>
     <Resource Include="Images\Scenario.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

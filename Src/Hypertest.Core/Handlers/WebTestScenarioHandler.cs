@@ -70,14 +70,12 @@ namespace Hypertest.Core.Handlers
         {
             var vm = _container.Resolve<WebTestScenarioViewModel>();
             var model = _container.Resolve<WebTestScenario>();
-            model.Description = "wow another scenario!";
-            model.Children.Add(new FolderTestCase {Description = "My dear folder"});
             model.IsSelected = true;
             model.Manager.Clear();
             var view = _container.Resolve<WebTestScenarioView>();
 
             //Model details
-            _loggerService.Log("Creating a new simple file using MDHandler", LogCategory.Info, LogPriority.Low);
+            _loggerService.Log("Creating a new simple file using WebTestScenarioHandler", LogCategory.Info, LogPriority.Low);
 
             //Set the model and view
             vm.SetModel(model);

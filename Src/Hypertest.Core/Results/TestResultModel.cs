@@ -11,29 +11,59 @@
 #endregion
 
 using System;
-using Hypertest.Core.Results;
+using System.Runtime.Serialization;
 using Hypertest.Core.Tests;
-using OpenQA.Selenium;
+using Wide.Interfaces;
 
-namespace Hypertest.Core.Interfaces
+namespace Hypertest.Core.Results
 {
-    public interface IRunner
+    /// <summary>
+    ///     The basic unit of a test case in the Hypertest framework
+    /// </summary>
+    [DataContract]
+    [Serializable]
+    public class TestResultModel : ContentModel
     {
-        string UniqueID { get; }
-        string RunFolder { get; }
-        bool IsRunning { get; }
-        IWebDriver Driver { get; }
-        TestResultModel Result { get; }
+        #region Members
+        private TestScenario _scenario;
+        #endregion
 
-        void Initialize(TestScenario scenario);
-        void Pause();
-        void Resume();
-        void Stop();
-        void Wait(int milliseconds);
-        bool AddVariable(Variable variable);
-        void Clear();
-        void CleanUp();
+        #region CTOR
+        public TestResultModel()
+        {
+            Initialize();
+        }
 
-        Variable GetVariable(String name);
+        private void Initialize(bool create = true)
+        {
+
+        }
+        #endregion
+
+        #region Deserialize
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            Initialize();
+            if (_scenario != null)
+            {
+                _scenario.PauseStateManager();
+            }
+        }
+
+        #endregion
+       
+        #region Properties
+        [DataMember]
+        public TestScenario Scenario
+        {
+            get { return _scenario; }
+            set
+            {
+                _scenario = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
     }
 }
