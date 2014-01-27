@@ -167,10 +167,11 @@ namespace Hypertest.Core.Tests
             }
         }
 
-        protected void Log(string message, LogCategory category, LogPriority priority)
+        protected internal void Log(string message, LogCategory category, LogPriority priority)
         {
             this.LoggerService.Log(string.Format("[{0}] {1}", this.Description, message), category, priority);
             this.LogMessages.Add(string.Format("[{0}] {1}", DateTime.Now.ToString(), message));
+			this.RaisePropertyChanged("LogMessages");
         }
         #endregion
 
