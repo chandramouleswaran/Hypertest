@@ -13,8 +13,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Hypertest.Core.Interfaces;
+using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
 using Hypertest.Core.Utils;
 using OpenQA.Selenium;
@@ -35,10 +38,9 @@ namespace Hypertest.Core.Runners
     public class WebScenarioRunner : IRunner
     {
         #region Members
-
         private readonly Dictionary<String, Variable> _globals;
+        private TestResultModel _result;
         private WebTestScenario _scenario;
-
         #endregion
 
         #region CTOR
@@ -62,10 +64,9 @@ namespace Hypertest.Core.Runners
         #endregion
 
         #region IRunner
-
-        public TestScenario Scenario
+        public TestResultModel Result
         {
-            get { return _scenario; }
+            get { return _result; }
         }
 
         public void Initialize(TestScenario scenario)
@@ -73,7 +74,10 @@ namespace Hypertest.Core.Runners
             if (this.IsRunning == false)
             {
                 this.IsRunning = true;
+                _result = new TestResultModel();
+                _result.Scenario = scenario;
                 _scenario = scenario as WebTestScenario;
+                scenario.PauseStateManager();
                 Task.Factory.StartNew(() =>
                                       {
                                           this.BackRun();
@@ -114,13 +118,30 @@ namespace Hypertest.Core.Runners
 
         public void CleanUp()
         {
-            this._scenario = null;
             if (this.Driver != null)
             {
                 this.Driver.Quit();
                 this.Driver = null;
             }
-            //TODO: This is where we will create a TestResult class - add Scenario inside it and add some analysis
+            try
+            {
+                //Save the result in its location
+                using (var writer = new FileStream(this.RunFolder + Path.DirectorySeparatorChar + "Result.wtr", FileMode.Create, FileAccess.Write))
+                {
+                    var types = new List<Type>();
+                    types.Add(typeof(WebTestScenario));
+                    var ser = new DataContractSerializer(typeof(TestResultModel), this.Result.Scenario.TestRegistry.Tests.Union(types));
+                    ser.WriteObject(writer, this._result);
+                }
+            }
+            catch (Exception ex)
+            {     
+                Console.WriteLine(ex.Message);
+            }
+
+            //Set the variables back to null
+            this._result = null;
+            this._scenario = null;
         }
 
         public Variable GetVariable(string name)
@@ -140,7 +161,6 @@ namespace Hypertest.Core.Runners
         #endregion
 
         #region Methods
-
         private bool InternalAddVariable(Variable variable, bool force = true)
         {
             if (_globals.ContainsKey(variable.Name))
@@ -151,9 +171,7 @@ namespace Hypertest.Core.Runners
                 }
                 else
                 {
-                    _scenario.LoggerService.Log(
-                        "Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn,
-                        LogPriority.Low);
+                    _result.Scenario.LoggerService.Log("Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn, LogPriority.Low);
                 }
             }
             _globals.Add(variable.Name, variable);
@@ -185,7 +203,6 @@ namespace Hypertest.Core.Runners
         {
             this.CleanUp();
             this.IsRunning = false;
-            //TODO: Create a Result structure and store it in a file
         }
 
         private void BackRun()

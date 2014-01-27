@@ -10,18 +10,18 @@
 
 #endregion
 
+using Hypertest.Core.Results;
 using Hypertest.Core.Runners;
-using Hypertest.Core.Tests;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core
 {
-    internal class WebTestResultViewModel : ContentViewModel
+    internal class WebTestCurrentResultViewModel : ContentViewModel
     {
         private readonly WebTestResultView _resultView;
 
-        public WebTestResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger,
+        public WebTestCurrentResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger,
             IMenuService menuService)
             : base(workspace, commandManager, logger, menuService)
         {
@@ -42,12 +42,12 @@ namespace Hypertest.Core
         /// <summary>
         /// Refreshes the Web test result view model
         /// </summary>
-        public void Refresh()
+        internal void Refresh()
         {
-            if (WebScenarioRunner.Current.Scenario != null)
+            if (WebScenarioRunner.Current.Result != null)
             {
-                WebScenarioRunner.Current.Scenario.SetDirty(false);
-                Model = WebScenarioRunner.Current.Scenario;
+                WebScenarioRunner.Current.Result.Scenario.SetDirty(false);
+                Model = WebScenarioRunner.Current.Result;
                 View = _resultView;
                 View.DataContext = Model;
             }

@@ -14,42 +14,38 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Utils;
+using Hypertest.Core.Runners;
 using Hypertest.Web.Tests;
+using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
     [DataContract]
     [Serializable]
-    [DisplayName("Send Keys")]
-    [Description("Sends simple keys to a web element on the browser")]
+    [DisplayName("Switch Frame")]
+    [Description("Selects the \"iframe\" on which the rest of the actions should take place")]
     [Category("Web")]
-    [TestImage("Images/SendKeys.png")]
-    public class SendKeysTestCase : WebTestCase
+    [TestImage("Images/Frame.png")]
+    public class SwitchFrameTestCase : TestCase
     {
-        #region Members
-
-        private string _keys;
-        private bool _clearField;
-
-        #endregion
+        #region Member
+		private bool _baseFrame;
+        private string _frameDescriptor; 
+	    #endregion
 
         #region CTOR
-
-        public SendKeysTestCase()
+        public SwitchFrameTestCase()
         {
             Initialize();
         }
 
         private void Initialize(bool create = true)
         {
-            this.Description = "Send keys to a web element";
+            this.Description = "Click a particular web element";
             this.MarkedForExecution = true;
-            this.Keys = "SACHIN TENDULKAR{ENTER}";
-            this.ClearField = true;
+            this.BaseFrame = false;
         }
-
         #endregion
 
         #region Deserialize
@@ -63,40 +59,37 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-        /// <summary>
-        /// Gets or sets the value used along with query type.
-        /// </summary>
         [DataMember]
-        [DisplayName("Keys to send")]
-        [Description("Enter the keys to send to the element")]
+        [DisplayName("Default Content?")]
+        [Description("Switches to the default content")]
         [Category("Settings")]
         [DynamicReadonly("RunState")]
-        public String Keys
+        public bool BaseFrame
         {
-            get { return _keys; }
+            get { return _baseFrame; }
             set
             {
-                string oldValue = _keys;
-                _keys = value;
+                bool oldValue = _baseFrame;
+                _baseFrame = value;
                 if (oldValue != value)
-                    RaisePropertyChangedWithValues(oldValue, _keys, "Keys change");
+                    RaisePropertyChangedWithValues(oldValue, _baseFrame, "Base Frame change");
             }
         }
 
         [DataMember]
-        [DisplayName("Clear the element?")]
-        [Description("Do you want to clear the field before sending key strokes?")]
+        [DisplayName("Frame Descriptor")]
+        [Description("Enter frame number or name to switch to")]
         [Category("Settings")]
         [DynamicReadonly("RunState")]
-        public bool ClearField
+        public string FrameDescriptor
         {
-            get { return _clearField; }
+            get { return _frameDescriptor; }
             set
             {
-                bool oldValue = _clearField;
-                _clearField = value;
+                string oldValue = _frameDescriptor;
+                _frameDescriptor = value;
                 if (oldValue != value)
-                    RaisePropertyChangedWithValues(oldValue, _clearField, "Clear Field change");
+                    RaisePropertyChangedWithValues(oldValue, _frameDescriptor, "Frame Descriptor change");
             }
         }
         #endregion
@@ -104,22 +97,27 @@ namespace Hypertest.Core.Tests
         #region Override
         protected override void Body()
         {
-            base.Body();
-            if (this.ActualResult == TestCaseResult.Failed) return;
-
-            //We have reached so far - this means we have an element
+            this.ActualResult = TestCaseResult.Passed;
+            IWebDriver driver = WebScenarioRunner.Current.Driver;
             try
             {
-                this.Keys = this.Keys.Evaluate().ToString();
-                if (this.ClearField)
+                if (this.BaseFrame)
                 {
-                    this.Element.ClearFirstSendKeys(Keys.ToSeleniumKeys());
+                    driver.SwitchTo().DefaultContent();
                 }
                 else
                 {
-                    this.Element.SendKeys(Keys.ToSeleniumKeys());
+                    //Might be an integer - try and parse it and switch to that iframe
+                    int intVal;
+                    if (int.TryParse(this.FrameDescriptor, out intVal))
+                    {
+                        driver.SwitchTo().Frame(intVal);
+                    }
+                    else
+                    {
+                        driver.SwitchTo().Frame(this.FrameDescriptor);
+                    }
                 }
-                this.ActualResult = TestCaseResult.Passed;
             }
             catch (Exception ex)
             {

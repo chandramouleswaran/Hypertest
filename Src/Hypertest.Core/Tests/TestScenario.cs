@@ -151,6 +151,15 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Methods
+        internal void PauseStateManager()
+        {
+            _manager.StateChange -= _manager_StateChange;
+        }
+
+        internal void ResumeStateManager()
+        {
+            _manager.StateChange += _manager_StateChange;
+        }
 
         internal void SetDirty(bool p)
         {

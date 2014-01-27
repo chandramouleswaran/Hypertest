@@ -11,61 +11,57 @@
 #endregion
 
 using System;
-using System.ComponentModel;
 using System.Runtime.Serialization;
-using Hypertest.Core.Attributes;
-using Hypertest.Web.Tests;
-using Wide.Interfaces.Services;
+using Hypertest.Core.Tests;
+using Wide.Interfaces;
 
-namespace Hypertest.Core.Tests
+namespace Hypertest.Core.Results
 {
+    /// <summary>
+    ///     The basic unit of a test case in the Hypertest framework
+    /// </summary>
     [DataContract]
     [Serializable]
-    [DisplayName("Click element")]
-    [Description("Clicks the first web element based on the search results")]
-    [Category("Web")]
-    [TestImage("Images/MouseClick.png")]
-    public class MouseClickTestCase : WebTestCase
+    public class TestResultModel : ContentModel
     {
+        #region Members
+        private TestScenario _scenario;
+        #endregion
+
         #region CTOR
-        public MouseClickTestCase()
+        public TestResultModel()
         {
             Initialize();
         }
 
         private void Initialize(bool create = true)
         {
-            this.Description = "Click a particular web element";
-            this.MarkedForExecution = true;
+
         }
         #endregion
 
         #region Deserialize
-
-        [OnDeserializing]
-        private void OnDeserializing(StreamingContext context)
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
         {
             Initialize();
+            if (_scenario != null)
+            {
+                _scenario.PauseStateManager();
+            }
         }
 
         #endregion
-
-        #region Override
-        protected override void Body()
+       
+        #region Properties
+        [DataMember]
+        public TestScenario Scenario
         {
-            base.Body();
-            if (this.ActualResult == TestCaseResult.Failed) return;
-
-            //We have reached so far - this means we have an element
-            try
+            get { return _scenario; }
+            set
             {
-                this.Element.Click();
-            }
-            catch (Exception ex)
-            {
-                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
-                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
-                this.ActualResult = TestCaseResult.Failed;
+                _scenario = value;
+                RaisePropertyChanged();
             }
         }
         #endregion

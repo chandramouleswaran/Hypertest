@@ -42,6 +42,7 @@ namespace Hypertest.Core
             registry.Add(typeof(WebTestCase));
             registry.Add(typeof (SendKeysTestCase));
             registry.Add(typeof(MouseClickTestCase));
+            registry.Add(typeof(SwitchFrameTestCase));
         }
     }
 }

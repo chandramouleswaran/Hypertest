@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Hypertest.Core.Tests.WebTestResultView"
+﻿<UserControl x:Class="Hypertest.Core.Results.WebTestResultView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -20,7 +20,7 @@
             <ColumnDefinition Width="*" MinWidth="200" />
         </Grid.ColumnDefinitions>
         <TreeView Name="treeView1"
-                  ItemsSource="{Binding ., Mode=TwoWay, Converter={StaticResource ResourceKey=ScenarioConverter}}"
+                  ItemsSource="{Binding Scenario, Mode=TwoWay, Converter={StaticResource ResourceKey=ScenarioConverter}}"
                   Grid.Column="0" ScrollViewer.CanContentScroll="True">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children, Mode=TwoWay}">

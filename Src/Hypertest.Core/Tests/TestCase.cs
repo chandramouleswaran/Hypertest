@@ -50,7 +50,6 @@ namespace Hypertest.Core.Tests
     public abstract class TestCase : ContentModel, ICloneable, ICustomTypeDescriptor
     {
         #region Members
-
         protected TestCaseResult _actualResult;
         private string _description;
         private int _waitTime;
@@ -92,21 +91,20 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Virtuals
-
-        public virtual void Setup()
+        protected virtual void Setup()
         {
         }
 
-        public virtual void Body()
+        protected virtual void Body()
         {
         }
 
-        public virtual void Wait()
+        protected virtual void Wait()
         {
             Thread.Sleep(this.WaitTime);
         }
 
-        public virtual void Cleanup(Exception ex = null)
+        protected virtual void Cleanup(Exception ex = null)
         {
             if (ex != null)
             {
@@ -157,6 +155,7 @@ namespace Hypertest.Core.Tests
                         {
                             Variable v = new Variable(p.VariableName, val);
                             WebScenarioRunner.Current.AddVariable(v);
+                            this.Log(v.ToString(), LogCategory.Info, LogPriority.None);
                         }
                     }
                     catch (Exception ex)

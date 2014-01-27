@@ -81,7 +81,6 @@ namespace Hypertest.Core.Interfaces
         #endregion
 
         #region Overrides
-
         public override int GetHashCode()
         {
             return Name.GetHashCode();
@@ -99,7 +98,7 @@ namespace Hypertest.Core.Interfaces
 
         public override string ToString()
         {
-            return _name + "=" + _value + " (" + _type + ")";
+            return string.Format("({0}) {1}={2}", _type, _name, _value);
         }
 
         #endregion

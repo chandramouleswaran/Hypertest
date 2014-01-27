@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Hypertest.Core.Handlers;
 using Hypertest.Core.Interfaces;
+using Hypertest.Core.Results;
 using Hypertest.Core.Runners;
 using Hypertest.Core.Service;
 using Hypertest.Core.Tests;
@@ -97,8 +98,8 @@ namespace Hypertest.Core
             _container.RegisterType<ToolboxModel>();
             _container.RegisterType<ToolboxViewModel>();
 
-            _container.RegisterType<WebTestResultViewModel>(new ContainerControlledLifetimeManager());
-            _container.Resolve<WebTestResultViewModel>();
+            _container.RegisterType<WebTestCurrentResultViewModel>(new ContainerControlledLifetimeManager());
+            _container.Resolve<WebTestCurrentResultViewModel>();
 
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
@@ -390,7 +391,6 @@ namespace Hypertest.Core
         #endregion
 
         #region Run
-
         private void RunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
@@ -399,18 +399,17 @@ namespace Hypertest.Core
                 if (workspace.ActiveDocument.Model is TestScenario)
                 {
                     var cvm =
-                        workspace.Documents.FirstOrDefault(x => x is WebTestResultViewModel) as WebTestResultViewModel;
+                        workspace.Documents.FirstOrDefault(x => x is WebTestCurrentResultViewModel) as WebTestCurrentResultViewModel;
                     if (cvm != null)
                     {
                         workspace.ActiveDocument = cvm;
                     }
                     else
                     {
-                        cvm = _container.Resolve<WebTestResultViewModel>();
+                        cvm = _container.Resolve<WebTestCurrentResultViewModel>();
                         if (WebScenarioRunner.Current.IsRunning == false)
                         {
-                            TestScenario scenario =
-                                (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
+                            TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
                             scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
                             scenario.LoggerService = (workspace.ActiveDocument.Model as TestScenario).LoggerService;
                             WebScenarioRunner.Current.Initialize(scenario);
@@ -426,7 +425,7 @@ namespace Hypertest.Core
         private bool CanRunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            if (workspace.ActiveDocument != null)
+            if (workspace.ActiveDocument != null && WebScenarioRunner.Current.IsRunning == false)
             {
                 return (workspace.ActiveDocument.Model is TestScenario);
             }

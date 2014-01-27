@@ -83,8 +83,7 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-
-        public override void Setup()
+        protected override void Setup()
         {
             foreach (Variable variable in Variables)
             {
@@ -92,11 +91,10 @@ namespace Hypertest.Core.Tests
             }
         }
 
-        public override void Body()
+        protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
         }
-
         #endregion
     }
 }

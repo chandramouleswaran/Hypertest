@@ -77,8 +77,7 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-
-        public override void Setup()
+        protected override void Setup()
         {
             TestScenario scenario;
             using (var reader = new FileStream(this.FilePath, FileMode.Open, FileAccess.Read))
@@ -94,7 +93,6 @@ namespace Hypertest.Core.Tests
                 this.Children = scenario.Children;
             }
         }
-
         #endregion
     }
 }

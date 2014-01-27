@@ -97,8 +97,7 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Override
-
-        public override void Setup()
+        protected override void Setup()
         {
             ObservableCollection<TestCase> newChildren = new ObservableCollection<TestCase>();
             for (int i = 0; i < this.LoopCount; i++)
@@ -113,7 +112,6 @@ namespace Hypertest.Core.Tests
             this.Children = newChildren;
             //If you want to add break and if its a future requirement - override the Body specifically for a Break test case
         }
-
         #endregion
     }
 }

@@ -11,6 +11,7 @@
 #endregion
 
 using System;
+using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
 using OpenQA.Selenium;
 
@@ -22,7 +23,7 @@ namespace Hypertest.Core.Interfaces
         string RunFolder { get; }
         bool IsRunning { get; }
         IWebDriver Driver { get; }
-        TestScenario Scenario { get; }
+        TestResultModel Result { get; }
 
         void Initialize(TestScenario scenario);
         void Pause();
