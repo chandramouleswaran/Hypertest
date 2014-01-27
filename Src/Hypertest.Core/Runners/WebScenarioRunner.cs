@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
@@ -171,7 +172,7 @@ namespace Hypertest.Core.Runners
                 }
                 else
                 {
-                    _result.Scenario.LoggerService.Log("Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn, LogPriority.Low);
+                    _result.Scenario.Log("Variable " + variable.Name + "already exists. Cannot add new variable.", LogCategory.Warn, LogPriority.Low);
                 }
             }
             _globals.Add(variable.Name, variable);
@@ -220,8 +221,14 @@ namespace Hypertest.Core.Runners
             {
                 Create(_scenario.BrowserType);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+				_scenario.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+				_scenario.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+				_scenario.ActualResult = TestCaseResult.Failed;
+				Dispatcher.CurrentDispatcher.Invoke(() => _scenario.RunState = TestRunState.Done);
+				CleanUp();
+				return;
             }
             if (_scenario.URL != null)
             {
