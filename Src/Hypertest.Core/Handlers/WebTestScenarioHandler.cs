@@ -148,7 +148,7 @@ namespace Hypertest.Core.Handlers
 
                     return vm;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                 }
             }

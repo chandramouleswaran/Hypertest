@@ -390,7 +390,6 @@ namespace Hypertest.Core
         #endregion
 
         #region Run
-
         private void RunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
@@ -409,8 +408,7 @@ namespace Hypertest.Core
                         cvm = _container.Resolve<WebTestResultViewModel>();
                         if (WebScenarioRunner.Current.IsRunning == false)
                         {
-                            TestScenario scenario =
-                                (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
+                            TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
                             scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
                             scenario.LoggerService = (workspace.ActiveDocument.Model as TestScenario).LoggerService;
                             WebScenarioRunner.Current.Initialize(scenario);
@@ -426,7 +424,7 @@ namespace Hypertest.Core
         private bool CanRunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            if (workspace.ActiveDocument != null)
+            if (workspace.ActiveDocument != null && WebScenarioRunner.Current.IsRunning == false)
             {
                 return (workspace.ActiveDocument.Model is TestScenario);
             }

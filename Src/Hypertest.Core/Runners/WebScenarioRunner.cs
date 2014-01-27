@@ -74,6 +74,7 @@ namespace Hypertest.Core.Runners
             {
                 this.IsRunning = true;
                 _scenario = scenario as WebTestScenario;
+                _scenario.PauseStateManager();
                 Task.Factory.StartNew(() =>
                                       {
                                           this.BackRun();
