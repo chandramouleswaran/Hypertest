@@ -43,6 +43,7 @@ namespace Hypertest.Core
             registry.Add(typeof (SendKeysTestCase));
             registry.Add(typeof(MouseClickTestCase));
             registry.Add(typeof(SwitchFrameTestCase));
+			registry.Add(typeof(TakeScreenshotTestCase));
         }
     }
 }

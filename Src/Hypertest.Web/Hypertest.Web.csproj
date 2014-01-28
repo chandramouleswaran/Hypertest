@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="Elements\WebElement.cs" />
     <Compile Include="Elements\WebElementCollection.cs" />
+    <Compile Include="Tests\TakeScreenshotTestCase.cs" />
     <Compile Include="Tests\SwitchFrameTestCase.cs" />
     <Compile Include="Tests\MouseClickTestCase.cs" />
     <Compile Include="Tests\SendKeysTestCase.cs" />
@@ -129,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Frame.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Screenshot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
