@@ -44,6 +44,9 @@
   <PropertyGroup>
     <StartupObject>Hypertest.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AvalonDock.Themes.VS2012">
       <HintPath>..\..\Libs\AvalonDock.Themes.VS2012.dll</HintPath>
@@ -144,6 +147,9 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
