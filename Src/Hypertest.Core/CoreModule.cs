@@ -113,6 +113,10 @@ namespace Hypertest.Core
             registry.Add(typeof (LooperTestCase));
             registry.Add(typeof (RunScenarioTestCase));
             registry.Add(typeof (SetVariableTestCase));
+            
+            #if DEBUG
+            registry.Add(typeof(DebugInfoTestCase));
+            #endif
 
             //Add the toolbox to the workspace
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
