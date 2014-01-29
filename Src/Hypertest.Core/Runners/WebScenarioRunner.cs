@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Hypertest.Core.Interfaces;
@@ -237,6 +238,19 @@ namespace Hypertest.Core.Runners
             _scenario.Run();
         }
 
+
+        internal string PrintDebug()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Dumping variables from the current run...");
+            foreach (var kvp in _globals)
+            {
+                Variable v = kvp.Value;
+                sb.AppendLine(kvp.Value.ToString());
+            }
+            sb.Append("Dump complete...");
+            return sb.ToString();
+        }
         #endregion
     }
 }
