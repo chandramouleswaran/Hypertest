@@ -17,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Hypertest.Core.Handlers;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Results;
 using Hypertest.Core.Runners;
 using Hypertest.Core.Service;
 using Hypertest.Core.Tests;

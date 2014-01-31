@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="Hypertest.Core.Editors.ScenarioFilePathEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="25" d:DesignWidth="300"
+             x:Name="_uc">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="20" />
+        </Grid.ColumnDefinitions>
+        <TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding Value, ElementName=_uc}" />
+        <Button Name="ButtonSelect" Grid.Column="1" Click="Button_Click" Content="..." />
+    </Grid>
+</UserControl>

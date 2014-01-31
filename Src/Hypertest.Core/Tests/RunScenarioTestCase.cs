@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
+using Hypertest.Core.Editors;
 
 namespace Hypertest.Core.Tests
 {
@@ -53,6 +54,7 @@ namespace Hypertest.Core.Tests
         [Description("Enter the file path for the scenario to run")]
         [DynamicReadonly("RunState")]
         [Category("Settings")]
+        [Editor(typeof(ScenarioFilePathEditor), typeof(ScenarioFilePathEditor))]
         public string FilePath
         {
             get { return _filePath; }

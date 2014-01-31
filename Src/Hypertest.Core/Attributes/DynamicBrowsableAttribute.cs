@@ -26,7 +26,7 @@ namespace Hypertest.Core.Attributes
         {
         }
 
-        protected override Attribute OnEvaluateCoplete(object value)
+        protected override Attribute OnEvaluateComplete(object value)
         {
             Attribute output;
             try
