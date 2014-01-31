@@ -53,7 +53,7 @@ namespace Hypertest.Core.Attributes
         /// <returns>Dynamically evaluated attribute</returns>
         public Attribute Evaluate(object container)
         {
-            return OnEvaluateCoplete(RuntimeEvaluator.Eval(container, _property, _index));
+            return OnEvaluateComplete(RuntimeEvaluator.Eval(container, _property, _index));
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Hypertest.Core.Attributes
         /// </summary>
         /// <param name="value">Evaluated value</param>
         /// <returns>Dynamically evaluated attribute</returns>
-        protected abstract Attribute OnEvaluateCoplete(object value);
+        protected abstract Attribute OnEvaluateComplete(object value);
 
         private class RuntimeEvaluator
         {

@@ -12,6 +12,6 @@
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
         <TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding Value, ElementName=_uc}" />
-        <Button Grid.Column="1" Click="Button_Click" Content="..." />
+        <Button Name="ButtonSelect" Grid.Column="1" Click="Button_Click" Content="..." />
     </Grid>
 </UserControl>

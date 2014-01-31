@@ -66,6 +66,10 @@ namespace Hypertest.Core.Editors
             binding.Source = propertyItem;
             binding.Mode = propertyItem.IsReadOnly ? BindingMode.OneWay : BindingMode.TwoWay;
             BindingOperations.SetBinding(this, ScenarioFilePathEditor.ValueProperty, binding);
+            if (propertyItem.IsReadOnly)
+            {
+                ButtonSelect.IsEnabled = false;
+            }
             return this;
         } 
         #endregion
