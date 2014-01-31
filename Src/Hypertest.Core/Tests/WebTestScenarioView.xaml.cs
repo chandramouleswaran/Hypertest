@@ -107,15 +107,20 @@ namespace Hypertest.Core.Tests
             }
 
             if (copyValue != null)
-            {
-                var folder = treeView1.SelectedItem as FolderTestCase;
-                if (folder != null)
+            {                
+                var testCase = treeView1.SelectedItem as TestCase;
+                if (testCase != null)
                 {
-                    scenario.Manager.BeginChangeSetBatch("Pasting");
-                    actionInProgress = true;
-                    folder.IsExpanded = true;
-                    folder.Children.Add(copyValue);
-                    copyValue.IsSelected = true;
+                    // If the parent test case is a folder test case but not a run scenario test case
+                    if ((testCase.Parent is FolderTestCase) && !(testCase.Parent is RunScenarioTestCase))
+                    {
+                        int selectedIndex = testCase.Parent.Children.IndexOf(testCase);
+                        scenario.Manager.BeginChangeSetBatch("Pasting");
+                        actionInProgress = true;
+                        testCase.Parent.Children.Insert(selectedIndex + 1, copyValue);
+                        copyValue.IsSelected = true;
+                        copyValue.Parent = testCase.Parent;
+                    }
                 }
             }
             e.Handled = true;

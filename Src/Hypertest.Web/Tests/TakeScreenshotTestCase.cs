@@ -16,8 +16,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Runners;
-using Hypertest.Core.Utils;
-using Hypertest.Web.Tests;
 using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
@@ -67,7 +65,7 @@ namespace Hypertest.Core.Tests
 		[DisplayName("Screenshot")]
 		[Description("The file path to the screenshot")]
 		[Category("Settings")]
-		[DynamicReadonly("RunState")]
+		[DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
 		[PostRun]
 		public String ScreenshotPath
 		{
@@ -88,7 +86,7 @@ namespace Hypertest.Core.Tests
             try
             {
 				this.ActualResult = TestCaseResult.Passed;
-				this.ScreenshotPath = WebScenarioRunner.Current.RunFolder + Path.DirectorySeparatorChar + DateTime.Now.Ticks.ToString() + ".png";
+				this.ScreenshotPath = WebScenarioRunner.Current.RunFolder + Path.DirectorySeparatorChar + DateTime.Now.Ticks + ".png";
 				((ITakesScreenshot)WebScenarioRunner.Current.Driver).GetScreenshot().SaveAsFile(this.ScreenshotPath, System.Drawing.Imaging.ImageFormat.Png);
             }
             catch (Exception ex)

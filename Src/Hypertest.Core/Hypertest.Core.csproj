@@ -104,6 +104,9 @@
     <Compile Include="Converters\TypeToTestImageConverter.cs" />
     <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Editors\ScenarioFilePathEditor.xaml.cs">
+      <DependentUpon>ScenarioFilePathEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Handlers\ToolboxDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
@@ -170,6 +173,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\ScenarioFilePathEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Results\WebTestResultView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

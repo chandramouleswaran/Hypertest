@@ -12,7 +12,6 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using Hypertest.Core.Tests;
 using Wide.Interfaces;
 
 namespace Hypertest.Core.Results
