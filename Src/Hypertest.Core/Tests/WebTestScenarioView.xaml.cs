@@ -111,15 +111,31 @@ namespace Hypertest.Core.Tests
                 var testCase = treeView1.SelectedItem as TestCase;
                 if (testCase != null)
                 {
-                    // If the parent test case is a folder test case but not a run scenario test case
-                    if ((testCase.Parent is FolderTestCase) && !(testCase.Parent is RunScenarioTestCase))
+                    // If the parent test case is a folder test case
+                    var ftc = testCase.Parent as FolderTestCase;
+                    if (ftc != null && ftc.AreNewItemsAllowed())
                     {
-                        int selectedIndex = testCase.Parent.Children.IndexOf(testCase);
+                        var source = testCase.Parent;
+
+                        int selectedIndex = source.Children.IndexOf(testCase);
                         scenario.Manager.BeginChangeSetBatch("Pasting");
                         actionInProgress = true;
-                        testCase.Parent.Children.Insert(selectedIndex + 1, copyValue);
+                        source.Children.Insert(selectedIndex + 1, copyValue);
                         copyValue.IsSelected = true;
-                        copyValue.Parent = testCase.Parent;
+                        copyValue.Parent = source;
+                    }
+                    else
+                    {
+                        //If the selected item is a test scenario - add the test case as the last item
+                        var ts = testCase as TestScenario;
+                        if (ts != null)
+                        {
+                            scenario.Manager.BeginChangeSetBatch("Pasting");
+                            actionInProgress = true;
+                            ts.Children.Add(copyValue);
+                            copyValue.IsSelected = true;
+                            copyValue.Parent = ts;
+                        }
                     }
                 }
             }
@@ -188,7 +204,7 @@ namespace Hypertest.Core.Tests
         {
             if (treeView1.SelectedItem != null)
             {
-                if (treeView1.SelectedItem is WebTestScenario)
+                if (treeView1.SelectedItem is TestScenario)
                 {
                     return false;
                 }

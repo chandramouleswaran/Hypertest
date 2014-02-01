@@ -129,5 +129,12 @@ namespace Hypertest.Core.Tests
             }
         }
         #endregion
+
+        #region Virtuals
+        public virtual bool AreNewItemsAllowed()
+        {
+            return true;
+        }
+        #endregion
     }
 }

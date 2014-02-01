@@ -95,6 +95,11 @@ namespace Hypertest.Core.Tests
                 this.Children = scenario.Children;
             }
         }
+
+        public override bool AreNewItemsAllowed()
+        {
+            return false;
+        }
         #endregion
     }
 }
