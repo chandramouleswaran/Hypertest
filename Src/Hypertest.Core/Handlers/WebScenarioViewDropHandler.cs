@@ -37,18 +37,14 @@ namespace Hypertest.Core.Handlers
                     }
                 }
 
-                var runScenario = item.DataContext as RunScenarioTestCase;
-                if (runScenario != null)
-                {
-                    dropInfo.Effects = DragDropEffects.None;
-                    return;
-                }
-
                 var folderTest = item.DataContext as FolderTestCase;
                 if (folderTest != null)
                 {
-                    folderTest.IsExpanded = true;
-                    base.DragOver(dropInfo);
+                    if (folderTest.AreNewItemsAllowed())
+                    {
+                        folderTest.IsExpanded = true;
+                        base.DragOver(dropInfo);
+                    }
                     return;
                 }
 
