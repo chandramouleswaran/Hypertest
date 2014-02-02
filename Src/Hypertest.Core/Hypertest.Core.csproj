@@ -94,6 +94,7 @@
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
     <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
+    <Compile Include="Converters\PathToImageConverter.cs" />
     <Compile Include="Converters\TypeToPropertyListConverter.cs" />
     <Compile Include="Converters\RunStateToVisibilityConverter.cs" />
     <Compile Include="Converters\ScenarioToObservableCollectionConverter.cs" />
@@ -104,6 +105,9 @@
     <Compile Include="Converters\TypeToTestImageConverter.cs" />
     <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
     <Compile Include="CoreModule.cs" />
+    <Compile Include="Editors\ImagePathEditor.xaml.cs">
+      <DependentUpon>ImagePathEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ScenarioFilePathEditor.xaml.cs">
       <DependentUpon>ScenarioFilePathEditor.xaml</DependentUpon>
     </Compile>
@@ -173,6 +177,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Editors\ImagePathEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Editors\ScenarioFilePathEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
