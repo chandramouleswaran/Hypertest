@@ -15,47 +15,48 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
+using Hypertest.Core.Editors;
 using Hypertest.Core.Runners;
 using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
 {
-    [DataContract]
-    [Serializable]
-    [DisplayName("Take Screenshot")]
-    [Description("Takes a screenshot of the current state of browser")]
-    [Category("Web")]
-    [TestImage("Images/Screenshot.png")]
-    public class TakeScreenshotTestCase : TestCase
-    {
-        #region Members
-        private string _screenshotPath;
-        #endregion
+	[DataContract]
+	[Serializable]
+	[DisplayName("Take Screenshot")]
+	[Description("Takes a screenshot of the current state of browser")]
+	[Category("Web")]
+	[TestImage("Images/Screenshot.png")]
+	public class TakeScreenshotTestCase : TestCase
+	{
+		#region Members
+		private string _screenshotPath;
+		#endregion
 
-        #region CTOR
+		#region CTOR
 		public TakeScreenshotTestCase()
-        {
-            Initialize();
-        }
+		{
+			Initialize();
+		}
 
-        private void Initialize(bool create = true)
-        {
-            this.Description = "Take a screenshot";
-            this.MarkedForExecution = true;
-        }
+		private void Initialize(bool create = true)
+		{
+			this.Description = "Take a screenshot";
+			this.MarkedForExecution = true;
+		}
 
-        #endregion
+		#endregion
 
-        #region Deserialize
+		#region Deserialize
 
-        [OnDeserializing]
-        private void OnDeserializing(StreamingContext context)
-        {
-            Initialize();
-        }
+		[OnDeserializing]
+		private void OnDeserializing(StreamingContext context)
+		{
+			Initialize();
+		}
 
-        #endregion
+		#endregion
 
 		#region Property
 		/// <summary>
@@ -66,6 +67,7 @@ namespace Hypertest.Core.Tests
 		[Description("The file path to the screenshot")]
 		[Category("Settings")]
 		[DynamicBrowsable("RunState"), DynamicReadonly("RunState")]
+		[Editor(typeof(ImagePathEditor), typeof(ImagePathEditor))]
 		[PostRun]
 		public String ScreenshotPath
 		{
@@ -80,22 +82,22 @@ namespace Hypertest.Core.Tests
 		} 
 		#endregion
 
-        #region Override
-        protected override void Body()
-        {
-            try
-            {
+		#region Override
+		protected override void Body()
+		{
+			try
+			{
 				this.ActualResult = TestCaseResult.Passed;
 				this.ScreenshotPath = WebScenarioRunner.Current.RunFolder + Path.DirectorySeparatorChar + DateTime.Now.Ticks + ".png";
 				((ITakesScreenshot)WebScenarioRunner.Current.Driver).GetScreenshot().SaveAsFile(this.ScreenshotPath, System.Drawing.Imaging.ImageFormat.Png);
-            }
-            catch (Exception ex)
-            {
-                this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
-                this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
-                this.ActualResult = TestCaseResult.Failed;
-            }
-        }
-        #endregion
-    }
+			}
+			catch (Exception ex)
+			{
+				this.Log(ex.Message, LogCategory.Exception, LogPriority.High);
+				this.Log(ex.StackTrace, LogCategory.Exception, LogPriority.High);
+				this.ActualResult = TestCaseResult.Failed;
+			}
+		}
+		#endregion
+	}
 }
