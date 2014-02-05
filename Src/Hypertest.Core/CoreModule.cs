@@ -31,6 +31,7 @@ using Wide.Interfaces.Events;
 using Wide.Interfaces.Services;
 using Wide.Interfaces.Settings;
 using Wide.Interfaces.Themes;
+using Hypertest.Core.Results;
 
 namespace Hypertest.Core
 {
@@ -91,8 +92,11 @@ namespace Hypertest.Core
         private void RegisterParts()
         {
             _container.RegisterType<WebTestScenarioHandler>();
+            _container.RegisterType<WebTestResultHandler>();
             _container.RegisterType<WebTestScenarioViewModel>();
+            _container.RegisterType<WebTestResultViewModel>();
             _container.RegisterType<WebTestScenarioView>();
+            _container.RegisterType<WebTestResultView>();
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ToolboxModel>();
             _container.RegisterType<ToolboxViewModel>();
@@ -102,6 +106,9 @@ namespace Hypertest.Core
 
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
+            _container.Resolve<IContentHandlerRegistry>().Register(handler);
+
+            handler = _container.Resolve<WebTestResultHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
 
             var registry = _container.Resolve<ITestRegistry>();

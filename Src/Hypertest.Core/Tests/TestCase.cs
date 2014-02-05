@@ -68,24 +68,25 @@ namespace Hypertest.Core.Tests
         protected TestCase()
         {
             Initialize();
-            _postValues = new ObservableCollection<PostRunPairs>();
         }
 
         private void Initialize(bool create = true)
         {
-            _expectedResult = TestCaseResult.Passed;
-            _runState = TestRunState.NotStarted;
-             this.LogMessages = new ObservableCollection<string>();
+            if (create)
+            {
+                _expectedResult = TestCaseResult.Passed;
+                _runState = TestRunState.NotStarted;
+                this.LogMessages = new ObservableCollection<string>();
+                _postValues = new ObservableCollection<PostRunPairs>();
+            }
         }
-
         #endregion
 
         #region Deserialize
-
         [OnDeserialized]
         private void OnDeserialized(StreamingContext context)
         {
-            Initialize();
+            Initialize(false);
         }
 
         #endregion
@@ -333,6 +334,7 @@ namespace Hypertest.Core.Tests
 
         [DataMember]
         [Browsable(false), RefreshProperties(RefreshProperties.All)]
+        [DefaultValue(TestRunState.NotStarted)]
         public TestRunState RunState
         {
             get { return _runState; }

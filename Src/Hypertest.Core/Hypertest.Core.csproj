@@ -104,6 +104,7 @@
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Converters\TypeToTestImageConverter.cs" />
     <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
+    <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Editors\ImagePathEditor.xaml.cs">
       <DependentUpon>ImagePathEditor.xaml</DependentUpon>
@@ -111,6 +112,7 @@
     <Compile Include="Editors\ScenarioFilePathEditor.xaml.cs">
       <DependentUpon>ScenarioFilePathEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\WebTestResultHandler.cs" />
     <Compile Include="Handlers\ToolboxDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDragHandler.cs" />
     <Compile Include="Handlers\WebScenarioViewDropHandler.cs" />
