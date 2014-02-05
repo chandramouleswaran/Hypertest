@@ -65,5 +65,19 @@ namespace Hypertest.Core.Results
             }
         }
         #endregion
+
+        #region Internals
+        internal void SetDirty(bool p)
+        {
+            IsDirty = p;
+        }
+
+        internal void SetLocation(object info)
+        {
+            Location = info;
+            IsDirty = false;
+            RaisePropertyChanged("Location");
+        } 
+        #endregion
     }
 }

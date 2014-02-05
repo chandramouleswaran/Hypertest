@@ -10,45 +10,37 @@
 
 #endregion
 
+using Hypertest.Core.Handlers;
 using Hypertest.Core.Results;
-using Hypertest.Core.Runners;
+using Wide.Core.TextDocument;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core
 {
-    internal class WebTestCurrentResultViewModel : ContentViewModel
+    internal class WebTestResultViewModel : TextViewModel
     {
         private readonly WebTestResultView _resultView;
 
-        public WebTestCurrentResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
+        public WebTestResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
         {
             _tooltip = "Web Test Results";
             _title = "Web Test Results";
-            _resultView = new WebTestResultView();
         }
 
-        /// <summary>
-        /// The content ID - unique value for each document. "WEBTESTRESULT:##:" + location of the file.
-        /// </summary>
-        /// <value>The content id.</value>
-        public override string ContentId
+        internal void SetModel(TestResultModel model)
         {
-            get { return "WEBTESTRESULT:##:" + Tooltip; }
+            Model = model;
         }
 
-        /// <summary>
-        /// Refreshes the Web test result view model
-        /// </summary>
-        internal void Refresh()
+        internal void SetView(WebTestResultView view)
         {
-            if (WebScenarioRunner.Current.Result != null)
-            {
-                WebScenarioRunner.Current.Result.Scenario.SetDirty(false);
-                Model = WebScenarioRunner.Current.Result;
-                View = _resultView;
-                View.DataContext = Model;
-            }
+            View = view;
+        }
+
+        internal void SetHandler(WebTestResultHandler wtrHandler)
+        {
+            Handler = wtrHandler;
         }
     }
 }
