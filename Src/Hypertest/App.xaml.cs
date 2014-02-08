@@ -11,6 +11,9 @@
 #endregion
 
 using System.Windows;
+using Microsoft.Practices.Unity;
+using Wide.Interfaces;
+using Wide.Interfaces.Services;
 
 namespace Hypertest
 {
@@ -20,12 +23,36 @@ namespace Hypertest
     public partial class App : Application
     {
         private HTBootstrapper b;
+        private IShell shell;
+        private IOpenDocumentService documentService;
+        private ILoggerService loggerService;
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             b = new HTBootstrapper();
             b.Run();
+            shell = b.Container.Resolve<IShell>();
+            documentService = b.Container.Resolve<IOpenDocumentService>();
+            loggerService = b.Container.Resolve<ILoggerService>();
+            var window = shell as Window;
+            if (window != null)
+            {
+                window.Loaded += OnLoaded;
+                window.Unloaded += OnUnloaded;
+            }
         }
+
+        #region Save Restore layout and use command line arguments
+        private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            shell.LoadLayout();
+        }
+
+        private void OnUnloaded(object sender, RoutedEventArgs routedEventArgs)
+        {
+            shell.SaveLayout();
+        } 
+        #endregion
     }
 }
