@@ -68,6 +68,7 @@ namespace Hypertest
                     {
                         if (cmdLineResult.Value.Browser != null)
                         {
+                            //TODO: Parse the browser and send the browser type to the initialize function
                             if (runner.IsRunning == false)
                             {
                                 var scenario = wts.Clone() as TestScenario;

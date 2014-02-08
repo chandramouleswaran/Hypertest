@@ -51,7 +51,6 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Property
-
         [DataMember]
         [DisplayName("Expression")]
         [Description("Enter the expression to evaluate - use variables in the format (%VARIABLE%)")]
