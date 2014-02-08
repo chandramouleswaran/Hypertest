@@ -155,7 +155,7 @@ namespace Hypertest.Core.Tests
                         if (val != null)
                         {
                             Variable v = new Variable(p.VariableName, val);
-                            WebScenarioRunner.Current.AddVariable(v);
+                            this.Runner.AddVariable(v);
                             this.Log(v.ToString(), LogCategory.Info, LogPriority.None);
                         }
                     }
@@ -409,7 +409,15 @@ namespace Hypertest.Core.Tests
                 {
                     serializer.WriteObject(ms, this);
                     ms.Position = 0;
-                    return serializer.ReadObject(ms);
+                    var value = serializer.ReadObject(ms) as TestCase;
+                    var wts = value as WebTestScenario;
+                    if (wts != null)
+                    {
+                        wts.TestRegistry = this.TestRegistry;
+                        wts.LoggerService = this.LoggerService;
+                        wts.Runner = this.Runner;
+                    }
+                    return value;
                 }
             }
             throw new Exception("Test registry is null - please set the scenario's registry");

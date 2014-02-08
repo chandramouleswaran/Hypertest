@@ -11,7 +11,6 @@
 #endregion
 
 using Hypertest.Core.Results;
-using Hypertest.Core.Runners;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
@@ -19,13 +18,11 @@ namespace Hypertest.Core
 {
     internal class WebTestCurrentResultViewModel : ContentViewModel
     {
-        private readonly WebTestResultView _resultView;
-
-        public WebTestCurrentResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
+        public WebTestCurrentResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger, IMenuService menuService, WebTestResultView view) : base(workspace, commandManager, logger, menuService)
         {
             _tooltip = "Web Test Results";
             _title = "Web Test Results";
-            _resultView = new WebTestResultView();
+            this.View = view;
         }
 
         /// <summary>
@@ -37,18 +34,14 @@ namespace Hypertest.Core
             get { return "WEBTESTRESULT:##:" + Tooltip; }
         }
 
-        /// <summary>
-        /// Refreshes the Web test result view model
-        /// </summary>
-        internal void Refresh()
+        internal void SetModel(TestResultModel model)
         {
-            if (WebScenarioRunner.Current.Result != null)
-            {
-                WebScenarioRunner.Current.Result.Scenario.SetDirty(false);
-                Model = WebScenarioRunner.Current.Result;
-                View = _resultView;
-                View.DataContext = Model;
-            }
+            Model = model;
+        }
+
+        internal void SetView(WebTestResultView view)
+        {
+            View = view;
         }
     }
 }

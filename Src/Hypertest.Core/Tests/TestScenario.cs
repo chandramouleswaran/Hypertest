@@ -185,6 +185,8 @@ namespace Hypertest.Core.Tests
 
         protected internal override ILoggerService LoggerService { get; set; }
 
+        protected internal override IRunner Runner { get; set; }
+
         [DataMember]
         [NewItemTypes(typeof (Variable))]
         [DisplayName("Variables")]

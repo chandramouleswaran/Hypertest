@@ -88,8 +88,8 @@ namespace Hypertest.Core.Tests
 			try
 			{
 				this.ActualResult = TestCaseResult.Passed;
-				this.ScreenshotPath = WebScenarioRunner.Current.RunFolder + Path.DirectorySeparatorChar + DateTime.Now.Ticks + ".png";
-				((ITakesScreenshot)WebScenarioRunner.Current.Driver).GetScreenshot().SaveAsFile(this.ScreenshotPath, System.Drawing.Imaging.ImageFormat.Png);
+				this.ScreenshotPath = this.Runner.RunFolder + Path.DirectorySeparatorChar + DateTime.Now.Ticks + ".png";
+                ((ITakesScreenshot)this.Runner.Driver).GetScreenshot().SaveAsFile(this.ScreenshotPath, System.Drawing.Imaging.ImageFormat.Png);
 			}
 			catch (Exception ex)
 			{

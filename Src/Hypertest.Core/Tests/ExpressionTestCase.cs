@@ -122,7 +122,7 @@ namespace Hypertest.Core.Tests
             this.ActualResult = TestCaseResult.Passed;
             try
             {
-                this.Value = this.Expression.Evaluate();
+                this.Value = StringExtensions.Evaluate(this.Expression, this.Runner);
                 if (this.Value != null && !string.IsNullOrEmpty(this.ExpectedValue))
                 {
                     if (this.Value.ToString() == this.ExpectedValue)

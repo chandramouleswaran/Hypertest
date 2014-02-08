@@ -26,11 +26,11 @@ namespace Hypertest.Core.Utils
     /// </summary>
     public class EvalCode
     {
-        public static object Evaluate(string code, bool replace = true)
+        public static object Evaluate(string code, IRunner runner, bool replace = true)
         {
             if (replace)
             {
-                code = ReplaceVariables(code);
+                code = ReplaceVariables(code, runner);
             }
 
             if (!string.IsNullOrEmpty(code))
@@ -50,13 +50,13 @@ namespace Hypertest.Core.Utils
             throw new Exception("The expression needing evaluation is empty.");
         }
 
-        private static string ReplaceVariables(string code)
+        private static string ReplaceVariables(string code, IRunner runner)
         {
             Regex r = new Regex("%.*?%");
             MatchCollection matches = r.Matches(code);
             foreach (Match m in matches)
             {
-                Variable v = WebScenarioRunner.Current.GetVariable(m.Value.Replace("%", ""));
+                Variable v = runner.GetVariable(m.Value.Replace("%", ""));
                 if (v != null)
                 {
                     switch (v.Type)

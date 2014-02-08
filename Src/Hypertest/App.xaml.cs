@@ -10,7 +10,12 @@
 
 #endregion
 
+using System.Linq;
 using System.Windows;
+using CommandLine;
+using Hypertest.Core.Interfaces;
+using Hypertest.Core.Runners;
+using Hypertest.Core.Tests;
 using Microsoft.Practices.Unity;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
@@ -26,6 +31,8 @@ namespace Hypertest
         private IShell shell;
         private IOpenDocumentService documentService;
         private ILoggerService loggerService;
+        private IRunner runner;
+        private ParserResult<Options> cmdLineResult;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -41,12 +48,35 @@ namespace Hypertest
                 window.Loaded += OnLoaded;
                 window.Unloaded += OnUnloaded;
             }
+            cmdLineResult = Parser.Default.ParseArguments<Options>(e.Args);
         }
 
         #region Save Restore layout and use command line arguments
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
             shell.LoadLayout();
+
+            //Command line parsing - either open the file or even run the scenario based on what is opened
+            runner = b.Container.Resolve<IRunner>();
+            if (!cmdLineResult.Errors.Any())
+            {
+                if (cmdLineResult.Value.OpenFile != null)
+                {
+                    var cvm = documentService.Open(cmdLineResult.Value.OpenFile) as ContentViewModel;
+                    var wts = (cvm != null) ? cvm.Model as WebTestScenario : null;
+                    if (wts != null)
+                    {
+                        if (cmdLineResult.Value.Browser != null)
+                        {
+                            if (runner.IsRunning == false)
+                            {
+                                var scenario = wts.Clone() as TestScenario;
+                                runner.Initialize(scenario);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private void OnUnloaded(object sender, RoutedEventArgs routedEventArgs)

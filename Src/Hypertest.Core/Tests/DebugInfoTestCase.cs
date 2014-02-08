@@ -56,7 +56,7 @@ namespace Hypertest.Core.Tests
         protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
-            this.Log(WebScenarioRunner.Current.PrintDebug(), LogCategory.Info, LogPriority.None);
+            this.Log(this.Runner.PrintDebug(), LogCategory.Info, LogPriority.None);
         }
         #endregion
     }

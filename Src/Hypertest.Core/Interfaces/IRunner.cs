@@ -33,6 +33,7 @@ namespace Hypertest.Core.Interfaces
         bool AddVariable(Variable variable);
         void Clear();
         void CleanUp();
+        string PrintDebug();
 
         Variable GetVariable(String name);
     }

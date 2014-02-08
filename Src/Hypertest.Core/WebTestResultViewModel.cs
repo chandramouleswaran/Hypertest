@@ -20,8 +20,6 @@ namespace Hypertest.Core
 {
     internal class WebTestResultViewModel : TextViewModel
     {
-        private readonly WebTestResultView _resultView;
-
         public WebTestResultViewModel(AbstractWorkspace workspace, ICommandManager commandManager, ILoggerService logger, IMenuService menuService) : base(workspace, commandManager, logger, menuService)
         {
             _tooltip = "Web Test Results";

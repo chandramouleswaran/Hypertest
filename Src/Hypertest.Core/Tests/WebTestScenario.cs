@@ -85,7 +85,7 @@ namespace Hypertest.Core.Tests
         {
             foreach (Variable variable in Variables)
             {
-                WebScenarioRunner.Current.AddVariable(variable);
+                this.Runner.AddVariable(variable);
             }
         } 
         #endregion
