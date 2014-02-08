@@ -16,7 +16,6 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Hypertest.Core.Tests;
 using Hypertest.Web.Elements;
 using OpenQA.Selenium;

@@ -16,7 +16,6 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests

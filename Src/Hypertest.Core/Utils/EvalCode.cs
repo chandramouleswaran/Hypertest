@@ -17,7 +17,6 @@ using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.Text.RegularExpressions;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 
 namespace Hypertest.Core.Utils
 {

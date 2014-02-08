@@ -22,7 +22,6 @@ using System.Windows.Threading;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 

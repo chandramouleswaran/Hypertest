@@ -14,7 +14,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Runners;
 using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
