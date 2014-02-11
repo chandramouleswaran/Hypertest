@@ -10,6 +10,8 @@
 
 #endregion
 
+using Hypertest.Core.Interfaces;
+
 namespace Hypertest.Core.Utils
 {
     /// <summary>
@@ -61,9 +63,9 @@ namespace Hypertest.Core.Utils
             return keys;
         }
 
-        public static object Evaluate(this string text, bool replace = true)
+        public static object Evaluate(string text, IRunner runner, bool replace = true)
         {
-            return EvalCode.Evaluate(text, replace);
+            return EvalCode.Evaluate(text, runner, replace);
         }
     }
 }

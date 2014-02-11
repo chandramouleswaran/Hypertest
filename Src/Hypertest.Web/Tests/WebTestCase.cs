@@ -16,7 +16,6 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Hypertest.Core.Tests;
 using Hypertest.Web.Elements;
 using OpenQA.Selenium;
@@ -179,7 +178,7 @@ namespace Hypertest.Web.Tests
             {
                 try
                 {
-                    return WebScenarioRunner.Current.Driver.Url;
+                    return this.Runner.Driver.Url;
                 }
                 catch (Exception)
                 {
@@ -269,7 +268,7 @@ namespace Hypertest.Web.Tests
             {
                 try
                 {
-                    return this.Element.HasFocus(WebScenarioRunner.Current.Driver);
+                    return this.Element.HasFocus(this.Runner.Driver);
                 }
                 catch (Exception)
                 {
@@ -491,7 +490,7 @@ namespace Hypertest.Web.Tests
         protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
-            this.Element = GetWebElement(WebScenarioRunner.Current.Driver);
+            this.Element = GetWebElement(this.Runner.Driver);
             if (this.Element == null || this.Element.InnerElement == null)
             {
                 this.Log("Unable to find the requested element in the Web page to perform the action.", LogCategory.Warn, LogPriority.Medium);
@@ -570,7 +569,7 @@ namespace Hypertest.Web.Tests
                 else
                 {
                     WebElement w =
-                        WebScenarioRunner.Current.GetVariable(this.ParentVariable.Replace("%", "")).Value as WebElement;
+                        this.Runner.GetVariable(this.ParentVariable.Replace("%", "")).Value as WebElement;
                     WebElementCollection c = new WebElementCollection(w, by);
                     this.TotalElements = c.Count;
                     element = c[ElementNumber - 1];
@@ -578,7 +577,7 @@ namespace Hypertest.Web.Tests
             }
             else
             {
-                Variable v = WebScenarioRunner.Current.GetVariable(ElementDescriptor);
+                Variable v = this.Runner.GetVariable(ElementDescriptor);
                 if (v != null)
                 {
                     element = v.Value as WebElement;

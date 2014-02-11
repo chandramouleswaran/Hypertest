@@ -51,16 +51,22 @@ namespace Hypertest.Core.Handlers
         private readonly ITestRegistry _testRegistry;
 
         /// <summary>
+        ///     The runner appropriate for web test scenario
+        /// </summary>
+        private readonly IRunner _runner;
+
+        /// <summary>
         ///     Constructor of MDHandler - all parameters are injected
         /// </summary>
         /// <param name="container">The injected container of the application</param>
         /// <param name="loggerService">The injected logger service of the application</param>
         public WebTestScenarioHandler(IUnityContainer container, ILoggerService loggerService,
-            ITestRegistry testRegistry)
+            ITestRegistry testRegistry, IRunner runner)
         {
             _container = container;
             _loggerService = loggerService;
             _testRegistry = testRegistry;
+            _runner = runner;
             _dialog = new SaveFileDialog();
         }
 
@@ -86,6 +92,7 @@ namespace Hypertest.Core.Handlers
             model.SetDirty(true);
             model.TestRegistry = _testRegistry;
             model.LoggerService = _loggerService;
+            model.Runner = _runner;
 
             return vm;
         }
@@ -136,6 +143,7 @@ namespace Hypertest.Core.Handlers
                     model.SetDirty(false);
                     model.TestRegistry = _testRegistry;
                     model.LoggerService = _loggerService;
+                    model.Runner = _runner;
 
                     //Set the model and view
                     vm.SetModel(model);

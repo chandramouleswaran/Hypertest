@@ -12,7 +12,6 @@
 
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Forms;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using Binding = System.Windows.Data.Binding;

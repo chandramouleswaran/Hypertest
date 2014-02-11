@@ -14,7 +14,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Runners;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Tests
@@ -56,7 +55,7 @@ namespace Hypertest.Core.Tests
         protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
-            this.Log(WebScenarioRunner.Current.PrintDebug(), LogCategory.Info, LogPriority.None);
+            this.Log(this.Runner.PrintDebug(), LogCategory.Info, LogPriority.None);
         }
         #endregion
     }

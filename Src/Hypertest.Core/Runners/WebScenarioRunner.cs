@@ -22,10 +22,12 @@ using Hypertest.Core.Interfaces;
 using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
 using Hypertest.Core.Utils;
+using Microsoft.Practices.Unity;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
+using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Runners
@@ -37,30 +39,23 @@ namespace Hypertest.Core.Runners
         Firefox
     }
 
-    public class WebScenarioRunner : IRunner
+    internal class WebScenarioRunner : IRunner
     {
         #region Members
         private readonly Dictionary<String, Variable> _globals;
         private TestResultModel _result;
         private WebTestScenario _scenario;
+        private IWorkspace _workspace;
+        private IUnityContainer _container;
         #endregion
 
         #region CTOR
 
-        private WebScenarioRunner()
+        public WebScenarioRunner(AbstractWorkspace workspace, IUnityContainer container)
         {
             _globals = new Dictionary<string, Variable>();
-        }
-
-        #endregion
-
-        #region Statics
-
-        private static WebScenarioRunner _runner;
-
-        public static WebScenarioRunner Current
-        {
-            get { return _runner ?? (_runner = new WebScenarioRunner()); }
+            _workspace = workspace;
+            _container = container;
         }
 
         #endregion
@@ -73,18 +68,32 @@ namespace Hypertest.Core.Runners
 
         public void Initialize(TestScenario scenario)
         {
-            if (this.IsRunning == false)
+            lock (this)
             {
-                this.IsRunning = true;
-                _result = new TestResultModel();
-                _result.Scenario = scenario;
-                _scenario = scenario as WebTestScenario;
-                scenario.PauseStateManager();
-                Task.Factory.StartNew(() =>
-                                      {
-                                          this.BackRun();
-                                          this.WorkComplete();
-                                      });
+                if (this.IsRunning == false)
+                {
+                    this.IsRunning = true;
+                    _result = new TestResultModel();
+                    _result.Scenario = scenario;
+                    _scenario = scenario as WebTestScenario;
+                    scenario.PauseStateManager();
+                    scenario.SetDirty(false);
+
+                    var wtrvm = _container.Resolve<WebTestCurrentResultViewModel>();
+                    wtrvm.SetModel(_result);
+                    var view = _container.Resolve<WebTestResultView>();
+                    view.DataContext = _result;
+                    wtrvm.SetView(view);
+                    _workspace.Documents.Add(wtrvm);
+                    _workspace.ActiveDocument = wtrvm;
+
+
+                    Task.Factory.StartNew(() =>
+                    {
+                        this.BackRun();
+                        this.WorkComplete();
+                    });
+                }
             }
         }
 
@@ -155,11 +164,23 @@ namespace Hypertest.Core.Runners
             return null;
         }
 
+        public string PrintDebug()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Dumping variables from the current run...");
+            foreach (var kvp in _globals)
+            {
+                Variable v = kvp.Value;
+                sb.AppendLine(kvp.Value.ToString());
+            }
+            sb.Append("Dump complete...");
+            return sb.ToString();
+        }
+
         public string UniqueID { get; private set; }
         public string RunFolder { get; private set; }
         public bool IsRunning { get; private set; }
         public IWebDriver Driver { get; private set; }
-
         #endregion
 
         #region Methods
@@ -236,20 +257,6 @@ namespace Hypertest.Core.Runners
                 this.Driver.Navigate().GoToUrl(_scenario.URL);
             }
             _scenario.Run();
-        }
-
-
-        internal string PrintDebug()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Dumping variables from the current run...");
-            foreach (var kvp in _globals)
-            {
-                Variable v = kvp.Value;
-                sb.AppendLine(kvp.Value.ToString());
-            }
-            sb.Append("Dump complete...");
-            return sb.ToString();
         }
         #endregion
     }

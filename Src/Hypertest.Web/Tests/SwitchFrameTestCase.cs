@@ -14,7 +14,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
-using Hypertest.Core.Runners;
 using OpenQA.Selenium;
 using Wide.Interfaces.Services;
 
@@ -97,7 +96,7 @@ namespace Hypertest.Core.Tests
         protected override void Body()
         {
             this.ActualResult = TestCaseResult.Passed;
-            IWebDriver driver = WebScenarioRunner.Current.Driver;
+            IWebDriver driver = this.Runner.Driver;
             try
             {
                 if (this.BaseFrame)

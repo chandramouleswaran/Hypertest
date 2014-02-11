@@ -41,6 +41,7 @@ namespace Hypertest.Core
     {
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
+        private IRunner _runner;
 
         public CoreModule(IUnityContainer container, IEventAggregator eventAggregator)
         {
@@ -98,12 +99,13 @@ namespace Hypertest.Core
             _container.RegisterType<WebTestScenarioView>();
             _container.RegisterType<WebTestResultView>();
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRunner, WebScenarioRunner>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ToolboxModel>();
             _container.RegisterType<ToolboxViewModel>();
 
             _container.RegisterType<WebTestCurrentResultViewModel>(new ContainerControlledLifetimeManager());
             _container.Resolve<WebTestCurrentResultViewModel>();
-
+            _runner = _container.Resolve<IRunner>();
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
@@ -417,16 +419,11 @@ namespace Hypertest.Core
                     else
                     {
                         cvm = _container.Resolve<WebTestCurrentResultViewModel>();
-                        if (WebScenarioRunner.Current.IsRunning == false)
+                        if (_runner.IsRunning == false)
                         {
                             TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
-                            scenario.TestRegistry = (workspace.ActiveDocument.Model as TestScenario).TestRegistry;
-                            scenario.LoggerService = (workspace.ActiveDocument.Model as TestScenario).LoggerService;
-                            WebScenarioRunner.Current.Initialize(scenario);
+                            _runner.Initialize(scenario);
                         }
-                        cvm.Refresh();
-                        workspace.Documents.Add(cvm);
-                        workspace.ActiveDocument = cvm;
                     }
                 }
             }
@@ -435,7 +432,7 @@ namespace Hypertest.Core
         private bool CanRunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            if (workspace.ActiveDocument != null && WebScenarioRunner.Current.IsRunning == false)
+            if (workspace.ActiveDocument != null && _runner.IsRunning == false)
             {
                 return (workspace.ActiveDocument.Model is TestScenario);
             }

@@ -110,7 +110,7 @@ namespace Hypertest.Core.Tests
             //We have reached so far - this means we have an element
             try
             {
-                this.Keys = this.Keys.Evaluate().ToString();
+                this.Keys = StringExtensions.Evaluate(this.Keys, this.Runner).ToString();
                 if (this.ClearField)
                 {
                     this.Element.ClearFirstSendKeys(Keys.ToSeleniumKeys());

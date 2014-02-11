@@ -16,7 +16,6 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Xceed.Wpf.Toolkit.PropertyGrid.Attributes;
 
 namespace Hypertest.Core.Tests
@@ -87,7 +86,7 @@ namespace Hypertest.Core.Tests
         {
             foreach (Variable variable in Variables)
             {
-                WebScenarioRunner.Current.AddVariable(variable);
+                this.Runner.AddVariable(variable);
             }
         }
 

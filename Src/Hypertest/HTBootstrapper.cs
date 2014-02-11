@@ -10,7 +10,9 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 using Wide.Interfaces;
@@ -43,7 +45,7 @@ namespace Hypertest
 
         protected override IModuleCatalog CreateModuleCatalog()
         {
-            var catalog = new MultipleDirectoryModuleCatalog(new List<string> {@".\External", @".", @".\Test"});
+            var catalog = new MultipleDirectoryModuleCatalog(new List<string> { AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "External", AppDomain.CurrentDomain.BaseDirectory, AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + "Test" });
             return catalog;
         }
     }

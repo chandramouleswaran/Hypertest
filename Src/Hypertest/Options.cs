@@ -10,31 +10,16 @@
 
 #endregion
 
-using System;
-using Hypertest.Core.Results;
-using Hypertest.Core.Tests;
-using OpenQA.Selenium;
+using CommandLine;
 
-namespace Hypertest.Core.Interfaces
+namespace Hypertest
 {
-    public interface IRunner
+    internal class Options
     {
-        string UniqueID { get; }
-        string RunFolder { get; }
-        bool IsRunning { get; }
-        IWebDriver Driver { get; }
-        TestResultModel Result { get; }
+        [Value(0)]
+        public string OpenFile { get; set; }
 
-        void Initialize(TestScenario scenario);
-        void Pause();
-        void Resume();
-        void Stop();
-        void Wait(int milliseconds);
-        bool AddVariable(Variable variable);
-        void Clear();
-        void CleanUp();
-        string PrintDebug();
-
-        Variable GetVariable(String name);
+        [Option('b', "browser", HelpText = "Indicate the browser here. InternetExplorer, Chrome, Firefox")]
+        public string Browser { get; set; }
     }
 }
