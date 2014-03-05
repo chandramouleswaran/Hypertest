@@ -131,6 +131,10 @@ namespace Hypertest.Core.Tests
         #endregion
 
         #region Virtuals
+        /// <summary>
+        /// Are new items allowed to be added from the user interface.
+        /// </summary>
+        /// <returns><c>true</c> if this test case allows new items to be added, <c>false</c> otherwise</returns>
         public virtual bool AreNewItemsAllowed()
         {
             return true;

@@ -86,7 +86,7 @@ namespace Hypertest
             {
                 if (cmdLineResult.Value.OpenFile != null)
                 {
-                    var cvm = documentService.Open(cmdLineResult.Value.OpenFile) as ContentViewModel;
+                    var cvm = documentService.Open(cmdLineResult.Value.OpenFile);
                     var wts = (cvm != null) ? cvm.Model as WebTestScenario : null;
                     if (wts != null)
                     {
