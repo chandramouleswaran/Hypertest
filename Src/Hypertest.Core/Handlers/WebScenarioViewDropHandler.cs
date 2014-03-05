@@ -20,105 +20,111 @@ using DragDrop = GongSolutions.Wpf.DragDrop.DragDrop;
 
 namespace Hypertest.Core.Handlers
 {
-    public class WebScenarioViewDropHandler : DefaultDropHandler
-    {
-        public override void DragOver(IDropInfo dropInfo)
-        {
-            var item = dropInfo.VisualTargetItem as TreeViewItem;
-            if (item != null)
-            {
-                var tc = item.DataContext as TestCase;
-                if (tc != null)
-                {
-                    if (tc == dropInfo.Data)
-                    {
-                        dropInfo.Effects = DragDropEffects.None;
-                        return;
-                    }
-                }
+	public class WebScenarioViewDropHandler : DefaultDropHandler
+	{
+		public override void DragOver(IDropInfo dropInfo)
+		{
+			var item = dropInfo.VisualTargetItem as TreeViewItem;
+			if (item != null)
+			{
+				var tc = item.DataContext as TestCase;
+				if (tc != null)
+				{
+					if (tc == dropInfo.Data)
+					{
+						dropInfo.Effects = DragDropEffects.None;
+						return;
+					}
+				}
 
-                var folderTest = item.DataContext as FolderTestCase;
-                if (folderTest != null)
-                {
-                    if (folderTest.AreNewItemsAllowed())
-                    {
-                        folderTest.IsExpanded = true;
-                        base.DragOver(dropInfo);
-                    }
-                    return;
-                }
+				var folderTest = item.DataContext as FolderTestCase;
+				if (folderTest != null)
+				{
+					if (folderTest.AreNewItemsAllowed())
+					{
+						folderTest.IsExpanded = true;
+						base.DragOver(dropInfo);
+					}
+					return;
+				}
 
-                base.DragOver(dropInfo);
-            }
-            else
-            {
-                var view = dropInfo.VisualTarget as TreeView;
-                if (view != null)
-                {
-                    IDropTarget dropHandler = DragDrop.GetDropHandler(view);
-                    if (dropHandler == this)
-                    {
-                        dropInfo.Effects = DragDropEffects.Move;
-                    }
-                }
-            }
-        }
+				base.DragOver(dropInfo);
+			}
+			else
+			{
+				var view = dropInfo.VisualTarget as TreeView;
+				if (view != null)
+				{
+					IDropTarget dropHandler = DragDrop.GetDropHandler(view);
+					if (dropHandler == this)
+					{
+						dropInfo.Effects = DragDropEffects.Move;
+					}
+				}
+			}
+		}
 
-        public override void Drop(IDropInfo dropInfo)
-        {
-            var item = dropInfo.VisualTargetItem as TreeViewItem;
-            var view = dropInfo.VisualTarget as TreeView;
-            bool directlyOverItem = false;
+		public override void Drop(IDropInfo dropInfo)
+		{
+			var item = dropInfo.VisualTargetItem as TreeViewItem;
+			var view = dropInfo.VisualTarget as TreeView;
+			bool directlyOverItem = false;
 
-            if (item != null && view != null)
-            {
-                var result = view.InputHitTest(dropInfo.DropPosition) as UIElement;
-                if (result != null)
-                {
-                    var ancestor = result.GetVisualAncestor<TreeViewItem>();
-                    directlyOverItem = (ancestor != null) && (ancestor == item);
-                }
-                var ftc = item.DataContext as FolderTestCase;
-                if (ftc != null && directlyOverItem)
-                {
-                    int insertIndex = dropInfo.InsertIndex;
-                    IList destinationList = GetList(dropInfo.TargetCollection);
-                    IEnumerable data = ExtractData(dropInfo.Data);
+			if (item != null && view != null)
+			{
+				var result = view.InputHitTest(dropInfo.DropPosition) as UIElement;
+				if (result != null)
+				{
+					var ancestor = result.GetVisualAncestor<TreeViewItem>();
+					directlyOverItem = (ancestor != null) && (ancestor == item);
+				}
+				var ftc = item.DataContext as FolderTestCase;
+				if (ftc != null && directlyOverItem)
+				{
+					int insertIndex = dropInfo.InsertIndex;
+					IList destinationList = GetList(dropInfo.TargetCollection);
+					IEnumerable data = ExtractData(dropInfo.Data);
 
-                    if (dropInfo.DragInfo.VisualSource == dropInfo.VisualTarget)
-                    {
-                        IList sourceList = GetList(dropInfo.DragInfo.SourceCollection);
+					if (dropInfo.DragInfo.VisualSource == dropInfo.VisualTarget)
+					{
+						IList sourceList = GetList(dropInfo.DragInfo.SourceCollection);
 
-                        foreach (object o in data)
-                        {
-                            int index = sourceList.IndexOf(o);
+						foreach (object o in data)
+						{
+							int index = sourceList.IndexOf(o);
 
-                            if (index != -1)
-                            {
-                                sourceList.RemoveAt(index);
+							if (index != -1)
+							{
+								sourceList.RemoveAt(index);
 
-                                if (sourceList == destinationList && index < insertIndex)
-                                {
-                                    --insertIndex;
-                                }
-                            }
-                        }
-                    }
+								if (sourceList == destinationList && index < insertIndex)
+								{
+									--insertIndex;
+								}
+							}
+						}
+					}
 
-                    foreach (object o in data)
-                    {
-                        ftc.Children.Add(o as TestCase);
-                    }
-                }
-            }
-            if (item == null && view != null)
-            {
-                //TODO: (if needed) Case when you just dropping anywhere on the tree and not on an item - IGNORE THIS CASE
-            }
-            else if (!directlyOverItem)
-            {
-                base.Drop(dropInfo);
-            }
-        }
-    }
+					foreach (object o in data)
+					{
+						ftc.Children.Add(o as TestCase);
+					}
+				}
+			}
+			if (item == null && view != null)
+			{
+				//Case when you drop anywhere on the tree and not on an item
+				TestScenario scenaio = view.DataContext as TestScenario;
+				TestCase tc = dropInfo.Data as TestCase;
+				if (scenaio != null && tc != null)
+				{
+					scenaio.Children.Add(tc);
+				}
+			}
+			else if (!directlyOverItem)
+			{
+				base.Drop(dropInfo);
+			}
+		}
+	}
 }
