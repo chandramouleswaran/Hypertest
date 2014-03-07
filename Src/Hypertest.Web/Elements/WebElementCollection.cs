@@ -12,82 +12,108 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Hypertest.Web.Utils;
 using OpenQA.Selenium;
 
 namespace Hypertest.Web.Elements
 {
-    /// <summary>
-    /// Base web element
-    /// </summary>
-    public class WebElementCollection : List<WebElement>
-    {
-        public WebElementCollection()
-        {
-        }
+	/// <summary>
+	/// Base web element
+	/// </summary>
+	public class WebElementCollection : List<WebElement>
+	{
+		public WebElementCollection()
+		{
+		}
 
-        public WebElementCollection(IWebDriver webDriver, By by)
-        {
-            try
-            {
-                var tempElements = webDriver.FindElements(by);
+		public WebElementCollection(IWebDriver webDriver, By by, bool recurse = false)
+		{
+			try
+			{
+				if (recurse)
+				{
+					List<IWebElement> elements = SearchElement(webDriver, by);
+					foreach (var element in elements)
+					{
+						this.Add(new WebElement(element));
+					}
+				}
+				else
+				{
+					var tempElements = webDriver.FindElements(by);
+					foreach (IWebElement element in tempElements)
+					{
+						this.Add(new WebElement(element));
+					}
+				}
+			}
+			catch (NoSuchElementException)
+			{
+			}
+		}
 
-                foreach (IWebElement element in tempElements)
-                {
-                    this.Add(new WebElement(element));
-                }
-            }
-            catch (NoSuchElementException)
-            {
-            }
-        }
+		public WebElementCollection(IWebElement webElement, By by)
+		{
+			try
+			{
+				var tempElements = webElement.FindElements(by);
 
-        public WebElementCollection(IWebElement webElement, By by)
-        {
-            try
-            {
-                var tempElements = webElement.FindElements(by);
+				foreach (IWebElement element in tempElements)
+				{
+					this.Add(new WebElement(element));
+				}
+			}
+			catch (NoSuchElementException)
+			{
+			}
+		}
 
-                foreach (IWebElement element in tempElements)
-                {
-                    this.Add(new WebElement(element));
-                }
-            }
-            catch (NoSuchElementException)
-            {
-            }
-        }
+		public WebElementCollection(IWebDriver webDriver, By by, Func<IWebElement, bool> predicate)
+		{
+			try
+			{
+				var tempElements = webDriver.FindElements(by, predicate);
 
-        public WebElementCollection(IWebDriver webDriver, By by, Func<IWebElement, bool> predicate)
-        {
-            try
-            {
-                var tempElements = webDriver.FindElements(by, predicate);
+				foreach (IWebElement element in tempElements)
+				{
+					this.Add(new WebElement(element));
+				}
+			}
+			catch (NoSuchElementException)
+			{
+			}
+		}
 
-                foreach (IWebElement element in tempElements)
-                {
-                    this.Add(new WebElement(element));
-                }
-            }
-            catch (NoSuchElementException)
-            {
-            }
-        }
+		public WebElementCollection(IWebElement webElement, By by, Func<IWebElement, bool> predicate)
+		{
+			try
+			{
+				var tempElements = webElement.FindElements(by, predicate);
 
-        public WebElementCollection(IWebElement webElement, By by, Func<IWebElement, bool> predicate)
-        {
-            try
-            {
-                var tempElements = webElement.FindElements(by, predicate);
+				foreach (IWebElement element in tempElements)
+				{
+					this.Add(new WebElement(element));
+				}
+			}
+			catch (NoSuchElementException)
+			{
+			}
+		}
 
-                foreach (IWebElement element in tempElements)
-                {
-                    this.Add(new WebElement(element));
-                }
-            }
-            catch (NoSuchElementException)
-            {
-            }
-        }
-    }
+		private List<IWebElement> SearchElement(IWebDriver webDriver, By by)
+		{
+			List<IWebElement> elementList = new List<IWebElement>(webDriver.FindElements(by));
+			ReadOnlyCollection<IWebElement> frames = webDriver.FindElements(By.XPath("//iframe"));
+			foreach (IWebElement frame in frames)
+			{
+				webDriver.SwitchTo().Frame(frame);
+				List<IWebElement> innerElements = SearchElement(webDriver, by);
+				elementList.AddRange(innerElements);
+				webDriver.SwitchTo().DefaultContent();
+				webDriver.SwitchTo().Frame(0);
+			}
+			return elementList;
+		}
+	}
 }

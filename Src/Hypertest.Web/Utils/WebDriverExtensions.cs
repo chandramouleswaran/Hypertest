@@ -19,71 +19,77 @@ using OpenQA.Selenium.Remote;
 
 namespace Hypertest.Web.Utils
 {
-    public static class DriverExtensions
-    {
-        public static IWebElement FindElement(this IWebElement driver, By by, Func<WebElement, bool> predicate)
-        {
-            try
-            {
-                return new WebElementCollection(driver, by).Where(predicate).First();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+	public static class DriverExtensions
+	{
+		public static IWebElement FindElement(this IWebElement driver, By by, Func<WebElement, bool> predicate)
+		{
+			try
+			{
+				return new WebElementCollection(driver, by).Where(predicate).First();
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
-        public static IEnumerable<IWebElement> FindElements(this IWebElement driver, By by,
-            Func<WebElement, bool> predicate)
-        {
-            try
-            {
-                return new WebElementCollection(driver, by).Where(predicate);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+		public static IEnumerable<IWebElement> FindElements(this IWebElement driver, By by, Func<WebElement, bool> predicate)
+		{
+			try
+			{
+				return new WebElementCollection(driver, by).Where(predicate);
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
-        public static IWebElement FindElement(this IWebDriver driver, By by, Func<WebElement, bool> predicate)
-        {
-            try
-            {
-                return new WebElementCollection(driver, by).Where(predicate).First();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+		public static IWebElement FindElement(this IWebDriver driver, By by, Func<WebElement, bool> predicate)
+		{
+			try
+			{
+				return new WebElementCollection(driver, by).Where(predicate).First();
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
-        public static IEnumerable<IWebElement> FindElements(this IWebDriver driver, By by,
-            Func<WebElement, bool> predicate)
-        {
-            try
-            {
-                return new WebElementCollection(driver, by).Where(predicate);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+		public static IEnumerable<IWebElement> FindElements(this IWebDriver driver, By by, Func<WebElement, bool> predicate)
+		{
+			try
+			{
+				return new WebElementCollection(driver, by).Where(predicate);
+			}
+			catch (Exception)
+			{
+				return null;
+			}
+		}
 
-        public static bool HasFocus(this IWebElement element, IWebDriver driver)
-        {
-            if (element.GetType() == typeof (RemoteWebElement))
-            {
-                return driver.SwitchTo().ActiveElement().Equals(element);
-            }
+		public static bool HasFocus(this IWebElement element, IWebDriver driver)
+		{
+			if (element.GetType() == typeof (RemoteWebElement))
+			{
+				return driver.SwitchTo().ActiveElement().Equals(element);
+			}
 
-            if (element.GetType() == typeof (WebElement))
-            {
-                WebElement wElement = element as WebElement;
-                return wElement != null && driver.SwitchTo().ActiveElement().Equals(wElement.InnerElement);
-            }
-            return false;
-        }
-    }
+			if (element.GetType() == typeof (WebElement))
+			{
+				WebElement wElement = element as WebElement;
+				return wElement != null && driver.SwitchTo().ActiveElement().Equals(wElement.InnerElement);
+			}
+			return false;
+		}
+
+		public static string InvokeScript(this IWebDriver driver, string script)
+		{
+			var result = "";
+			var test = ((IJavaScriptExecutor)driver).ExecuteScript(script);
+			result = test != null ? test.ToString() : null;
+			return result;
+		}
+	}
 }
