@@ -40,7 +40,7 @@ namespace Hypertest.Core.Tests
 
         private void Initialize(bool create = true)
         {
-            this.Description = "Click a particular web element";
+            this.Description = "Switch to a particular frame";
             this.MarkedForExecution = true;
             this.BaseFrame = false;
         }
