@@ -31,7 +31,7 @@
             </TreeView.Resources>
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type toolbox:CategoryNode}" ItemsSource="{Binding Nodes, Mode=OneWay}">
-                    <TextBlock Text="{Binding Category, Converter={StaticResource ResourceKey=CategoryConverter}}" Foreground="{DynamicResource BlackBrush}" Margin="4,0,4,0"/>
+                    <TextBlock Text="{Binding Category, Converter={StaticResource ResourceKey=CategoryConverter}}" Foreground="{DynamicResource BlackBrush}" Margin="4,0,4,0" />
                     <HierarchicalDataTemplate.ItemTemplate>
                         <HierarchicalDataTemplate DataType="{x:Type system:Type}" >
                             <StackPanel Orientation="Horizontal" ToolTip="{Binding ., Converter={StaticResource ResourceKey=DescriptionConverter}}">
@@ -42,6 +42,11 @@
                     </HierarchicalDataTemplate.ItemTemplate>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="TreeViewItem">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
     </Grid>
 </UserControl>
