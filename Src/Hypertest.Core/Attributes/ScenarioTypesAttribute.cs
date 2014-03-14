@@ -13,11 +13,20 @@
 using System;
 using Hypertest.Core.Tests;
 
-namespace Hypertest.Core.Interfaces
+namespace Hypertest.Core.Attributes
 {
-    public interface IRunnerRegistry
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    public class ScenarioTypesAttribute : Attribute
     {
-        IRunner this[TestScenario scenario] { get; }
-        void Add(Type t);
+        public ScenarioTypesAttribute(Type type)
+        {
+            if (!type.IsSubclassOf(typeof(TestScenario)))
+            {
+                throw new ArgumentException("Type should be a subclass of TestScenario", "type");
+            }
+            this.Type = type;
+        }
+
+        public Type Type { get; private set; }
     }
 }

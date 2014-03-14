@@ -17,7 +17,6 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Hypertest.Core.Handlers;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
 using Hypertest.Core.Service;
 using Hypertest.Core.Tests;
 using Hypertest.Core.Toolbox;
@@ -41,7 +40,7 @@ namespace Hypertest.Core
     {
         private readonly IUnityContainer _container;
         private readonly IEventAggregator _eventAggregator;
-        private IRunner _runner;
+        private IRunnerRegistry _runnerRegistry;
 
         public CoreModule(IUnityContainer container, IEventAggregator eventAggregator)
         {
@@ -99,19 +98,22 @@ namespace Hypertest.Core
             _container.RegisterType<WebTestScenarioView>();
             _container.RegisterType<WebTestResultView>();
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IRunner, WebScenarioRunner>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IRunnerRegistry, RunnerRegistry>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<WebScenarioRunner>(new ContainerControlledLifetimeManager());
             _container.RegisterType<ToolboxModel>();
             _container.RegisterType<ToolboxViewModel>();
 
             _container.RegisterType<WebTestCurrentResultViewModel>(new ContainerControlledLifetimeManager());
             _container.Resolve<WebTestCurrentResultViewModel>();
-            _runner = _container.Resolve<IRunner>();
 
             IContentHandler handler = _container.Resolve<WebTestScenarioHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
 
             handler = _container.Resolve<WebTestResultHandler>();
             _container.Resolve<IContentHandlerRegistry>().Register(handler);
+
+            _runnerRegistry = _container.Resolve<IRunnerRegistry>();
+            _runnerRegistry.Add(typeof(WebScenarioRunner));
 
             var registry = _container.Resolve<ITestRegistry>();
 
@@ -410,8 +412,7 @@ namespace Hypertest.Core
             {
                 if (workspace.ActiveDocument.Model is TestScenario)
                 {
-                    var cvm =
-                        workspace.Documents.FirstOrDefault(x => x is WebTestCurrentResultViewModel) as WebTestCurrentResultViewModel;
+                    var cvm = workspace.Documents.FirstOrDefault(x => x is WebTestCurrentResultViewModel) as WebTestCurrentResultViewModel;
                     if (cvm != null)
                     {
                         workspace.ActiveDocument = cvm;
@@ -419,10 +420,11 @@ namespace Hypertest.Core
                     else
                     {
                         cvm = _container.Resolve<WebTestCurrentResultViewModel>();
-                        if (_runner.IsRunning == false)
+                        var runner = _runnerRegistry[workspace.ActiveDocument.Model as TestScenario];
+                        if (runner.IsRunning == false)
                         {
                             TestScenario scenario = (workspace.ActiveDocument.Model as TestScenario).Clone() as TestScenario;
-                            _runner.Initialize(scenario);
+                            runner.Initialize(scenario);
                         }
                     }
                 }
@@ -432,9 +434,10 @@ namespace Hypertest.Core
         private bool CanRunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            if (workspace.ActiveDocument != null && _runner.IsRunning == false)
+            if (workspace.ActiveDocument != null)
             {
-                return (workspace.ActiveDocument.Model is TestScenario);
+                var runner = _runnerRegistry[workspace.ActiveDocument.Model as TestScenario];
+                return runner != null && (workspace.ActiveDocument.Model is TestScenario && runner.IsRunning == false);
             }
             return false;
         }

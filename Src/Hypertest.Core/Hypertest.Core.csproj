@@ -90,6 +90,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ScenarioTypesAttribute.cs" />
     <Compile Include="Attributes\PostRunAttribute.cs" />
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Converters\TypeToTestImageConverter.cs" />
     <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
+    <Compile Include="Service\RunnerRegistry.cs" />
     <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="CoreModule.cs" />
     <Compile Include="Editors\ImagePathEditor.xaml.cs">
@@ -126,7 +128,7 @@
     <Compile Include="Manager\PropertyChange.cs" />
     <Compile Include="Manager\StateManager.cs" />
     <Compile Include="Results\TestResultModel.cs" />
-    <Compile Include="Runners\WebScenarioRunner.cs" />
+    <Compile Include="Service\WebScenarioRunner.cs" />
     <Compile Include="Attributes\DependsOnPropertyAttribute.cs" />
     <Compile Include="Attributes\DynamicBrowsableAttribute.cs" />
     <Compile Include="Attributes\DynamicReadonlyAttribute.cs" />
