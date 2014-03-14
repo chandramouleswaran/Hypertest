@@ -15,7 +15,7 @@ using System.ComponentModel;
 using System.Runtime.Serialization;
 using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
-using Hypertest.Core.Runners;
+using Hypertest.Core.Service;
 
 namespace Hypertest.Core.Tests
 {

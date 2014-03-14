@@ -15,48 +15,60 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Tests;
+using Microsoft.Practices.Unity;
 
 namespace Hypertest.Core.Service
 {
-    internal class TestRegistry : ITestRegistry, INotifyPropertyChanged
+    internal class RunnerRegistry : IRunnerRegistry, INotifyPropertyChanged
     {
         private readonly List<Type> _types;
+        private IUnityContainer _container;
 
-        public TestRegistry()
+        public RunnerRegistry(IUnityContainer container)
         {
+            _container = container;
             _types = new List<Type>();
         }
 
-        public void Add(Type testCase)
+        public IRunner this[TestScenario scenario]
         {
-            if (!testCase.IsSubclassOf(typeof (TestCase)))
+            get
             {
-                throw new ArgumentException("The type you are trying to add needs to be a TestCase", "testCase");
-            }
-
-            CategoryAttribute attributeExists = testCase.GetCustomAttributes(typeof (CategoryAttribute), true).FirstOrDefault() as CategoryAttribute;
-
-            if (attributeExists == null)
-            {
-                throw new ArgumentException("Your test case needs to belong to a category which needs to be listed in the Toolbox. If you do not want to see it in the Toolbox, do not add it to the registry.", "testCase");
-            }
-
-            if (!_types.Contains(testCase))
-            {
-                _types.Add(testCase);
-                RaisePropertyChanged("Tests");
+                foreach (var type in _types)
+                {
+                    IRunner runner = _container.Resolve(type) as IRunner;
+                    if (runner != null)
+                    {
+                        object[] attributes = type.GetCustomAttributes(typeof(ScenarioTypesAttribute), true);
+                        foreach (var attribute in attributes)
+                        {
+                            ScenarioTypesAttribute sta = attribute as ScenarioTypesAttribute;
+                            if (sta.Type == scenario.GetType())
+                                return runner;
+                        }
+                    }
+                }
+                throw new Exception("No runner found that can handle this scenario. Make sure you have the ScenarioTypes attribute for your runner class.");
             }
         }
 
-        public IReadOnlyList<Type> Tests
+        public void Add(Type runnerType)
         {
-            get { return _types; }
+            if (!typeof(IRunner).IsAssignableFrom(runnerType))
+            {
+                throw new ArgumentException("The type you are trying to add needs to be a IRunner", "runnerType");
+            }
+
+            if (!_types.Contains(runnerType))
+            {
+                _types.Add(runnerType);
+            }
         }
 
         #region INotifyPropertyChanged
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

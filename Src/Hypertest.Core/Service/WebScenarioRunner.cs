@@ -18,6 +18,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
@@ -30,7 +31,7 @@ using OpenQA.Selenium.IE;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
 
-namespace Hypertest.Core.Runners
+namespace Hypertest.Core.Service
 {
     public enum BrowserType
     {
@@ -39,6 +40,7 @@ namespace Hypertest.Core.Runners
         Firefox
     }
 
+    [ScenarioTypes(typeof(WebTestScenario))]
     internal class WebScenarioRunner : IRunner
     {
         #region Members

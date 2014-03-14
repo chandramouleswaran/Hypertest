@@ -33,7 +33,7 @@ namespace Hypertest
         private IShell shell;
         private IOpenDocumentService documentService;
         private ILoggerService loggerService;
-        private IRunner runner;
+        private IRunnerRegistry runnerRegistry;
         private ParserResult<Options> cmdLineResult;
 
         private const string Unique = "SOME_RANDOM_BUT_UNIQUE_STRING!!";
@@ -81,7 +81,7 @@ namespace Hypertest
 
         private void ParseArguments()
         {
-            runner = b.Container.Resolve<IRunner>();
+            runnerRegistry = b.Container.Resolve<IRunnerRegistry>();
             if (!cmdLineResult.Errors.Any())
             {
                 if (cmdLineResult.Value.OpenFile != null)
@@ -93,10 +93,10 @@ namespace Hypertest
                         if (cmdLineResult.Value.Browser != null)
                         {
                             //TODO: Parse the browser and send the browser type to the initialize function
-                            if (runner.IsRunning == false)
+                            if (runnerRegistry[wts].IsRunning == false)
                             {
                                 var scenario = wts.Clone() as TestScenario;
-                                runner.Initialize(scenario);
+                                runnerRegistry[wts].Initialize(scenario);
                             }
                         }
                     }
