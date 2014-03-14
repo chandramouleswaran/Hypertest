@@ -42,6 +42,7 @@ namespace Hypertest.Web.Tests
 	[Description("Searches for an element in the browser window")]
 	[Category("Web")]
 	[TestImage("Images/Search.png")]
+    [ScenarioTypes(typeof(WebTestScenario))]
 	public class WebTestCase : TestCase
 	{
 		#region Members

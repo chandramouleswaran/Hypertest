@@ -100,6 +100,7 @@ namespace Hypertest.Core
             _container.RegisterType<ITestRegistry, TestRegistry>(new ContainerControlledLifetimeManager());
             _container.RegisterType<IRunnerRegistry, RunnerRegistry>(new ContainerControlledLifetimeManager());
             _container.RegisterType<WebScenarioRunner>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<ToolboxView>();
             _container.RegisterType<ToolboxModel>();
             _container.RegisterType<ToolboxViewModel>();
 

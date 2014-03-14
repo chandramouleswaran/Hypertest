@@ -25,6 +25,7 @@ namespace Hypertest.Core.Tests
     [Description("Selects the \"iframe\" on which the rest of the actions should take place")]
     [Category("Web")]
     [TestImage("Images/Frame.png")]
+    [ScenarioTypes(typeof(WebTestScenario))]
     public class SwitchFrameTestCase : TestCase
     {
         #region Member

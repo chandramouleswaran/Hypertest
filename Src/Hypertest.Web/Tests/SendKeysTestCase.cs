@@ -26,6 +26,7 @@ namespace Hypertest.Core.Tests
     [Description("Sends simple keys to a web element on the browser")]
     [Category("Web")]
     [TestImage("Images/SendKeys.png")]
+    [ScenarioTypes(typeof(WebTestScenario))]
     public class SendKeysTestCase : WebTestCase
     {
         #region Members

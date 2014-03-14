@@ -25,6 +25,7 @@ namespace Hypertest.Core.Tests
     [Description("Evaluate an expression")]
     [Category("General")]
     [TestImage("Images/Expression.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class ExpressionTestCase : TestCase
     {
         #region Members

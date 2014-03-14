@@ -25,6 +25,7 @@ namespace Hypertest.Core.Tests
     [Description("Specify the scenario to run")]
     [Category("General")]
     [TestImage("Images/RunScenario.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class RunScenarioTestCase : FolderTestCase
     {
         #region Members
