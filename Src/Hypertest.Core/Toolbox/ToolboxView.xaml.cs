@@ -11,7 +11,10 @@
 #endregion
 
 using System.Windows.Controls;
+using Microsoft.Practices.Prism.Events;
 using Wide.Interfaces;
+using Wide.Interfaces.Events;
+using Hypertest.Core.Converters;
 
 namespace Hypertest.Core.Toolbox
 {
@@ -20,9 +23,21 @@ namespace Hypertest.Core.Toolbox
     /// </summary>
     public partial class ToolboxView : UserControl, IContentView
     {
-        public ToolboxView()
+        public ToolboxView(IEventAggregator aggregator)
         {
             InitializeComponent();
+            aggregator.GetEvent<ActiveContentChangedEvent>().Subscribe(ContentChanged);
+        }
+
+        private void ContentChanged(ContentViewModel cvm)
+        {
+            var converter = this.Resources["RegistryConverter"] as TestRegistryToToolboxConverter;
+            converter.Content = cvm;
+
+            //Rebind
+            object dc = this.DataContext;
+            this.DataContext = null;
+            this.DataContext = dc;
         }
     }
 }

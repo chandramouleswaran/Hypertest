@@ -25,6 +25,7 @@ namespace Hypertest.Core.Tests
     [Description("A test case which holds a list of test cases")]
     [Category("General")]
     [TestImage("Images/Folder.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class FolderTestCase : TestCase
     {
         #region Members

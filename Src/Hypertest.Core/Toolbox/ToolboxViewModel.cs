@@ -35,7 +35,7 @@ namespace Hypertest.Core.Toolbox
             Model = _model;
             IsVisible = false;
 
-            _view = new ToolboxView();
+            _view = container.Resolve<ToolboxView>();
             _view.DataContext = _model;
             View = _view;
 

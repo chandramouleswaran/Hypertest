@@ -20,7 +20,7 @@ namespace Hypertest.Core.Attributes
     {
         public ScenarioTypesAttribute(Type type)
         {
-            if (!type.IsSubclassOf(typeof(TestScenario)))
+            if (type != typeof(TestScenario) && !type.IsSubclassOf(typeof(TestScenario)))
             {
                 throw new ArgumentException("Type should be a subclass of TestScenario", "type");
             }

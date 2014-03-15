@@ -24,6 +24,7 @@ namespace Hypertest.Core.Tests
     [Description("Prints the debug information")]
     [Category("General")]
     [TestImage("Images/Debug.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class DebugInfoTestCase : TestCase
     {
         #region CTOR

@@ -17,8 +17,10 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
+using Hypertest.Core.Attributes;
 using Hypertest.Core.Service;
 using Hypertest.Core.Toolbox;
+using Wide.Interfaces;
 
 namespace Hypertest.Core.Converters
 {
@@ -28,19 +30,26 @@ namespace Hypertest.Core.Converters
         {
             var testRegistry = value as TestRegistry;
             var dictionary = new SortedDictionary<string, CategoryNode>();
-            if (testRegistry != null)
+            if (this.Content != null && testRegistry != null)
             {
                 foreach (var testCase in testRegistry.Tests)
                 {
-                    var attribute =
-                        testCase.GetCustomAttributes(typeof (CategoryAttribute), true).FirstOrDefault() as
-                            CategoryAttribute;
-                    if (!dictionary.ContainsKey(attribute.Category))
+                    object[] stas = testCase.GetCustomAttributes(typeof(ScenarioTypesAttribute), true);
+                    Type contentType = this.Content.Model.GetType();
+                    bool addNode = stas.Cast<ScenarioTypesAttribute>().Any(sta => contentType == sta.Type || contentType.IsSubclassOf(sta.Type));
+
+                    if (addNode)
                     {
-                        dictionary.Add(attribute.Category, new CategoryNode());
-                        dictionary[attribute.Category].Category = attribute;
+                        var attribute =
+                            testCase.GetCustomAttributes(typeof (CategoryAttribute), true).FirstOrDefault() as
+                                CategoryAttribute;
+                        if (!dictionary.ContainsKey(attribute.Category))
+                        {
+                            dictionary.Add(attribute.Category, new CategoryNode());
+                            dictionary[attribute.Category].Category = attribute;
+                        }
+                        dictionary[attribute.Category].Nodes.Add(testCase);
                     }
-                    dictionary[attribute.Category].Nodes.Add(testCase);
                 }
             }
 
@@ -57,5 +66,7 @@ namespace Hypertest.Core.Converters
             throw new NotImplementedException(
                 "Cannot convert from a tree to a test registry. Use converter for one way binding only.");
         }
+
+        internal ContentViewModel Content { get; set; }
     }
 }

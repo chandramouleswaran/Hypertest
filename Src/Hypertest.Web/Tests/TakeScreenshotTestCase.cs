@@ -27,6 +27,7 @@ namespace Hypertest.Core.Tests
 	[Description("Takes a screenshot of the current state of browser")]
 	[Category("Web")]
 	[TestImage("Images/Screenshot.png")]
+    [ScenarioTypes(typeof(WebTestScenario))]
 	public class TakeScreenshotTestCase : TestCase
 	{
 		#region Members

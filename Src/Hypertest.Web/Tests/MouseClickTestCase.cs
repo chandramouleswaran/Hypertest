@@ -25,6 +25,7 @@ namespace Hypertest.Core.Tests
     [Description("Clicks the first web element based on the search results")]
     [Category("Web")]
     [TestImage("Images/MouseClick.png")]
+    [ScenarioTypes(typeof(WebTestScenario))]
     public class MouseClickTestCase : WebTestCase
     {
         #region CTOR

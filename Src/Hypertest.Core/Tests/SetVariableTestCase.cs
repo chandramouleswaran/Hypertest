@@ -26,6 +26,7 @@ namespace Hypertest.Core.Tests
     [Description("Create and set initial values for variables")]
     [Category("General")]
     [TestImage("Images/SetVariable.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class SetVariableTestCase : TestCase
     {
         #region Members

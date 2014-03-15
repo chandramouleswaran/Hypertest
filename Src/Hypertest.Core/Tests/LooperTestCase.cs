@@ -24,6 +24,7 @@ namespace Hypertest.Core.Tests
     [Description("Equivalent of a for loop")]
     [Category("General")]
     [TestImage("Images/Looper.png")]
+    [ScenarioTypes(typeof(TestScenario))]
     public class LooperTestCase : FolderTestCase
     {
         #region Members
