@@ -10,10 +10,12 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Hypertest.Core.Manager;
 using Hypertest.Core.Utils;
 using Wide.Interfaces;
@@ -229,7 +231,7 @@ namespace Hypertest.Core.Tests
             {
                 scenario.Manager.AddChange(new CommonPropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
             }
-            treeView1.Focus();
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action) (() => treeView1.Focus()));
             if (actionInProgress)
             {
                 scenario.Manager.EndChangeSetBatch();
