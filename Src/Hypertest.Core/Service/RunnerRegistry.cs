@@ -37,6 +37,9 @@ namespace Hypertest.Core.Service
         {
             get
             {
+                if (scenario == null)
+                    return null;
+
                 foreach (var type in _types)
                 {
                     IRunner runner = _container.Resolve(type) as IRunner;
