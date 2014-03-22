@@ -118,6 +118,13 @@ namespace Hypertest.Core.Handlers
 				TestCase tc = dropInfo.Data as TestCase;
 				if (scenaio != null && tc != null)
 				{
+				    if (tc.Scenario == scenaio)
+				    {
+				        scenaio.Children.Remove(tc);
+				    }
+                    //Clone the dragged object - you never know if the object is dragged from one window to another
+				    tc = tc.Clone() as TestCase;
+				    tc.IsSelected = true;
 					scenaio.Children.Add(tc);
 				}
 			}

@@ -8,7 +8,7 @@
              xmlns:xwt="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged">
+             d:DesignHeight="400" d:DesignWidth="600" DataContextChanged="UserControl_DataContextChanged" Background="White">
     <UserControl.Resources>
         <converters:ScenarioToObservableCollectionConverter x:Key="scenarioConverter" />
         <converters:TypeToTestImageConverter x:Key="TypeToTestImageConverter" />

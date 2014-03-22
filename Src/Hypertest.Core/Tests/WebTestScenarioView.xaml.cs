@@ -227,15 +227,22 @@ namespace Hypertest.Core.Tests
 
         private void treeView1_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue != null && e.OldValue != null && e.OldValue != e.NewValue)
+            try
             {
-                scenario.Manager.AddChange(new CommonPropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
+                if (e.NewValue != null && e.OldValue != null && e.OldValue != e.NewValue)
+                {
+                    scenario.Manager.AddChange(new CommonPropertyChange(e.OldValue, e.NewValue, "IsSelected"), "Selection");
+                }
+                Dispatcher.BeginInvoke(DispatcherPriority.Send, (Action)(()=>treeView1.Focus()));
+                if (actionInProgress)
+                {
+                    scenario.Manager.EndChangeSetBatch();
+                    actionInProgress = false;
+                }
             }
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action) (() => treeView1.Focus()));
-            if (actionInProgress)
+            catch (Exception ex)
             {
-                scenario.Manager.EndChangeSetBatch();
-                actionInProgress = false;
+
             }
         }
     }

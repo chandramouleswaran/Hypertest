@@ -435,7 +435,7 @@ namespace Hypertest.Core
         private bool CanRunTest()
         {
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
-            if (workspace.ActiveDocument != null)
+            if (workspace.ActiveDocument != null && workspace.ActiveDocument.Model is TestScenario)
             {
                 var runner = _runnerRegistry[workspace.ActiveDocument.Model as TestScenario];
                 return runner != null && (workspace.ActiveDocument.Model is TestScenario && runner.IsRunning == false);
