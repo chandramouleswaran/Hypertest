@@ -13,6 +13,7 @@
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using Wide.Interfaces;
+using Wide.Interfaces.Services;
 
 namespace Hypertest.Core.Toolbox
 {
@@ -40,6 +41,11 @@ namespace Hypertest.Core.Toolbox
             View = _view;
 
             _aggregator = _container.Resolve<IEventAggregator>();
+        }
+
+        public override PaneLocation PreferredLocation
+        {
+            get { return PaneLocation.Right; }
         }
     }
 }
