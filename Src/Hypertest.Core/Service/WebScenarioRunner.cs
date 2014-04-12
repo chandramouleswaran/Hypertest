@@ -23,6 +23,7 @@ using Hypertest.Core.Interfaces;
 using Hypertest.Core.Results;
 using Hypertest.Core.Tests;
 using Hypertest.Core.Utils;
+using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Unity;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -30,6 +31,7 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using Wide.Interfaces;
 using Wide.Interfaces.Services;
+using Hypertest.Core.Events;
 
 namespace Hypertest.Core.Service
 {
@@ -41,7 +43,7 @@ namespace Hypertest.Core.Service
     }
 
     [ScenarioTypes(typeof(WebTestScenario))]
-    internal class WebScenarioRunner : IRunner
+    public class WebScenarioRunner : IRunner
     {
         #region Members
         private readonly Dictionary<String, Variable> _globals;
@@ -49,15 +51,17 @@ namespace Hypertest.Core.Service
         private WebTestScenario _scenario;
         private IWorkspace _workspace;
         private IUnityContainer _container;
+        private IEventAggregator _aggregator;
         #endregion
 
         #region CTOR
 
-        public WebScenarioRunner(AbstractWorkspace workspace, IUnityContainer container)
+        public WebScenarioRunner(AbstractWorkspace workspace, IUnityContainer container, IEventAggregator aggregator)
         {
             _globals = new Dictionary<string, Variable>();
             _workspace = workspace;
             _container = container;
+            _aggregator = aggregator;
         }
 
         #endregion
@@ -136,21 +140,6 @@ namespace Hypertest.Core.Service
                 this.Driver.Quit();
                 this.Driver = null;
             }
-            try
-            {
-                //Save the result in its location
-                using (var writer = new FileStream(this.RunFolder + Path.DirectorySeparatorChar + "Result.wtr", FileMode.Create, FileAccess.Write))
-                {
-                    var types = new List<Type>();
-                    types.Add(typeof(WebTestScenario));
-                    var ser = new DataContractSerializer(typeof(TestResultModel), this.Result.Scenario.TestRegistry.Tests.Union(types));
-                    ser.WriteObject(writer, this._result);
-                }
-            }
-            catch (Exception ex)
-            {     
-                Console.WriteLine(ex.Message);
-            }
 
             //Set the variables back to null
             this._result = null;
@@ -226,12 +215,14 @@ namespace Hypertest.Core.Service
 
         private void WorkComplete()
         {
+            _aggregator.GetEvent<RunEndedEvent>().Publish(this);
             this.CleanUp();
             this.IsRunning = false;
         }
 
         private void BackRun()
         {
+            _aggregator.GetEvent<RunStartedEvent>().Publish(this);
             do
             {
                 this.UniqueID = DateTime.Now.Ticks.ToString();

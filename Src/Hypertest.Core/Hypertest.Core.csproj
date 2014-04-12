@@ -105,6 +105,8 @@
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
     <Compile Include="Converters\TypeToTestImageConverter.cs" />
     <Compile Include="Converters\TypeToDisplayNameConverter.cs" />
+    <Compile Include="Events\RunEndedEvent.cs" />
+    <Compile Include="Events\RunStartedEvent.cs" />
     <Compile Include="Service\RunnerRegistry.cs" />
     <Compile Include="WebTestResultViewModel.cs" />
     <Compile Include="CoreModule.cs" />
