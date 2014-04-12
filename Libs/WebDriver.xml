@@ -296,6 +296,16 @@
       <param name="keySequence">The sequence to test for file existence.</param>
       <returns>This method always returns <see langword="false" /> in this implementation.</returns>
     </member>
+    <member name="T:OpenQA.Selenium.Remote.ICommandServer">
+      <summary>
+            Provides a way to start a server that understands remote commands
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.ICommandServer.Start">
+      <summary>
+            Starts the server.
+            </summary>
+    </member>
     <member name="T:OpenQA.Selenium.DriverService">
       <summary>
             Exposes the service provided by a native WebDriver server executable.
@@ -369,6 +379,16 @@
     <member name="P:OpenQA.Selenium.DriverService.IsRunning">
       <summary>
             Gets a value indicating whether the service is running.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.DriverService.HideCommandPromptWindow">
+      <summary>
+            Gets or sets a value indicating whether the command prompt window of the service should be hidden.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.DriverService.ProcessId">
+      <summary>
+            Gets the process ID of the running driver service executable. Returns 0 if the process is not running.
             </summary>
     </member>
     <member name="P:OpenQA.Selenium.DriverService.DriverServiceExecutableName">
@@ -949,6 +969,78 @@
     <member name="M:OpenQA.Selenium.InvalidElementStateException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
       <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.InvalidElementStateException" /> class with serialized data.
+            </summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
+            object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual 
+            information about the source or destination.</param>
+    </member>
+    <member name="T:OpenQA.Selenium.NotFoundException">
+      <summary>
+            The exception that is thrown when an item is not found.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.NotFoundException.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with 
+            a specified error message.
+            </summary>
+      <param name="message">The message that describes the error.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.String,System.Exception)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with
+            a specified error message and a reference to the inner exception that is the
+            cause of this exception.
+            </summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="innerException">The exception that is the cause of the current exception,
+            or <see langword="null" /> if no inner exception is specified.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with serialized data.
+            </summary>
+      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
+            object data about the exception being thrown.</param>
+      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual 
+            information about the source or destination.</param>
+    </member>
+    <member name="T:OpenQA.Selenium.NoSuchElementException">
+      <summary>
+            The exception that is thrown when an element is not found.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with 
+            a specified error message.
+            </summary>
+      <param name="message">The message that describes the error.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.String,System.Exception)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with
+            a specified error message and a reference to the inner exception that is the
+            cause of this exception.
+            </summary>
+      <param name="message">The error message that explains the reason for the exception.</param>
+      <param name="innerException">The exception that is the cause of the current exception,
+            or <see langword="null" /> if no inner exception is specified.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with serialized data.
             </summary>
       <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
             object data about the exception being thrown.</param>
@@ -1818,42 +1910,6 @@
             Represents the function key COMMAND.
             </summary>
     </member>
-    <member name="T:OpenQA.Selenium.NotFoundException">
-      <summary>
-            The exception that is thrown when an item is not found.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.NotFoundException.#ctor">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.String)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with 
-            a specified error message.
-            </summary>
-      <param name="message">The message that describes the error.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.String,System.Exception)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with
-            a specified error message and a reference to the inner exception that is the
-            cause of this exception.
-            </summary>
-      <param name="message">The error message that explains the reason for the exception.</param>
-      <param name="innerException">The exception that is the cause of the current exception,
-            or <see langword="null" /> if no inner exception is specified.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.NotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NotFoundException" /> class with serialized data.
-            </summary>
-      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
-            object data about the exception being thrown.</param>
-      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual 
-            information about the source or destination.</param>
-    </member>
     <member name="T:OpenQA.Selenium.NoAlertPresentException">
       <summary>
             The exception that is thrown when an alert is not found.
@@ -1884,42 +1940,6 @@
     <member name="M:OpenQA.Selenium.NoAlertPresentException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
       <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoAlertPresentException" /> class with serialized data.
-            </summary>
-      <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
-            object data about the exception being thrown.</param>
-      <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual 
-            information about the source or destination.</param>
-    </member>
-    <member name="T:OpenQA.Selenium.NoSuchElementException">
-      <summary>
-            The exception that is thrown when an element is not found.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.String)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with 
-            a specified error message.
-            </summary>
-      <param name="message">The message that describes the error.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.String,System.Exception)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with
-            a specified error message and a reference to the inner exception that is the
-            cause of this exception.
-            </summary>
-      <param name="message">The error message that explains the reason for the exception.</param>
-      <param name="innerException">The exception that is the cause of the current exception,
-            or <see langword="null" /> if no inner exception is specified.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.NoSuchElementException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.NoSuchElementException" /> class with serialized data.
             </summary>
       <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> that holds the serialized 
             object data about the exception being thrown.</param>
@@ -2621,6 +2641,66 @@
       <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual 
             information about the source or destination.</param>
     </member>
+    <member name="T:OpenQA.Selenium.Remote.ICommandExecutor">
+      <summary>
+            Provides a way to send commands to the remote server
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.ICommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
+      <summary>
+            Executes a command
+            </summary>
+      <param name="commandToExecute">The command you wish to execute</param>
+      <returns>A response from the browser</returns>
+    </member>
+    <member name="T:OpenQA.Selenium.Remote.HttpCommandExecutor">
+      <summary>
+            Provides a way of executing Commands over HTTP
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.#ctor(System.Uri,System.TimeSpan)">
+      <summary>
+            Initializes a new instance of the HttpCommandExecutor class
+            </summary>
+      <param name="addressOfRemoteServer">Address of the WebDriver Server</param>
+      <param name="timeout">The timeout within which the server must respond.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.#ctor(System.Uri,System.TimeSpan,System.Boolean)">
+      <summary>
+            Initializes a new instance of the HttpCommandExecutor class
+            </summary>
+      <param name="addressOfRemoteServer">Address of the WebDriver Server</param>
+      <param name="timeout">The timeout within which the server must respond.</param>
+      <param name="enableKeepAlive">
+        <see langword="true" /> if the KeepAlive header should be sent
+            with HTTP requests; otherwise, <see langword="false" />.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
+      <summary>
+            Executes a command
+            </summary>
+      <param name="commandToExecute">The command you wish to execute</param>
+      <returns>A response from the browser</returns>
+    </member>
+    <member name="T:OpenQA.Selenium.Chrome.ChromeCommandExecutor">
+      <summary>
+            Provides a mechanism to execute commands on the browser
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeCommandExecutor.#ctor(OpenQA.Selenium.Chrome.ChromeDriverService,System.TimeSpan)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Chrome.ChromeCommandExecutor" /> class.
+            </summary>
+      <param name="driverService">The <see cref="T:OpenQA.Selenium.Chrome.ChromeDriverService" /> that drives the browser.</param>
+      <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
+      <summary>
+            Executes a command with the ChromeDriver.
+            </summary>
+      <param name="commandToExecute">The command you wish to execute</param>
+      <returns>A response from the browser</returns>
+    </member>
     <member name="T:OpenQA.Selenium.Internal.IFindsById">
       <summary>
             Defines the interface through which the user finds elements by their ID.
@@ -3132,6 +3212,12 @@
       <returns>A <see cref="T:System.Collections.ObjectModel.ReadOnlyCollection`1" /> containing all
             <see cref="T:OpenQA.Selenium.IWebElement">IWebElements</see> matching the criteria.</returns>
     </member>
+    <member name="M:OpenQA.Selenium.Remote.RemoteWebDriver.GetScreenshot">
+      <summary>
+            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
+            </summary>
+      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
+    </member>
     <member name="M:OpenQA.Selenium.Remote.RemoteWebDriver.Dispose">
       <summary>
             Dispose the RemoteWebDriver Instance
@@ -3212,6 +3298,23 @@
       <param name="elementId">The ID of this element.</param>
       <returns>A <see cref="T:OpenQA.Selenium.Remote.RemoteWebElement" /> with the specified ID.</returns>
     </member>
+    <member name="M:OpenQA.Selenium.Remote.RemoteWebDriver.ExecuteScriptCommand(System.String,System.String,System.Object[])">
+      <summary>
+            Executes JavaScript in the context of the currently selected frame or window using a specific command.
+            </summary>
+      <param name="script">The JavaScript code to execute.</param>
+      <param name="commandName">The name of the command to execute.</param>
+      <param name="args">The arguments to the script.</param>
+      <returns>The value returned by the script.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.RemoteWebDriver.ConvertArgumentsToJavaScriptObjects(System.Object[])">
+      <summary>
+            Converts the arguments to java script objects.
+            </summary>
+      <param name="args">The arguments.</param>
+      <returns>
+      </returns>
+    </member>
     <member name="P:OpenQA.Selenium.Remote.RemoteWebDriver.Url">
       <summary>
             Gets or sets the URL the browser is currently displaying.
@@ -3271,140 +3374,6 @@
       <summary>
             Gets the <see cref="P:OpenQA.Selenium.Remote.RemoteWebDriver.SessionId" /> for the current session of this driver.
             </summary>
-    </member>
-    <member name="T:OpenQA.Selenium.Android.AndroidDriver">
-      <summary>
-            Provides a mechanism to write tests against an Android device
-            </summary>
-      <example>
-        <code>
-            [TestFixture]
-            public class Testing
-            {
-                private IWebDriver driver;
-                <para></para>
-                [SetUp]
-                public void SetUp()
-                {
-                    driver = new AndroidDriver();
-                }
-                <para></para>
-                [Test]
-                public void TestGoogle()
-                {
-                    driver.Navigate().GoToUrl("http://www.google.co.uk");
-                    /*
-                    *   Rest of the test
-                    */
-                }
-                <para></para>
-                [TearDown]
-                public void TearDown()
-                {
-                    driver.Quit();
-                } 
-            }
-            </code>
-      </example>
-      <remarks>
-            Using the Android driver requires the Android device or emulator
-            to be running, and the WebDriver application be active on the device.
-            </remarks>
-    </member>
-    <member name="M:OpenQA.Selenium.Android.AndroidDriver.#ctor">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Android.AndroidDriver" /> class.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Android.AndroidDriver.#ctor(System.String)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Android.AndroidDriver" /> class,
-            communicating with the device at a specific URL.
-            </summary>
-      <param name="remoteAddress">The URL of the WebDriver application on the Android device.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Android.AndroidDriver.#ctor(System.Uri)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Android.AndroidDriver" /> class,
-            communicating with the device at a specific URL.
-            </summary>
-      <param name="remoteAddress">The URL of the WebDriver application on the Android device.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Android.AndroidDriver.GetScreenshot">
-      <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
-            </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
-    </member>
-    <member name="P:OpenQA.Selenium.Android.AndroidDriver.TouchScreen">
-      <summary>
-            Gets the device representing the touch screen.
-            </summary>
-    </member>
-    <member name="P:OpenQA.Selenium.Android.AndroidDriver.Orientation">
-      <summary>
-            Gets or sets the screen orientation of the browser on the device.
-            </summary>
-    </member>
-    <member name="T:OpenQA.Selenium.Remote.ICommandExecutor">
-      <summary>
-            Provides a way to send commands to the remote server
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Remote.ICommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
-      <summary>
-            Executes a command
-            </summary>
-      <param name="commandToExecute">The command you wish to execute</param>
-      <returns>A response from the browser</returns>
-    </member>
-    <member name="T:OpenQA.Selenium.Remote.HttpCommandExecutor">
-      <summary>
-            Provides a way of executing Commands over HTTP
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.#ctor(System.Uri,System.TimeSpan)">
-      <summary>
-            Initializes a new instance of the HttpCommandExecutor class
-            </summary>
-      <param name="addressOfRemoteServer">Address of the WebDriver Server</param>
-      <param name="timeout">The timeout within which the server must respond.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.#ctor(System.Uri,System.TimeSpan,System.Boolean)">
-      <summary>
-            Initializes a new instance of the HttpCommandExecutor class
-            </summary>
-      <param name="addressOfRemoteServer">Address of the WebDriver Server</param>
-      <param name="timeout">The timeout within which the server must respond.</param>
-      <param name="enableKeepAlive">
-        <see langword="true" /> if the KeepAlive header should be sent
-            with HTTP requests; otherwise, <see langword="false" />.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Remote.HttpCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
-      <summary>
-            Executes a command
-            </summary>
-      <param name="commandToExecute">The command you wish to execute</param>
-      <returns>A response from the browser</returns>
-    </member>
-    <member name="T:OpenQA.Selenium.Chrome.ChromeCommandExecutor">
-      <summary>
-            Provides a mechanism to execute commands on the browser
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Chrome.ChromeCommandExecutor.#ctor(OpenQA.Selenium.Chrome.ChromeDriverService,System.TimeSpan)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Chrome.ChromeCommandExecutor" /> class.
-            </summary>
-      <param name="driverService">The <see cref="T:OpenQA.Selenium.Chrome.ChromeDriverService" /> that drives the browser.</param>
-      <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Chrome.ChromeCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
-      <summary>
-            Executes a command with the ChromeDriver.
-            </summary>
-      <param name="commandToExecute">The command you wish to execute</param>
-      <returns>A response from the browser</returns>
     </member>
     <member name="T:OpenQA.Selenium.Chrome.ChromeDriver">
       <summary>
@@ -3497,12 +3466,6 @@
       <param name="options">The <see cref="T:OpenQA.Selenium.Chrome.ChromeOptions" /> to be used with the Chrome driver.</param>
       <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
     </member>
-    <member name="M:OpenQA.Selenium.Chrome.ChromeDriver.GetScreenshot">
-      <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
-            </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
-    </member>
     <member name="P:OpenQA.Selenium.Chrome.ChromeDriver.FileDetector">
       <summary>
             Gets or sets the <see cref="T:OpenQA.Selenium.IFileDetector" /> responsible for detecting 
@@ -3520,11 +3483,12 @@
             Exposes the service provided by the native ChromeDriver executable.
             </summary>
     </member>
-    <member name="M:OpenQA.Selenium.Chrome.ChromeDriverService.#ctor(System.String,System.Int32)">
+    <member name="M:OpenQA.Selenium.Chrome.ChromeDriverService.#ctor(System.String,System.String,System.Int32)">
       <summary>
             Initializes a new instance of the ChromeDriverService class.
             </summary>
-      <param name="executable">The full path to the ChromeDriver executable.</param>
+      <param name="executablePath">The full path to the ChromeDriver executable.</param>
+      <param name="executableFileName">The file name of the ChromeDriver executable.</param>
       <param name="port">The port on which the ChromeDriver executable should listen.</param>
     </member>
     <member name="M:OpenQA.Selenium.Chrome.ChromeDriverService.CreateDefaultService">
@@ -3538,6 +3502,14 @@
             Creates a default instance of the ChromeDriverService using a specified path to the ChromeDriver executable.
             </summary>
       <param name="driverPath">The directory containing the ChromeDriver executable.</param>
+      <returns>A ChromeDriverService using a random port.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeDriverService.CreateDefaultService(System.String,System.String)">
+      <summary>
+            Creates a default instance of the ChromeDriverService using a specified path to the ChromeDriver executable with the given name.
+            </summary>
+      <param name="driverPath">The directory containing the ChromeDriver executable.</param>
+      <param name="driverExecutableFileName">The name of the ChromeDriver executable file.</param>
       <returns>A ChromeDriverService using a random port.</returns>
     </member>
     <member name="P:OpenQA.Selenium.Chrome.ChromeDriverService.LogPath">
@@ -3597,9 +3569,7 @@
         <para>
         </para>
         <code>
-            DesiredCapabilities capabilities = DesiredCapabilities.Chrome();
-            capabilities.SetCapability(ChromeOptions.Capability, options);
-            RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://localhost:4444/wd/hub"), capabilities);
+            RemoteWebDriver driver = new RemoteWebDriver(new Uri("http://localhost:4444/wd/hub"), options.ToCapabilities());
             </code>
       </example>
     </member>
@@ -3626,6 +3596,27 @@
             Adds arguments to be appended to the Chrome.exe command line.
             </summary>
       <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> object of arguments to add.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.AddExcludedArgument(System.String)">
+      <summary>
+            Adds a single argument to be excluded from the list of arguments passed by default 
+            to the Chrome.exe command line by chromedriver.exe.
+            </summary>
+      <param name="argument">The argument to exclude.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.AddExcludedArguments(System.String[])">
+      <summary>
+            Adds arguments to be excluded from the list of arguments passed by default 
+            to the Chrome.exe command line by chromedriver.exe.
+            </summary>
+      <param name="arguments">An array of arguments to exclude.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.AddExcludedArguments(System.Collections.Generic.IEnumerable{System.String})">
+      <summary>
+            Adds arguments to be excluded from the list of arguments passed by default 
+            to the Chrome.exe command line by chromedriver.exe.
+            </summary>
+      <param name="arguments">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> object of arguments to exclude.</param>
     </member>
     <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.AddExtension(System.String)">
       <summary>
@@ -3697,8 +3688,28 @@
             thrown when attempting to add a capability for which there is already a type safe option, or 
             when <paramref name="capabilityName" /> is <see langword="null" /> or the empty string.
             </exception>
-      <remarks>Calling <see cref="M:OpenQA.Selenium.Chrome.ChromeOptions.AddAdditionalCapability(System.String,System.Object)" /> where <paramref name="capabilityName" />
-            has already been added will overwrite the existing value with the new value in <paramref name="capabilityValue" /></remarks>
+      <remarks>Calling <see cref="M:OpenQA.Selenium.Chrome.ChromeOptions.AddAdditionalCapability(System.String,System.Object)" />
+            where <paramref name="capabilityName" /> has already been added will overwrite the 
+            existing value with the new value in <paramref name="capabilityValue" />.
+            Also, by default, calling this method adds capabilities to the options object passed to
+            chromedriver.exe.</remarks>
+    </member>
+    <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.AddAdditionalCapability(System.String,System.Object,System.Boolean)">
+      <summary>
+            Provides a means to add additional capabilities not yet added as type safe options 
+            for the Chrome driver.
+            </summary>
+      <param name="capabilityName">The name of the capability to add.</param>
+      <param name="capabilityValue">The value of the capability to add.</param>
+      <param name="isGlobalCapability">Indicates whether the capability is to be set as a global
+            capability for the driver instead of a Chrome-specific option.</param>
+      <exception cref="T:System.ArgumentException">
+            thrown when attempting to add a capability for which there is already a type safe option, or 
+            when <paramref name="capabilityName" /> is <see langword="null" /> or the empty string.
+            </exception>
+      <remarks>Calling <see cref="M:OpenQA.Selenium.Chrome.ChromeOptions.AddAdditionalCapability(System.String,System.Object,System.Boolean)" />
+            where <paramref name="capabilityName" /> has already been added will overwrite the
+            existing value with the new value in <paramref name="capabilityValue" /></remarks>
     </member>
     <member name="M:OpenQA.Selenium.Chrome.ChromeOptions.ToCapabilities">
       <summary>
@@ -3732,6 +3743,17 @@
     <member name="P:OpenQA.Selenium.Chrome.ChromeOptions.Extensions">
       <summary>
             Gets the list of extensions to be installed as an array of base64-encoded strings.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.Chrome.ChromeOptions.DebuggerAddress">
+      <summary>
+            Gets or sets the address of a Chrome debugger server to connect to.
+            Should be of the form "{hostname|IP address}:port".
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.Chrome.ChromeOptions.MinidumpPath">
+      <summary>
+            Gets or sets the directory in which to store minidump files.
             </summary>
     </member>
     <member name="T:OpenQA.Selenium.Internal.IWrapsDriver">
@@ -4359,6 +4381,11 @@
             Indicates whether the driver will accept untrusted SSL certificates.
             </summary>
     </member>
+    <member name="F:OpenQA.Selenium.Firefox.FirefoxDriver.AssumeUntrustedCertificateIssuer">
+      <summary>
+            Indicates whether the driver assume the issuer of untrusted certificates is untrusted.
+            </summary>
+    </member>
     <member name="M:OpenQA.Selenium.Firefox.FirefoxDriver.#ctor">
       <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.Firefox.FirefoxDriver" /> class.
@@ -4397,22 +4424,6 @@
             to be used in starting Firefox.</param>
       <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
     </member>
-    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriver.GetScreenshot">
-      <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
-            </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriver.StartClient">
-      <summary>
-            Starts the command executor, enabling communication with the browser.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriver.StopClient">
-      <summary>
-            Stops the command executor, ending further communication with the browser.
-            </summary>
-    </member>
     <member name="M:OpenQA.Selenium.Firefox.FirefoxDriver.PrepareEnvironment">
       <summary>
             In derived classes, the <see cref="M:OpenQA.Selenium.Firefox.FirefoxDriver.PrepareEnvironment" /> method prepares the environment for test execution.
@@ -4445,6 +4456,64 @@
     <member name="P:OpenQA.Selenium.Firefox.FirefoxDriver.Profile">
       <summary>
             Gets the FirefoxProfile that is currently in use by subclasses
+            </summary>
+    </member>
+    <member name="T:OpenQA.Selenium.Firefox.FirefoxDriverCommandExecutor">
+      <summary>
+            Provides a way of executing Commands using the FirefoxDriver.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverCommandExecutor.#ctor(OpenQA.Selenium.Firefox.FirefoxBinary,OpenQA.Selenium.Firefox.FirefoxProfile,System.String,System.TimeSpan)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Firefox.FirefoxDriverCommandExecutor" /> class.
+            </summary>
+      <param name="binary">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxBinary" /> on which to make the connection.</param>
+      <param name="profile">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxProfile" /> creating the connection.</param>
+      <param name="host">The name of the host on which to connect to the Firefox extension (usually "localhost").</param>
+      <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
+      <summary>
+            Executes a command
+            </summary>
+      <param name="commandToExecute">The command you wish to execute</param>
+      <returns>A response from the browser</returns>
+    </member>
+    <member name="T:OpenQA.Selenium.Firefox.FirefoxDriverServer">
+      <summary>
+            Provides methods for launching Firefox with the WebDriver extension installed.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverServer.#ctor(OpenQA.Selenium.Firefox.FirefoxBinary,OpenQA.Selenium.Firefox.FirefoxProfile,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Firefox.FirefoxDriverServer" /> class.
+            </summary>
+      <param name="binary">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxBinary" /> on which to make the connection.</param>
+      <param name="profile">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxProfile" /> creating the connection.</param>
+      <param name="host">The name of the host on which to connect to the Firefox extension (usually "localhost").</param>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverServer.Start">
+      <summary>
+            Starts the server.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverServer.Dispose">
+      <summary>
+            Releases all resources used by the <see cref="T:OpenQA.Selenium.Firefox.FirefoxDriverServer" />.
+            </summary>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.FirefoxDriverServer.Dispose(System.Boolean)">
+      <summary>
+            Releases the unmanaged resources used by the <see cref="T:OpenQA.Selenium.Firefox.FirefoxDriverServer" /> and optionally 
+            releases the managed resources.
+            </summary>
+      <param name="disposing">
+        <see langword="true" /> to release managed and resources; 
+            <see langword="false" /> to only release unmanaged resources.</param>
+    </member>
+    <member name="P:OpenQA.Selenium.Firefox.FirefoxDriverServer.ExtensionUri">
+      <summary>
+            Gets the <see cref="T:System.Uri" /> for communicating with this server.
             </summary>
     </member>
     <member name="T:OpenQA.Selenium.Firefox.FirefoxExtension">
@@ -4572,14 +4641,6 @@
             Adds the WebDriver extension for Firefox to the profile.
             </summary>
     </member>
-    <member name="M:OpenQA.Selenium.Firefox.FirefoxProfile.AddDefaultPreference(System.Collections.Generic.Dictionary{System.String,System.String},System.String,System.String)">
-      <summary>
-            Adds a preference to the profile.
-            </summary>
-      <param name="preferences">The preferences dictionary.</param>
-      <param name="name">The name of the preference.</param>
-      <param name="value">The value of the preference.</param>
-    </member>
     <member name="M:OpenQA.Selenium.Firefox.FirefoxProfile.GenerateProfileDirectoryName">
       <summary>
             Generates a random directory name for the profile.
@@ -4616,13 +4677,6 @@
       <returns>A <see cref="T:System.Collections.Generic.Dictionary`2" />containing key-value pairs representing the preferences.</returns>
       <remarks>Assumes that we only really care about the preferences, not the comments</remarks>
     </member>
-    <member name="M:OpenQA.Selenium.Firefox.FirefoxProfile.WriteNewPreferences(System.Collections.Generic.Dictionary{System.String,System.String})">
-      <summary>
-            Writes the specified preferences to the user preferences file.
-            </summary>
-      <param name="preferences">A <see cref="T:System.Collections.Generic.Dictionary`2" /> containing key-value pairs
-            representing the preferences to write.</param>
-    </member>
     <member name="M:OpenQA.Selenium.Firefox.FirefoxProfile.SetManualProxyPreference(System.String,System.String)">
       <summary>
             Sets a preference for a manually specified proxy.
@@ -4654,8 +4708,30 @@
     </member>
     <member name="P:OpenQA.Selenium.Firefox.FirefoxProfile.AcceptUntrustedCertificates">
       <summary>
-            Gets or sets a value indicating whether Firefox should accept untrusted certificates.
+            Gets or sets a value indicating whether Firefox should accept SSL certificates which have 
+            expired, signed by an unknown authority or are generally untrusted. Set to true 
+            by default.
             </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.Firefox.FirefoxProfile.AssumeUntrustedCertificateIssuer">
+      <summary>
+            Gets or sets a value indicating whether Firefox assume untrusted SSL certificates 
+            come from an untrusted issuer or are self-signed. Set to true by default.
+            </summary>
+      <remarks>
+        <para>
+            Due to limitations within Firefox, it is easy to find out if a certificate has expired
+            or does not match the host it was served for, but hard to find out if the issuer of the
+            certificate is untrusted. By default, it is assumed that the certificates were not 
+            issued from a trusted certificate authority.
+            </para>
+        <para>
+            If you receive an "untrusted site" prompt it Firefox when using a certificate that was
+            issued by valid issuer, but the certificate has expired or is being served served for
+            a different host (e.g. production certificate served in a testing environment) set this
+            to false.
+            </para>
+      </remarks>
     </member>
     <member name="T:OpenQA.Selenium.Firefox.FirefoxProfileManager">
       <summary>
@@ -4728,6 +4804,13 @@
             Represents the preferences used by a profile in Firefox.
             </summary>
     </member>
+    <member name="M:OpenQA.Selenium.Firefox.Preferences.#ctor(System.Collections.Generic.Dictionary{System.String,System.Object},System.Collections.Generic.Dictionary{System.String,System.Object})">
+      <summary>
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Firefox.Preferences" /> class.
+            </summary>
+      <param name="defaultImmutablePreferences">A set of preferences that cannot be modified once set.</param>
+      <param name="defaultPreferences">A set of default preferences.</param>
+    </member>
     <member name="M:OpenQA.Selenium.Firefox.Preferences.SetPreference(System.String,System.String)">
       <summary>
             Sets a preference.
@@ -4755,7 +4838,14 @@
       <remarks>If the preference already exists in the currently-set list of preferences, 
             the value will be updated.</remarks>
     </member>
-    <member name="M:OpenQA.Selenium.Firefox.Preferences.AppendPreferencesTo(System.Collections.Generic.Dictionary{System.String,System.String})">
+    <member name="M:OpenQA.Selenium.Firefox.Preferences.GetPreference(System.String)">
+      <summary>
+            Gets a preference from the list of preferences.
+            </summary>
+      <param name="preferenceName">The name of the preference to retrieve.</param>
+      <returns>The value of the preference, or an empty string if the preference is not set.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.Preferences.AppendPreferences(System.Collections.Generic.Dictionary{System.String,System.String})">
       <summary>
             Appends this set of preferences to the specified set of preferences.
             </summary>
@@ -4763,6 +4853,12 @@
             append these values.</param>
       <remarks>If the preference already exists in <paramref name="preferencesToAdd" />, 
             the value will be updated.</remarks>
+    </member>
+    <member name="M:OpenQA.Selenium.Firefox.Preferences.WriteToFile(System.String)">
+      <summary>
+            Writes the preferences to a file.
+            </summary>
+      <param name="filePath">The full path to the file to be written.</param>
     </member>
     <member name="T:OpenQA.Selenium.Firefox.Internal.Executable">
       <summary>
@@ -4812,42 +4908,6 @@
     <member name="P:OpenQA.Selenium.Firefox.Internal.Executable.ExecutablePath">
       <summary>
             Gets the full path to the executable.
-            </summary>
-    </member>
-    <member name="T:OpenQA.Selenium.Firefox.Internal.ExtensionConnection">
-      <summary>
-            Represents the connection to the WebDriver Firefox extension.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.Internal.ExtensionConnection.#ctor(OpenQA.Selenium.Firefox.FirefoxBinary,OpenQA.Selenium.Firefox.FirefoxProfile,System.String,System.TimeSpan)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Firefox.Internal.ExtensionConnection" /> class.
-            </summary>
-      <param name="binary">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxBinary" /> on which to make the connection.</param>
-      <param name="profile">The <see cref="T:OpenQA.Selenium.Firefox.FirefoxProfile" /> creating the connection.</param>
-      <param name="host">The name of the host on which to connect to the Firefox extension (usually "localhost").</param>
-      <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.Internal.ExtensionConnection.Start">
-      <summary>
-            Starts the connection to the extension.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.Internal.ExtensionConnection.Quit">
-      <summary>
-            Closes the connection to the extension.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Firefox.Internal.ExtensionConnection.Execute(OpenQA.Selenium.Remote.Command)">
-      <summary>
-            Executes a command
-            </summary>
-      <param name="commandToExecute">The command you wish to execute</param>
-      <returns>A response from the browser</returns>
-    </member>
-    <member name="P:OpenQA.Selenium.Firefox.Internal.ExtensionConnection.Profile">
-      <summary>
-            Gets the <see cref="T:OpenQA.Selenium.Firefox.FirefoxProfile" /> associated with this connection.
             </summary>
     </member>
     <member name="T:OpenQA.Selenium.Firefox.Internal.ILock">
@@ -5028,12 +5088,6 @@
       <param name="options">The <see cref="T:OpenQA.Selenium.IE.InternetExplorerOptions" /> used to initialize the driver.</param>
       <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
     </member>
-    <member name="M:OpenQA.Selenium.IE.InternetExplorerDriver.GetScreenshot">
-      <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
-            </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
-    </member>
     <member name="P:OpenQA.Selenium.IE.InternetExplorerDriver.FileDetector">
       <summary>
             Gets or sets the <see cref="T:OpenQA.Selenium.IFileDetector" /> responsible for detecting 
@@ -5086,11 +5140,12 @@
             Exposes the service provided by the native IEDriverServer executable.
             </summary>
     </member>
-    <member name="M:OpenQA.Selenium.IE.InternetExplorerDriverService.#ctor(System.String,System.Int32)">
+    <member name="M:OpenQA.Selenium.IE.InternetExplorerDriverService.#ctor(System.String,System.String,System.Int32)">
       <summary>
             Initializes a new instance of the InternetExplorerDriverService class.
             </summary>
-      <param name="executable">The full path to the IEDriverServer executable.</param>
+      <param name="executablePath">The full path to the IEDriverServer executable.</param>
+      <param name="executableFileName">The file name of the IEDriverServer executable.</param>
       <param name="port">The port on which the IEDriverServer executable should listen.</param>
     </member>
     <member name="M:OpenQA.Selenium.IE.InternetExplorerDriverService.CreateDefaultService">
@@ -5104,6 +5159,14 @@
             Creates a default instance of the InternetExplorerDriverService using a specified path to the IEDriverServer executable.
             </summary>
       <param name="driverPath">The directory containing the IEDriverServer executable.</param>
+      <returns>A InternetExplorerDriverService using a random port.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.IE.InternetExplorerDriverService.CreateDefaultService(System.String,System.String)">
+      <summary>
+            Creates a default instance of the InternetExplorerDriverService using a specified path to the IEDriverServer executable with the given name.
+            </summary>
+      <param name="driverPath">The directory containing the IEDriverServer executable.</param>
+      <param name="driverExecutableFileName">The name of the IEDriverServer executable file.</param>
       <returns>A InternetExplorerDriverService using a random port.</returns>
     </member>
     <member name="P:OpenQA.Selenium.IE.InternetExplorerDriverService.Host">
@@ -5285,6 +5348,12 @@
       <summary>
             Gets or sets a value indicating whether to force the use of the Windows CreateProcess API
             when launching Internet Explorer. The default value is <see langword="false" />.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.IE.InternetExplorerOptions.ForceShellWindowsApi">
+      <summary>
+            Gets or sets a value indicating whether to force the use of the Windows ShellWindows API
+            when attaching to Internet Explorer. The default value is <see langword="false" />.
             </summary>
     </member>
     <member name="P:OpenQA.Selenium.IE.InternetExplorerOptions.BrowserCommandLineArguments">
@@ -6364,6 +6433,11 @@
             </code>
       </example>
     </member>
+    <member name="F:OpenQA.Selenium.PhantomJS.PhantomJSDriver.CommandExecutePhantomScript">
+      <summary>
+            Command name of the PhantomJS-specific command to execute native script in PhantomJS.
+            </summary>
+    </member>
     <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriver.#ctor">
       <summary>
             Initializes a new instance of the <see cref="T:OpenQA.Selenium.PhantomJS.PhantomJSDriver" /> class.
@@ -6421,11 +6495,35 @@
       <param name="options">The <see cref="T:OpenQA.Selenium.PhantomJS.PhantomJSOptions" /> used to initialize the driver.</param>
       <param name="commandTimeout">The maximum amount of time to wait for each command.</param>
     </member>
-    <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriver.GetScreenshot">
+    <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriver.ExecutePhantomJS(System.String,System.Object[])">
       <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
+            Execute a PhantomJS script fragment. Provides extra functionality not found in WebDriver
+            but available in PhantomJS.
             </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
+      <param name="script">The fragment of PhantomJS JavaScript to execute.</param>
+      <param name="args">List of arguments to pass to the function that the script is wrapped in.
+            These can accessed in the script as 'arguments[0]', 'arguments[1]','arguments[2]', etc
+            </param>
+      <returns>The result of the evaluation.</returns>
+      <remarks>
+        <para>
+            See the <a href="https://github.com/ariya/phantomjs/wiki/API-Reference">PhantomJS API</a>
+            for details on what is available.
+            </para>
+        <para>
+            A 'page' variable pointing to currently selected page is available for use.
+            If there is no page yet, one is created.
+            </para>
+        <para>
+            When overriding any callbacks be sure to wrap in a try/catch block, as failures
+            may cause future WebDriver calls to fail.
+            </para>
+        <para>
+            Certain callbacks are used by GhostDriver (the PhantomJS WebDriver implementation)
+            already. Overriding these may cause the script to fail. It's a good idea to check
+            for existing callbacks before overriding.
+            </para>
+      </remarks>
     </member>
     <member name="P:OpenQA.Selenium.PhantomJS.PhantomJSDriver.FileDetector">
       <summary>
@@ -6453,11 +6551,12 @@
             used in any other circumstances.
             </remarks>
     </member>
-    <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.#ctor(System.String,System.Int32)">
+    <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.#ctor(System.String,System.String,System.Int32)">
       <summary>
             Initializes a new instance of the PhantomJSDriverService class.
             </summary>
-      <param name="executable">The full path to the PhantomJS executable.</param>
+      <param name="executablePath">The full path to the PhantomJS executable.</param>
+      <param name="executableFileName">The file name of the PhantomJS executable.</param>
       <param name="port">The port on which the IEDriverServer executable should listen.</param>
     </member>
     <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.CreateDefaultService">
@@ -6471,6 +6570,14 @@
             Creates a default instance of the PhantomJSDriverService using a specified path to the PhantomJS executable.
             </summary>
       <param name="driverPath">The directory containing the PhantomJS executable.</param>
+      <returns>A PhantomJSDriverService using a random port.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.CreateDefaultService(System.String,System.String)">
+      <summary>
+            Creates a default instance of the PhantomJSDriverService using a specified path to the PhantomJS executable with the given name.
+            </summary>
+      <param name="driverPath">The directory containing the PhantomJS executable.</param>
+      <param name="driverExecutableFileName">The name of the PhantomJS executable file.</param>
       <returns>A PhantomJSDriverService using a random port.</returns>
     </member>
     <member name="M:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.AddArgument(System.String)">
@@ -6572,6 +6679,17 @@
             Gets or sets the location where the GhostDriver JavaScript file is located. This
             allows the use of an external implementation of GhostDriver instead of the
             implementation embedded inside the PhantomJS executable.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.IPAddress">
+      <summary>
+            Gets or sets the IP address to use when starting the GhostDriver implementation
+            embedded in PhantomJS.
+            </summary>
+    </member>
+    <member name="P:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.GridHubUrl">
+      <summary>
+            Gets or sets the URL of a Selenium Grid hub with which this PhantomJS instance should register.
             </summary>
     </member>
     <member name="P:OpenQA.Selenium.PhantomJS.PhantomJSDriverService.LogFile">
@@ -6864,6 +6982,8 @@
     <member name="T:OpenQA.Selenium.Remote.CommandInfoRepository">
       <summary>
             Holds the information about all commands specified by the JSON wire protocol.
+            This class cannot be inherited, as it is intended to be a singleton, and 
+            allowing subclasses introduces the possibility of multiple instances.
             </summary>
     </member>
     <member name="M:OpenQA.Selenium.Remote.CommandInfoRepository.#ctor">
@@ -6877,6 +6997,19 @@
             </summary>
       <param name="commandName">The <see cref="T:OpenQA.Selenium.Remote.DriverCommand" /> for which to get the information.</param>
       <returns>The <see cref="T:OpenQA.Selenium.Remote.CommandInfo" /> for the specified command.</returns>
+    </member>
+    <member name="M:OpenQA.Selenium.Remote.CommandInfoRepository.TryAddAdditionalCommand(System.String,OpenQA.Selenium.Remote.CommandInfo)">
+      <summary>
+            Tries the add an additional command to the list of known commands.
+            </summary>
+      <param name="commandName">Name of the command.</param>
+      <param name="commandInfo">The command information.</param>
+      <returns>
+        <see langword="true" /> if the new command has been added successfully; otherwise, <see langword="false" />.</returns>
+      <remarks>
+            This method is used by WebDriver implementations to add additional custom driver-specific commands.
+            This method will not overwrite existing commands for a specific name.
+            </remarks>
     </member>
     <member name="P:OpenQA.Selenium.Remote.CommandInfoRepository.Instance">
       <summary>
@@ -7446,13 +7579,6 @@
       <param name="enableKeepAlive">
         <see langword="true" /> if the KeepAlive header should be sent
             with HTTP requests; otherwise, <see langword="false" />.</param>
-    </member>
-    <member name="M:OpenQA.Selenium.Remote.DriverServiceCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
-      <summary>
-            Executes a command with the Driver.
-            </summary>
-      <param name="commandToExecute">The command you wish to execute</param>
-      <returns>A response from the browser</returns>
     </member>
     <member name="T:OpenQA.Selenium.Remote.ErrorResponse">
       <summary>
@@ -8359,22 +8485,6 @@
             </summary>
       <param name="options">The <see cref="T:OpenQA.Selenium.Safari.SafariOptions" /> to use for this <see cref="T:OpenQA.Selenium.Safari.SafariDriver" /> instance.</param>
     </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriver.GetScreenshot">
-      <summary>
-            Gets a <see cref="T:OpenQA.Selenium.Screenshot" /> object representing the image of the page on the screen.
-            </summary>
-      <returns>A <see cref="T:OpenQA.Selenium.Screenshot" /> object containing the image.</returns>
-    </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriver.StartClient">
-      <summary>
-            Starts the command executor, enabling communication with the browser.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriver.StopClient">
-      <summary>
-            Stops the command executor, ending further communication with the browser.
-            </summary>
-    </member>
     <member name="P:OpenQA.Selenium.Safari.SafariDriver.FileDetector">
       <summary>
             Gets or sets the <see cref="T:OpenQA.Selenium.IFileDetector" /> responsible for detecting 
@@ -8398,29 +8508,12 @@
             </summary>
       <param name="options">The <see cref="T:OpenQA.Selenium.Safari.SafariOptions" /> used to create the command executor.</param>
     </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverCommandExecutor.Start">
-      <summary>
-            Starts the command executor.
-            </summary>
-    </member>
     <member name="M:OpenQA.Selenium.Safari.SafariDriverCommandExecutor.Execute(OpenQA.Selenium.Remote.Command)">
       <summary>
             Executes a command
             </summary>
       <param name="commandToExecute">The command you wish to execute</param>
       <returns>A response from the browser</returns>
-    </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverCommandExecutor.Dispose">
-      <summary>
-            Releases all resources used by the <see cref="T:OpenQA.Selenium.Safari.SafariDriverCommandExecutor" />.
-            </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverCommandExecutor.Dispose(System.Boolean)">
-      <summary>
-            Releases all resources associated with this <see cref="T:OpenQA.Selenium.Safari.SafariDriverCommandExecutor" />.
-            </summary>
-      <param name="disposing">
-        <see langword="true" /> if the Dispose method was explicitly called; otherwise, <see langword="false" />.</param>
     </member>
     <member name="T:OpenQA.Selenium.Safari.SafariDriverConnection">
       <summary>
@@ -8486,26 +8579,23 @@
             Provides the WebSockets server for communicating with the Safari extension.
             </summary>
     </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.#ctor">
+    <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.#ctor(OpenQA.Selenium.Safari.SafariOptions)">
       <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Safari.SafariDriverServer" /> class.
+            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Safari.SafariDriverServer" /> class using the specified options.
             </summary>
-    </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.#ctor(System.Int32)">
-      <summary>
-            Initializes a new instance of the <see cref="T:OpenQA.Selenium.Safari.SafariDriverServer" /> class using a specific port for communication.
-            </summary>
-      <param name="port">The port to use to communicate.</param>
+      <param name="options">The <see cref="T:OpenQA.Selenium.Safari.SafariOptions" /> defining the browser settings.</param>
     </member>
     <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.Start">
       <summary>
             Starts the server.
             </summary>
     </member>
-    <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.Stop">
+    <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.SendCommand(OpenQA.Selenium.Remote.Command)">
       <summary>
-            Stops the server.
+            Sends a command to the server.
             </summary>
+      <param name="commandToSend">The <see cref="T:OpenQA.Selenium.Remote.Command" /> to send.</param>
+      <returns>The command <see cref="T:OpenQA.Selenium.Remote.Response" />.</returns>
     </member>
     <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.WaitForConnection(System.TimeSpan)">
       <summary>
@@ -8521,17 +8611,12 @@
     </member>
     <member name="M:OpenQA.Selenium.Safari.SafariDriverServer.Dispose(System.Boolean)">
       <summary>
-            Releases the unmanaged resources used by the <see cref="T:OpenQA.Selenium.Safari.Internal.SocketWrapper" /> and optionally 
+            Releases the unmanaged resources used by the <see cref="T:OpenQA.Selenium.Safari.SafariDriverServer" /> and optionally 
             releases the managed resources.
             </summary>
       <param name="disposing">
         <see langword="true" /> to release managed and resources; 
             <see langword="false" /> to only release unmanaged resources.</param>
-    </member>
-    <member name="P:OpenQA.Selenium.Safari.SafariDriverServer.ServerUri">
-      <summary>
-            Gets the URI of the server.
-            </summary>
     </member>
     <member name="T:OpenQA.Selenium.Safari.SafariOptions">
       <summary>
