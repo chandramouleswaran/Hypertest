@@ -166,6 +166,7 @@
             <summary>
             Sets the extension Javascript for the session
             </summary>
+            <param name="extensionJs">The extension JavaScript to use.</param>
         </member>
         <member name="M:Selenium.ISelenium.Start">
             <summary>
@@ -1347,11 +1348,13 @@
             <summary>
             Uses an arbitrary CommandProcessor
             </summary>
+            <param name="processor">An ICommandProcessor to be used.</param>
         </member>
         <member name="M:Selenium.DefaultSelenium.SetExtensionJs(System.String)">
             <summary>
             Sets the extension Javascript for the session
             </summary>
+            <param name="extensionJs">The extention JavaScript to use.</param>
         </member>
         <member name="M:Selenium.DefaultSelenium.Start">
             <summary>
@@ -1360,9 +1363,9 @@
         </member>
         <member name="M:Selenium.DefaultSelenium.Start(System.String)">
             <summary>
-            
+            Starts a new Selenium testing session
             </summary>
-            <param name="optionsString"></param>
+            <param name="optionsString">The options to use for the session.</param>
         </member>
         <member name="M:Selenium.DefaultSelenium.Stop">
             <summary>
@@ -2452,8 +2455,8 @@
             <summary>
             Captures the Network Traffic that is passing through Selenium Server
             </summary>
-            <param name="type"></param>
-            <returns></returns>
+            <param name="type">Type of traffic to capture</param>
+            <returns>The traffic passing through the Selenium Server.</returns>
         </member>
         <member name="M:Selenium.DefaultSelenium.CaptureEntirePageScreenshotToString(System.String)">
             <summary>Downloads a screenshot of the browser current window canvas to a 
@@ -2534,6 +2537,7 @@
             <summary>
             Sets the extension Javascript to be used in the created session
             </summary>
+            <param name="extensionJs">The extension JavaScript to use.</param>
         </member>
         <member name="M:Selenium.ICommandProcessor.Start">
             <summary>
@@ -2651,6 +2655,7 @@
             <summary>
             Sets the extension Javascript to be used in the created session
             </summary>
+            <param name="extensionJs">The extension JavaScript to use.</param>
         </member>
         <member name="M:Selenium.HttpCommandProcessor.Start">
             <summary>
@@ -2750,6 +2755,13 @@
             Creates an exception with the specified message
             </summary>
             <param name="message">the message to add to the exception</param>
+        </member>
+        <member name="M:Selenium.SeleniumException.#ctor(System.String,System.Exception)">
+            <summary>
+            Creates an exception with the specified message and inner exception
+            </summary>
+            <param name="message">the message to add to the exception</param>
+            <param name="innerException">the inner exception wrapped by this exception</param>
         </member>
     </members>
 </doc>
