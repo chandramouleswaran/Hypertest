@@ -15,6 +15,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using Hypertest.Core.Controls;
 using Hypertest.Core.Handlers;
 using Hypertest.Core.Interfaces;
 using Hypertest.Core.Service;
@@ -51,7 +52,7 @@ namespace Hypertest.Core
         public void Initialize()
         {
             _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-                .Publish(new SplashMessageUpdateEvent {Message = "Loading Core Module"});
+                .Publish(new SplashMessageUpdateEvent { Message = "Loading Core Module" });
             RegisterParts();
             LoadTheme();
             LoadCommands();
@@ -63,15 +64,15 @@ namespace Hypertest.Core
         private void LoadToolbar()
         {
             _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-                .Publish(new SplashMessageUpdateEvent {Message = "Toolbar.."});
+                .Publish(new SplashMessageUpdateEvent { Message = "Toolbar.." });
             var toolbarService = _container.Resolve<IToolbarService>();
             var menuService = _container.Resolve<IMenuService>();
 
-            toolbarService.Add(new ToolbarViewModel("Standard", 1) {Band = 1, BandIndex = 1});
+            toolbarService.Add(new ToolbarViewModel("Standard", 1) { Band = 1, BandIndex = 1 });
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_New"));
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_Open"));
 
-            toolbarService.Add(new ToolbarViewModel("Edit", 1) {Band = 1, BandIndex = 2});
+            toolbarService.Add(new ToolbarViewModel("Edit", 1) { Band = 1, BandIndex = 2 });
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Undo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Redo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Cut"));
@@ -119,15 +120,15 @@ namespace Hypertest.Core
             var registry = _container.Resolve<ITestRegistry>();
 
             //Register the test cases that you want to be able to participate
-            registry.Add(typeof (FolderTestCase));
-            registry.Add(typeof (ExpressionTestCase));
-            registry.Add(typeof (LooperTestCase));
-            registry.Add(typeof (RunScenarioTestCase));
-            registry.Add(typeof (SetVariableTestCase));
-            
-            #if DEBUG
+            registry.Add(typeof(FolderTestCase));
+            registry.Add(typeof(ExpressionTestCase));
+            registry.Add(typeof(LooperTestCase));
+            registry.Add(typeof(RunScenarioTestCase));
+            registry.Add(typeof(SetVariableTestCase));
+
+#if DEBUG
             registry.Add(typeof(DebugInfoTestCase));
-            #endif
+#endif
 
             //Add the toolbox to the workspace
             IWorkspace workspace = _container.Resolve<AbstractWorkspace>();
@@ -137,7 +138,7 @@ namespace Hypertest.Core
         private void LoadTheme()
         {
             _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-                .Publish(new SplashMessageUpdateEvent {Message = "Themes.."});
+                .Publish(new SplashMessageUpdateEvent { Message = "Themes.." });
             var manager = _container.Resolve<IThemeManager>();
             var themeSettings = _container.Resolve<IThemeSettings>();
             var win = _container.Resolve<IShell>() as Window;
@@ -149,7 +150,7 @@ namespace Hypertest.Core
         private void LoadCommands()
         {
             _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-                .Publish(new SplashMessageUpdateEvent {Message = "Commands.."});
+                .Publish(new SplashMessageUpdateEvent { Message = "Commands.." });
             var manager = _container.Resolve<ICommandManager>();
 
             var openCommand = new DelegateCommand(OpenModule);
@@ -175,7 +176,7 @@ namespace Hypertest.Core
         private void LoadMenus()
         {
             _eventAggregator.GetEvent<SplashMessageUpdateEvent>()
-                .Publish(new SplashMessageUpdateEvent {Message = "Menus.."});
+                .Publish(new SplashMessageUpdateEvent { Message = "Menus.." });
             var manager = _container.Resolve<ICommandManager>();
             var menuService = _container.Resolve<IMenuService>();
             var settingsManager = _container.Resolve<ISettingsManager>();
@@ -250,27 +251,32 @@ namespace Hypertest.Core
                     new Uri(
                         @"pack://application:,,,/Hypertest;component/Images/paste.png")),
                 ApplicationCommands.Paste));
-            menuService.Get("_Edit").Add(new MenuItemViewModel("Run", 23,
+            menuService.Get("_Edit").Add(new RunTestMenuItemViewModel("Pla_y", 23,
                 new BitmapImage(
                     new Uri(
-                        @"pack://application:,,,/Hypertest;component/Images/paste.png")),
-                manager.GetCommand("RUNTEST"), new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
+                        @"pack://application:,,,/Hypertest.Core;component/Images/RunScenario.png")),
+                null, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
+            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Chrome", 231,
+                null, null, null, true) {IsChecked = true});
+            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Firefox", 232,
+                null, null, null, true));
+            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Internet Explorer", 233,
+                null, null, null, true));
 
             menuService.Add(new MenuItemViewModel("_View", 3));
-
             if (logger != null)
                 menuService.Get("_View").Add(new MenuItemViewModel("_Logger", 1,
                     new BitmapImage(
                         new Uri(
                             @"pack://application:,,,/Hypertest;component/Images/undo.png")),
-                    manager.GetCommand("LOGSHOW")) {IsCheckable = true, IsChecked = logger.IsVisible});
+                    manager.GetCommand("LOGSHOW")) { IsCheckable = true, IsChecked = logger.IsVisible });
 
             if (toolbox != null)
                 menuService.Get("_View").Add(new MenuItemViewModel("_Toolbox", 2,
                     new BitmapImage(
                         new Uri(
                             @"pack://application:,,,/Hypertest;component/Images/undo.png")),
-                    manager.GetCommand("TOOLBOXSHOW")) {IsCheckable = true, IsChecked = toolbox.IsVisible});
+                    manager.GetCommand("TOOLBOXSHOW")) { IsCheckable = true, IsChecked = toolbox.IsVisible });
 
             menuService.Get("_View").Add(new MenuItemViewModel("Themes", 1));
 

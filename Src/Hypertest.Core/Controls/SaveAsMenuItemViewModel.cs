@@ -18,7 +18,7 @@ using Wide.Interfaces;
 using Wide.Interfaces.Controls;
 using Wide.Interfaces.Events;
 
-namespace Hypertest.Core
+namespace Hypertest.Core.Controls
 {
     /// <summary>
     ///     Class SaveAsMenuItemViewModel - simple menu implementation with events

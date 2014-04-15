@@ -94,6 +94,7 @@
     <Compile Include="Attributes\PostRunAttribute.cs" />
     <Compile Include="Attributes\PropertyInfoDescriptor.cs" />
     <Compile Include="Attributes\TestImageAttribute.cs" />
+    <Compile Include="Controls\RunTestMenuItemViewModel.cs" />
     <Compile Include="Converters\CategoryAttributeToStringConverter.cs" />
     <Compile Include="Converters\PathToImageConverter.cs" />
     <Compile Include="Converters\TypeToPropertyListConverter.cs" />
@@ -148,7 +149,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SaveAsMenuItemViewModel.cs" />
+    <Compile Include="Controls\SaveAsMenuItemViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IRunner.cs" />
     <Compile Include="Interfaces\IRunnerRegistry.cs" />
