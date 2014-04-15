@@ -10,6 +10,8 @@
 
 #endregion
 
+using System;
+using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Events;
@@ -18,13 +20,15 @@ using Wide.Interfaces;
 using Wide.Interfaces.Controls;
 using Wide.Interfaces.Events;
 
-namespace Hypertest.Core
+namespace Hypertest.Core.Controls
 {
     /// <summary>
-    ///     Class SaveAsMenuItemViewModel - simple menu implementation with events
+    ///     Class RunTestMenuItemViewModel - the run menu
     /// </summary>
-    public sealed class SaveAsMenuItemViewModel : AbstractMenuItem
+    public sealed class RunTestMenuItemViewModel : AbstractMenuItem
     {
+        private bool processing = false;
+
         #region CTOR
 
         /// <summary>
@@ -38,7 +42,7 @@ namespace Hypertest.Core
         /// <param name="isCheckable">if set to <c>true</c> this menu acts as a checkable menu.</param>
         /// <param name="hideDisabled">if set to <c>true</c> this menu is not visible when disabled.</param>
         /// <param name="container">The container.</param>
-        public SaveAsMenuItemViewModel(string header, int priority, ImageSource icon = null, ICommand command = null,
+        public RunTestMenuItemViewModel(string header, int priority, ImageSource icon = null, ICommand command = null,
             KeyGesture gesture = null, bool isCheckable = false, bool hideDisabled = false,
             IUnityContainer container = null)
             : base(header, priority, icon, command, gesture, isCheckable, hideDisabled)
@@ -46,22 +50,60 @@ namespace Hypertest.Core
             if (container != null)
             {
                 var eventAggregator = container.Resolve<IEventAggregator>();
-                eventAggregator.GetEvent<ActiveContentChangedEvent>().Subscribe(SaveAs);
+                eventAggregator.GetEvent<ActiveContentChangedEvent>().Subscribe(CurrentContent);
             }
         }
 
         #endregion
 
-        private void SaveAs(ContentViewModel cvm)
+        private void CurrentContent(ContentViewModel cvm)
         {
-            if (cvm != null)
+            
+        }
+
+        public override string Add(AbstractCommandable item)
+        {
+            item.PropertyChanged += ItemOnPropertyChanged;
+            return base.Add(item);
+        }
+
+        private void ItemOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            if (!processing)
             {
-                Header = "Save " + cvm.Title + " As...";
+                var mi = sender as MenuItemViewModel;
+
+                if (mi != null && mi.IsChecked == true && propertyChangedEventArgs.PropertyName == "IsChecked")
+                {
+                    processing = true;
+                    CurrentlyCheckedExcept(mi).IsChecked = false;
+                    this.Header = mi.Header;
+                    this.Command = mi.Command;
+                    RaisePropertyChanged("Header");
+                    RaisePropertyChanged("Command");
+                    processing = false;
+                }
+                else if (mi != null && mi.IsChecked == false)
+                {
+                    processing = true;
+                    mi.IsChecked = true;
+                    processing = false;
+                }
             }
-            else
+        }
+
+        private MenuItemViewModel CurrentlyCheckedExcept(MenuItemViewModel current)
+        {
+            foreach (var abstractCommandable in Children)
             {
-                Header = "Save As...";
+                var mi = abstractCommandable as MenuItemViewModel;
+                if (mi != null && mi != current && mi.IsChecked == true)
+                {
+                    return mi;
+                }
             }
+
+            return null;
         }
     }
 }
