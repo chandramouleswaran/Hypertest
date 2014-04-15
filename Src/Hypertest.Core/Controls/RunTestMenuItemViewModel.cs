@@ -27,6 +27,8 @@ namespace Hypertest.Core.Controls
     /// </summary>
     public sealed class RunTestMenuItemViewModel : AbstractMenuItem
     {
+        private bool processing = false;
+
         #region CTOR
 
         /// <summary>
@@ -67,10 +69,26 @@ namespace Hypertest.Core.Controls
 
         private void ItemOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            var mi = sender as MenuItemViewModel;
-            if (mi != null && mi.IsChecked == true && propertyChangedEventArgs.PropertyName == "IsChecked")
+            if (!processing)
             {
-                CurrentlyCheckedExcept(mi).IsChecked = false;
+                var mi = sender as MenuItemViewModel;
+
+                if (mi != null && mi.IsChecked == true && propertyChangedEventArgs.PropertyName == "IsChecked")
+                {
+                    processing = true;
+                    CurrentlyCheckedExcept(mi).IsChecked = false;
+                    this.Header = mi.Header;
+                    this.Command = mi.Command;
+                    RaisePropertyChanged("Header");
+                    RaisePropertyChanged("Command");
+                    processing = false;
+                }
+                else if (mi != null && mi.IsChecked == false)
+                {
+                    processing = true;
+                    mi.IsChecked = true;
+                    processing = false;
+                }
             }
         }
 

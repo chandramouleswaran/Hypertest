@@ -72,12 +72,15 @@ namespace Hypertest.Core
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_New"));
             toolbarService.Get("Standard").Add(menuService.Get("_File").Get("_Open"));
 
-            toolbarService.Add(new ToolbarViewModel("Edit", 1) { Band = 1, BandIndex = 2 });
+            toolbarService.Add(new ToolbarViewModel("Edit", 2) { Band = 1, BandIndex = 2 });
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Undo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Redo"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Cut"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("Copy"));
             toolbarService.Get("Edit").Add(menuService.Get("_Edit").Get("_Paste"));
+            
+            toolbarService.Add(new ToolbarViewModel("Debug", 3) { Band = 1, BandIndex = 3 });
+            toolbarService.Get("Debug").Add(menuService.Get("_Edit").Get("Play"));
 
             menuService.Get("_Tools").Add(toolbarService.RightClickMenu);
 
@@ -251,16 +254,16 @@ namespace Hypertest.Core
                     new Uri(
                         @"pack://application:,,,/Hypertest;component/Images/paste.png")),
                 ApplicationCommands.Paste));
-            menuService.Get("_Edit").Add(new RunTestMenuItemViewModel("Pla_y", 23,
+            menuService.Get("_Edit").Add(new RunTestMenuItemViewModel("Play", 23,
                 new BitmapImage(
                     new Uri(
                         @"pack://application:,,,/Hypertest.Core;component/Images/RunScenario.png")),
                 null, new KeyGesture(Key.F5, ModifierKeys.None, "F5")));
-            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Chrome", 231,
+            menuService.Get("_Edit").Get("Play").Add(new MenuItemViewModel("Chrome", 231,
                 null, null, null, true) {IsChecked = true});
-            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Firefox", 232,
+            menuService.Get("_Edit").Get("Play").Add(new MenuItemViewModel("Firefox", 232,
                 null, null, null, true));
-            menuService.Get("_Edit").Get("Pla_y").Add(new MenuItemViewModel("Run with Internet Explorer", 233,
+            menuService.Get("_Edit").Get("Play").Add(new MenuItemViewModel("Internet Explorer", 233,
                 null, null, null, true));
 
             menuService.Add(new MenuItemViewModel("_View", 3));
